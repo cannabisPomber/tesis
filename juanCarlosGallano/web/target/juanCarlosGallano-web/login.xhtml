@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+      
+<h:head>
+	<title>login</title>
+</h:head>
+<h:body>
+	<!--  <link type="text/css" rel="stylesheet" href="/project/faces/javax.faces.resource/theme.css?ln=primefaces-start" />-->
+	<link type="text/css" rel="stylesheet" href="../resources/css/login.css" />
+	<f:metadata>
+		<f:event listener="#{usuarioBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+	<h:form id="loginForm">
+		<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+		<p:dialog header="Login de Usuario" widgetVar="dlgLogin" resizable="false" id="dlgLogin">
+		<h:outputText value="Username" style="margin-right:10px" />
+		<h:inputText id="username" value="#{usuarioBean.user.usuario}" required="true"></h:inputText>
+		<h:message for="username"></h:message>
+		<br></br><br></br>
+		
+		<h:outputText value="Password" style="margin-right:10px" />
+		<h:inputSecret id="password" value="#{usuarioBean.user.password}" required="true" ></h:inputSecret>
+		<h:message for="password"></h:message>
+		<br></br><br></br>
+		
+		<h:commandButton action="#{usuarioBean.verificarUsuario()}"
+			value="Login"></h:commandButton>
+		</p:dialog>
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+      	
+      	<h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />		
+ 
+            <title>primestrap</title>
+        </f:facet>
+ 
+        <!--  <f:facet name="middle">
+		   <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
+		            
+		   <h:outputStylesheet name="css/dashboard.css" />
+		            
+		   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" />
+		            
+		    <h:outputScript name="bootstrap/js/bootstrap.js" />
+		</f:facet>
+        
+        <f:facet name="last">
+ 
+        </f:facet>-->
+ 
+    </h:head>
+    <body>
+    
+    <table style="width: 100%; heigth:82px ">
+	<tr>
+		<td style="width:30%;align-items: center">
+			<h:graphicImage library="images" name="delfralogo.jpg" styleClass="logo" height="50px"/></td>
+		 <td style="width:40%;">
+		 	<h:form id="formheader">  
+			    <p:growl id="messages"/>
+			 
+			    <p:menubar>
+			        <p:submenu label="File" icon="ui-icon-document">
+			            <p:submenu label="New" icon="ui-icon-contact">
+			                <p:menuitem value="Project" url="#" />
+			                <p:menuitem value="Other" url="#" />
+			            </p:submenu>
+			            <p:menuitem value="Open" url="#" />
+			            <p:separator />
+			            <p:menuitem value="Quit" url="#" />
+			        </p:submenu>
+			 
+			        <p:submenu label="Edit" icon="ui-icon-pencil">
+			            <p:menuitem value="Undo" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+			            <p:menuitem value="Redo" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+			        </p:submenu>
+			 
+			        <p:submenu label="Help" icon="ui-icon-help">
+			            <p:menuitem value="Contents" url="#" />
+			            <p:submenu label="Search" icon="ui-icon-search">
+			                <p:submenu label="Text">
+			                    <p:menuitem value="Workspace" url="#" />
+			                </p:submenu>
+			                <p:menuitem value="File" url="#" />
+			            </p:submenu>
+			        </p:submenu>
+			 
+			        <p:submenu label="Actions" icon="ui-icon-gear">
+			            <p:submenu label="Ajax" icon="ui-icon-refresh">
+			                <p:menuitem value="Save" actionListener="#{menuView.save}" icon="ui-icon-disk" update="messages"/>
+			                <p:menuitem value="Update" actionListener="#{menuView.update}" icon="ui-icon-arrowrefresh-1-w" update="messages"/>
+			            </p:submenu>
+			            <p:submenu label="Non-Ajax" icon="ui-icon-newwin">
+			                <p:menuitem value="Delete" actionListener="#{menuView.delete}" icon="ui-icon-close" update="messages" ajax="false"/>
+			            </p:submenu>
+			        </p:submenu>
+			    </p:menubar>
+			    
+			</h:form>
+		 </td>
+		  <td style="width:30%;">
+		  <!-- columna de sesion y usuario -->
+		  	<h:panelGrid columns="2" style="text-align:right">
+			             <h:outputText value="#{user}"/>  
+			            <p:commandButton id="cerrarSesionButton" value="Cerrar Sesion" icon="ui-icon-extlink" action="#{usuarioBean.logout()}"/>
+			</h:panelGrid>
+		  </td>
+	</tr>
+	
+</table>
+    	
+    	<!--  <p:layout>
+    		<p:layoutUnit position="center" header="Center Delfra"></p:layoutUnit>
+    		<p:layoutUnit position="west" header="West Delfra"></p:layoutUnit>
+    		<p:layoutUnit position="north" header="North Delfra">
+   							<p:graphicImage value="../resources/images/logobodega.jpeg">
+							</p:graphicImage>
+							<img src="../resources/images/logobodega.jpeg"/>
+    						<h:outputLabel value="Delfra Web" />
+    				
+    		</p:layoutUnit>
+    		<p:layoutUnit position="east" header="East Delfra"></p:layoutUnit>
+    		<p:layoutUnit position="south" header="South Delfra"></p:layoutUnit>
+    	</p:layout>-->
+    	
+    	
+    	
+    <!--<ui:composition>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Project name</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">Settings</a></li>
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">Help</a></li>
+                    </ul>
+                    <form class="navbar-form navbar-right">
+                        <input type="text" class="form-control" placeholder="Search..." />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </ui:composition> -->
+
+ 
+<!--  <div  style="background-color:#6e6e6e;width:100%; line-height:40px; 
+	      height:50px; color:#ffffff; padding:2%; 
+	      font-family:'Open Sans', sans-serif;">
+	      
+		<h3>JavaEE Web Application with Maven and JBoss</h3>
+</div>-->  
+</body>
+</html>

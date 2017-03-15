@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{editarClienteBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditCliente">
+		<p:panel id="panelEdicion">
+		<p:panelGrid columns="2" id="panelEditCliente">
+			
+			<p:outputLabel value="Nombre" for="nombre"/>
+			<p:inputText id="nombre" value="#{editarClienteBean.clienteEdicion.nombre}"
+				requiredMessage="Se requiere un datos de la persona" required="true"></p:inputText>
+			
+			<p:outputLabel value="Apellido" for="apellido"/>
+			<p:inputText id="apellido" value="#{editarClienteBean.clienteEdicion.apellido}"
+				requiredMessage="Se requiere un datos de la persona" required="true"></p:inputText>
+			
+			<p:outputLabel value="RUC" for="ruc"/>
+			<p:inputText id="ruc" value="#{editarClienteBean.clienteEdicion.ruc}"></p:inputText>
+			
+			<p:outputLabel value="Cedula" for="cedula"/>
+			<p:inputText id="cedula" value="#{editarClienteBean.clienteEdicion.cedula}"
+				requiredMessage="Se requiere cedula del cliente" required="true"
+				validatorMessage="Cedula debe ser numerico">
+					<f:validateRegex pattern="[0-9]*" />
+				</p:inputText>
+			
+			<p:outputLabel value="Direccion" for="direccion"/>
+			<p:inputText id="direccion" value="#{editarClienteBean.clienteEdicion.direccion}"
+				requiredMessage="Se requiere una direccion" required="true"></p:inputText>
+			
+			<p:outputLabel value="Telefono" for="telefono"/>
+			<p:inputText id="telefono" value="#{editarClienteBean.clienteEdicion.telefono}"
+				requiredMessage="Se requiere un numero de telefono" required="true"
+				validatorMessage="Telefono debe ser numerico">
+				<f:validateRegex pattern="[0-9]*" />	
+			</p:inputText>
+			
+			<p:outputLabel value="Email" for="email"/>
+			<p:inputText id="email" value="#{editarClienteBean.clienteEdicion.email}" 
+				requiredMessage="Se requiere un correo electrónico" required="true" 
+					validatorMessage="El correo ingresado es incorrecto">
+				<f:validateRegex 
+					pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" /> 	
+			</p:inputText>
+			
+			<p:outputLabel value="Estado" for="estadoDeposito"/>
+			<p:selectOneMenu required= "true" requiredMessage="Estado debe ser seleccionado" id="estadoDeposito" value="#{editarClienteBean.clienteEdicion.estado}" style="width:125px" >
+            	<f:selectItem itemLabel="Seleccione Estado"  />
+            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
+            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+        	</p:selectOneMenu>
+			
+		</p:panelGrid>
+		
+			<p:commandButton id="guardarDeposito" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
+				action="#{editarClienteBean.guardarCliente()}" update="templateForm:formEditCliente:panelEditCliente"/>
+			<p:button id="salirCliente" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				outcome="/clienteList.xhtml?faces-redirect=true"/>
+		</p:panel>
+		
+		
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

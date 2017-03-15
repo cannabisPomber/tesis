@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+
+
+<f:view contentType="text/html" id="fview">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Sistema Web Delfra</title>
+    <ui:debug />
+    <f:metadata>
+    	<f:metadata>
+		<f:event listener="#{usuarioBean.initUsuario()}" type="preRenderView"></f:event>
+	</f:metadata>
+        <ui:insert name="metadata" />
+    </f:metadata>
+
+    <h:head>
+	
+	    <!--  <p:dialog modal="true" widgetVar="statusDialog" showHeader="false" draggable="false" closable="false" resizable="false" visible="false" position="center" maximizable="false" minimizable="false" >
+	        <h:graphicImage value="resources/images/heineken.jpg" />
+	    </p:dialog> -->
+	</h:head>
+
+    <!--  <h:body onload="statusDialog.hide();">-->
+    <h:body>
+    <p:growl autoUpdate="true"/>
+    <!--  <h:outputStylesheet library="css" name="template.css" />-->
+    <h:form id="templateForm">
+    <p:panel id="panelHeader" style="width: 100%; heigth:15%; ">
+    <table style="width: 100%; heigth:20% ">
+    	
+    	<tr>	
+    		<!-- Header -->
+		    	<td>
+		    		<table>
+		    			<tr>
+		    				
+		    				<td style="width:20%">
+		    					<h:graphicImage library="images" name="delfralogo.jpg" styleClass="logo" height="50px"/>
+		    				</td>
+		    				<td style="width:80%"></td>
+		    				<td style="width: 20% ;text-content: center;">
+		    						<p:panelGrid columns="2" id="panelMostrarUsuario">
+						    			<p:outputLabel id="nombreUsuario" value="#{usuarioBean.usuarioLogueado()}"></p:outputLabel>
+						    			<p:commandButton id="logout" value="Cerrar." action="#{usuarioBean.logout()}"></p:commandButton>
+			    					</p:panelGrid>
+		    				</td>
+		    				
+		    			</tr>
+		    		</table>
+		    </td>	
+    	</tr>
+    <!-- contenido y navegacion -->
+    </table>
+    </p:panel>
+    	<!-- navegacion -->
+    <table style="width: 100%; heigth:55% ">
+    <tr>
+    	<td style="width:20%">
+		    <p:panelMenu >
+		    	<p:submenu label="Datos Principales" expanded="false" >
+		    		<p:menuitem value="Clientes" icon="ui-icon-disk" outcome="/clienteList.xhtml?faces-redirect=true" />
+		    		<p:menuitem value="Proveedores" outcome="/proveedorList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
+		    		<p:menuitem value="Producto" outcome="/productoList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
+		    		<p:menuitem value="Tipo Producto" outcome="/tipoProductoList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
+		    		<p:menuitem value="Marca Producto" outcome="/marcaList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
+		    		<p:menuitem value="Tipo Venta" outcome="/tipoVentaList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
+		    		<p:menuitem value="Depositos" outcome="/depositoList.xhtml?faces-redirect=true" ajax="false" icon="ui-icon-disk" />
+		    		
+		    	</p:submenu>
+		        <p:submenu label="Compras" expanded="false" >
+		        	<p:menuitem value="Proveedores" icon="ui-icon-disk" />
+		        </p:submenu>
+		        <p:submenu label="Ventas" expanded="false" >
+		            <p:menuitem value="Delete"   ajax="false" icon="ui-icon-close"/>
+		        </p:submenu>
+		        <p:separator />
+		        <p:submenu label="Inventario" expanded="false" >
+	
+	                    
+		        </p:submenu>
+		        <p:submenu label="Seguridad" >
+		            <p:menuitem value="Usuarios" outcome="/usuarioList.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
+		        	<p:menuitem value="Grupos"   outcome="/grupos.xhtml?faces-redirect=true" ajax="false" icon="ui-icon-close"/>
+		        </p:submenu>
+		        
+		        <p:submenu label="Caja" >
+		        	<p:menuitem value="Abrir Caja" outcome="/abrirCaja.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
+		        	<p:menuitem value="Cerrar Caja"   ajax="false" icon="ui-icon-close"/>
+		        	<p:menuitem value="Agregar Dinero Caja"  ajax="false" icon="ui-icon-close"/>
+		        </p:submenu>
+		    </p:panelMenu>
+    	</td>
+    	<!-- desarrollo -->
+    	<td style="width:75%; vertical-align: top;">
+    		<ui:insert name="contenido">
+            </ui:insert>
+    	</td>
+    </tr>
+    </table>
+    </h:form>
+	
+</h:body>
+
+</f:view>
+</html>

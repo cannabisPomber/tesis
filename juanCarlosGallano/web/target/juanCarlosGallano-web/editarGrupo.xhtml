@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{editarGrupoBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditGrupo">
+		<p:panel id="panelEdicion">
+		<p:panelGrid columns="2" id="panelEditGrupo">
+			
+			<p:outputLabel value="Nombre Grupo" for="grupo"/>
+			<p:inputText id="grupo" required= "true" value="#{editarGrupoBean.grupoEdicion.nombreGrupo}"
+				requiredMessage="Nombre de Grupo no puede estar vacio"></p:inputText>
+			<p:outputLabel value="Descripcion" for="descripcion"/>
+			<p:inputText  id="descripcion" value="#{editarGrupoBean.grupoEdicion.descripcionGrupo}"	
+				required="true" requiredMessage="Descripcion de grupo es requerida"/>
+			<p:outputLabel value="Estado " for="estadoGrupo"/>
+			<p:selectOneMenu required= "true" id="estadoGrupo" value="#{editarGrupoBean.grupoEdicion.estado}" style="width:125px"
+				requiredMessage="Debe seleccionar un estado de grupo" >
+            	<f:selectItem itemLabel="Seleccione Estado"  />
+            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
+            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+        	</p:selectOneMenu>
+			
+		</p:panelGrid>
+		
+			<p:commandButton id="guardarGrupo" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
+				action="#{editarGrupoBean.guardarGrupo()}" update="templateForm:formEditGrupo:panelEditGrupo"/>
+			<p:button id="salirGrupo" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				outcome="/grupos.xhtml?faces-redirect=true"/>
+		</p:panel>
+		
+		
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

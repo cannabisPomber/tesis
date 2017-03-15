@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<!-- 
+	<f:metadata>
+		<f:event listener="#{usuarioBean.initUsuario()}" type="preRenderView"></f:event>
+	</f:metadata>  -->
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formClienteList">
+		<p:panel>
+		<p:outputLabel value="Listado de Clientes del sistema" />
+		<p:dataTable id="tablaCliente" var="cliente" value="#{clienteBean.clientes}" emptyMessage="No se registran elementos cargados"
+			style="margin-top:10px">
+			<p:column headerText="Cedula">
+				<h:outputText value="#{cliente.cedula}" />
+			</p:column>
+			<p:column headerText="Ruc">
+				<h:outputText value="#{cliente.ruc}" />
+			</p:column>
+			<p:column headerText="Direccion">
+				<h:outputText value="#{cliente.direccion}" />
+			</p:column>
+			<p:column headerText="Email">
+				<h:outputText value="#{cliente.email}" />
+			</p:column>
+			<p:column headerText="Telefono">
+				<h:outputText value="#{cliente.telefono}" />
+			</p:column>
+			<p:column headerText="Estado">
+				<h:outputText value="#{cliente.estado}" />
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<p:button outcome="editarCliente.xhtml" title="Nuevo Cliente" value="Nuevo"/>
+					<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
+				</f:facet>
+				
+				<p:button outcome="/editarCliente" icon="ui-icon-pencil" id="editCliente">
+						<f:param name="idCliente" value="#{cliente.idCliente}"></f:param>
+					</p:button>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

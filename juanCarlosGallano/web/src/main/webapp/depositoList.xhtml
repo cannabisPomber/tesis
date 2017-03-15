@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<!-- 
+	<f:metadata>
+		<f:event listener="#{usuarioBean.initUsuario()}" type="preRenderView"></f:event>
+	</f:metadata>  -->
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formDepositoList">
+		<p:panel id="panelDepositoList">
+		<p:outputLabel value="Listado de depositos" />
+		<p:dataTable id="tablaDeposito" var="deposito" value="#{depositoBean.depositoList}" emptyMessage="No se registran elementos cargados"
+			style="margin-top:10px">
+			<p:column headerText="Nombre">
+				<h:outputText value="#{deposito.nombreDeposito}" />
+			</p:column>
+			
+			<p:column headerText="Nombre">
+				<h:outputText value="#{deposito.estado}" />
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						<p:button outcome="editarDeposito.xhtml" title="Nuevo deposito" value="Nuevo"/>
+						<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
+					</f:facet>
+					
+					<p:button outcome="/editarDeposito" icon="ui-icon-pencil" id="editDeposito">
+						<f:param name="idDeposito" value="#{deposito.idDeposito}"></f:param>
+					</p:button>
+					<p:commandButton action="#{depositoBean.eliminarDeposito(deposito)}"
+						update="templateForm:formDepositoList:tablaDeposito" icon="ui-icon-trash">
+					</p:commandButton>		
+					
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

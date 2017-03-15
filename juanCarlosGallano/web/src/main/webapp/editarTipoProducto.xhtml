@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{editarTipoProductoBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditTipoProducto">
+		<p:panel id="panelEdicion">
+		<p:panelGrid columns="2" id="panelEditTipoProducto">
+			
+			<p:outputLabel value="Nombre TipoProducto" for="tipoProducto"/>
+			<p:inputText required="true" id="tipoProducto" 
+				value="#{editarTipoProductoBean.tipoProductoEdicion.nombreTipoProducto}"
+					requiredMessage="Nombre de producto no puede ser vacio"></p:inputText>
+			
+			<p:outputLabel value="Cantidad" for="cantidad"/>
+			<p:inputNumber id="cantidad" 
+				value="#{editarTipoProductoBean.tipoProductoEdicion.cantidad}"
+					required="true" requiredMessage="Cantidad unitaria de tipo producto no puede ser vacio"></p:inputNumber>
+			<p:outputLabel value="Estado" for="estadoTipoProducto"/>
+			<p:selectOneMenu required= "true" requiredMessage="Estado debe ser seleccionado" id="estadoTipoProducto" 
+				value="#{editarTipoProductoBean.tipoProductoEdicion.estado}" style="width:125px" >
+            	<f:selectItem itemLabel="Seleccione Estado"  />
+            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
+            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+        	</p:selectOneMenu>
+		</p:panelGrid>
+		
+			<p:commandButton id="guardarTipoProducto" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
+				action="#{editarTipoProductoBean.guardarTipoProducto()}" update="templateForm:formEditTipoProducto:panelEditTipoProducto"/>
+			<p:button id="salirTipoProducto" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				outcome="/tipoProductoList.xhtml?faces-redirect=true"/>
+		</p:panel>
+		
+		
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<f:metadata>
+		<f:event listener="#{usuarioBean.initUsuario()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formUsuarioList">
+		<p:panel id="panelUsuarioList" style="vertical-align: text-top;">
+		<p:outputLabel value="Listado de usuarios" />
+		<p:dataTable id="tablaUsuarios" var="us" value="#{usuarioBean.listUsuarios}" emptyMessage="No se registran usuarios cargados"
+			style="margin-top:10px">
+			<p:column headerText="IdUsuario">
+				<h:outputText value="#{us.idUsuario}" />
+			</p:column>
+			
+			<p:column headerText="Nombre">
+				<h:outputText value="#{us.usuario}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<p:button outcome="editarUsuario.xhtml" title="Nuevo Usuario" value="Nuevo Usuario"/>
+					<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
+				</f:facet>
+				
+
+				<p:button outcome="/editarUsuario" icon="ui-icon-pencil" id="editUsuario">
+					<f:param name="idUsuario" value="#{us.idUsuario}"></f:param>
+				</p:button>
+				
+
+				<p:commandButton action="#{usuarioBean.eliminarUsuario(us)}"
+					update="templateForm:formUsuarioList:tablaUsuarios" icon="ui-icon-trash">	
+				</p:commandButton>
+
+				
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	<p:dialog id="verUsuarioDialog">
+		<p:panelGrid columns="2">
+			<p:outputLabel value="Nombre Usuario"/>
+			<p:outputLabel value="#{usuarioBean.userVista.usuario}"/>
+		</p:panelGrid>
+		<p:commandButton  onclick="PF('verUsuarioDialog').hide();"/>
+	</p:dialog>
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

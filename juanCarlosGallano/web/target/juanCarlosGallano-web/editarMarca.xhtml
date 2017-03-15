@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{editarMarcaBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditMarca">
+		<p:panel id="panelEdicion">
+		<p:panelGrid columns="2" id="panelEditMarca">
+			
+			<p:outputLabel value="Nombre Marca" for="marca"/>
+			<p:inputText id="marca" required="true" requiredMessage="Nombre de marca Requerido" value="#{editarMarcaBean.marcaEdicion.nombreMarca}"></p:inputText>
+			<p:outputLabel value="Estado" for="estadoMarca"/>
+			<p:selectOneMenu required= "true" requiredMessage="Estado debe ser seleccionado" id="estadoMarca" value="#{editarMarcaBean.marcaEdicion.estadoMarca}" style="width:125px" >
+            	<f:selectItem itemLabel="Seleccione Estado"  />
+            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
+            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+        	</p:selectOneMenu>
+			
+		</p:panelGrid>
+		
+			<p:commandButton id="guardarGrupo" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
+				action="#{editarMarcaBean.guardarMarca()}" update="templateForm:formEditMarca:panelEditMarca"/>
+			<p:button id="salirGrupo" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				outcome="/marcaList.xhtml?faces-redirect=true"/>
+		</p:panel>
+		
+		
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>
