@@ -19,6 +19,8 @@ public class Cliente implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long idCliente;
 	
+	
+	//Falta Tipo de Documnento
 	@Column (name = "ruc", nullable = false)
 	private String ruc;
 	@Column (name = "cedula", nullable = true)
@@ -32,6 +34,7 @@ public class Cliente implements Serializable{
 	
 	@Column (name = "direccion" , nullable = false)
 	private String direccion;
+	
 	@Column (name = "email" , nullable = false)
 	private String email;
 	

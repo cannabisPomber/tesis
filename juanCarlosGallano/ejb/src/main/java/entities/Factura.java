@@ -19,6 +19,11 @@ import javax.persistence.TemporalType;
 @NamedQuery(name="Factura.findAll", query="SELECT p FROM factura p")
 public class Factura implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column (name = "nroFactura")

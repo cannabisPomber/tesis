@@ -13,7 +13,7 @@ import entities.Usuario;
 import entities.Usuario;
 @Named ("usuarioConverter")
 @FacesConverter (forClass = Usuario.class)
-public class usuarioConverter implements Converter{
+public class UsuarioConverter implements Converter{
 
 	@EJB
 	UsuarioEJB usuarioEjb;

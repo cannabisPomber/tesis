@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<!-- 
+	<f:metadata>
+		<f:event listener="#{usuarioBean.initUsuario()}" type="preRenderView"></f:event>
+	</f:metadata>  -->
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formFormaPagoList">
+		<p:panel id="panelFormaPagoList">
+		<p:outputLabel value="Listado de Forma Pagos" />
+		<p:dataTable id="formaPagoTable" value="#{formaPagoBean.formaPagoList}" emptyMessage="No se registran elementos cargados"
+			style="margin-top:10px" var="formaPago">
+			<p:column headerText="Descripción">
+				<h:outputText value="#{formaPago.descripcion}" />
+			</p:column>
+			
+			<p:column headerText="Abreviatura">
+				<h:outputText value="#{formaPago.abreviatura}" />
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						<p:button outcome="editarFormaPago.xhtml" title="Nuevo Forma Pago" value="Nuevo"/>
+						<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
+					</f:facet>
+					
+					<p:commandButton action="#{formaPagoBean.eliminarFormaPago(formaPago)}"
+						update="templateForm:formFormaPagoList:formaPagoTable" icon="ui-icon-trash">
+					</p:commandButton>
+					
+					<p:button outcome="/editarFormaPago" icon="ui-icon-pencil" id="editFormaPago">
+						<f:param name="idFormaPago" value="#{formaPago.idFormaPago}"></f:param>
+					</p:button>
+
+					
+					
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

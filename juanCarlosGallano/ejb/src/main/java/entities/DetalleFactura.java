@@ -30,11 +30,18 @@ public class DetalleFactura implements Serializable {
 	@JoinColumn(name = "id_producto", nullable = false)
 	private Producto producto;
 	
-	@Column (name = "codigo_barra" , nullable = false)
+	@Column (name = "codigo_barra" , nullable = true)
 	private String codigoBarra;
 	
-	@Column (name = "monto_iva" , nullable = false)
-	private Double montoIva;
+	// Se obtiene de la suma de cantidad * precio + (cantidad*precio)*montoIVA
+	@Column (name = "importe" , nullable = false)
+	private Double importe;
+	
+	@Column (name = "precio_unitario" , nullable = false)
+	private Double precioUnitario;
+	
+	@Column (name = "cantidad" , nullable = false)
+	private Double cantidad;
 
 	public Long getIdDetalleFactura() {
 		return idDetalleFactura;
@@ -68,12 +75,29 @@ public class DetalleFactura implements Serializable {
 		this.codigoBarra = codigoBarra;
 	}
 
-	public Double getMontoIva() {
-		return montoIva;
+
+	public Double getImporte() {
+		return importe;
 	}
 
-	public void setMontoIva(Double montoIva) {
-		this.montoIva = montoIva;
+	public void setImporte(Double importe) {
+		this.importe = importe;
+	}
+
+	public Double getPrecioUnitario() {
+		return precioUnitario;
+	}
+
+	public void setPrecioUnitario(Double precioUnitario) {
+		this.precioUnitario = precioUnitario;
+	}
+
+	public Double getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(Double cantidad) {
+		this.cantidad = cantidad;
 	}
 
 	@Override

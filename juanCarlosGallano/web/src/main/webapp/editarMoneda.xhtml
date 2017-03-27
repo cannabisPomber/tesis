@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{editarMonedaBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditMoneda">
+		<p:panel id="panelEdicion">
+		<p:panelGrid columns="2" id="panelEditMoneda">
+			
+			<p:outputLabel value="Nombre Moneda" for="nombreMoneda"/>
+			<p:inputText id="nombreMoneda" value="#{editarMonedaBean.monedaEdicion.nombreMoneda}"
+				required="true" requiredMessage="Nombre de moneda no puede ser vacio"></p:inputText>
+				
+			<p:outputLabel value="Abreviatura Moneda" for="Abrmoneda"/>
+			<p:inputText id="Abrmoneda" value="#{editarMonedaBean.monedaEdicion.abreviaturaMoneda}"
+				required="true" requiredMessage="Abreviatura moneda no puede ser vacio"></p:inputText>
+				
+				
+			<p:outputLabel value="Cambio" for="cambio"/>
+			<p:inputText id="cambio" value="#{editarMonedaBean.monedaEdicion.cambio}"
+				required="true" requiredMessage="Cambio de moneda no puede ser vacio"></p:inputText>
+				
+				
+			<p:outputLabel value="Fecha Cotizacion" for="fechaCotizacion"/>
+			<p:calendar id="fechaCotizacion" value="#{editarMonedaBean.monedaEdicion.fechaCotizacion}"></p:calendar>
+			
+		</p:panelGrid>
+		
+			<p:commandButton id="guardarMoneda" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
+				action="#{editarMonedaBean.guardarMoneda()}" update="templateForm:formEditMoneda:panelEditMoneda"/>
+			<p:button id="salirMoneda" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				outcome="/monedaList.xhtml?faces-redirect=true"/>
+		</p:panel>
+		
+		
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

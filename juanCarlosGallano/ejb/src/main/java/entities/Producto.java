@@ -20,11 +20,11 @@ public class Producto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long idProducto;
 
-	@Column(name = "nombre_deposito")
+	@Column(name = "nombre_producto")
 	@NotNull
 	private String nombreProducto;
 
-	@Column(name = "estadoDeposito")
+	@Column(name = "estado")
 	@NotNull
 	private String estado;
 
@@ -32,9 +32,9 @@ public class Producto implements Serializable {
 	@NotNull
 	private Long cantidadMinima;
 
-	@Column(name = "estado")
+	@Column(name = "precio_unitario")
 	@NotNull
-	private Long precioVenta;
+	private Long precioUnitario;
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "id_marca", nullable = false)
@@ -79,14 +79,6 @@ public class Producto implements Serializable {
 		this.cantidadMinima = cantidadMinima;
 	}
 
-	public Long getPrecioVenta() {
-		return precioVenta;
-	}
-
-	public void setPrecioVenta(Long precioVenta) {
-		this.precioVenta = precioVenta;
-	}
-
 	public Marca getMarca() {
 		return marca;
 	}
@@ -111,6 +103,16 @@ public class Producto implements Serializable {
 		this.proveedor = proveedor;
 	}
 	
+	
+	
+	public Long getPrecioUnitario() {
+		return precioUnitario;
+	}
+
+	public void setPrecioUnitario(Long precioUnitario) {
+		this.precioUnitario = precioUnitario;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
