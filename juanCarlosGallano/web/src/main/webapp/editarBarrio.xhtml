@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{editarBarrioBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditBarrio">
+		<p:panel id="panelEdicion">
+		<p:panelGrid columns="2" id="panelEditBarrio">
+			
+			<p:outputLabel value="Nombre Barrio" for="nombreBarrio"/>
+			<p:inputText id="nombreBarrio" value="#{editarBarrioBean.barrioEdicion.nombreBarrio}"
+				required="true" requiredMessage="Nombre de barrio no puede ser vacio"></p:inputText>
+				
+			<p:outputLabel value="Código Barrio" for="codigoBarrio"/>
+			<p:inputText id="codigoBarrio" value="#{editarBarrioBean.barrioEdicion.codBarrio}"
+				required="true" requiredMessage="Nombre de barrio no puede ser vacio"></p:inputText>
+				
+			<p:outputLabel value="Ciudad" for="ciudad"/>
+			 <p:selectOneMenu id="ciudad" value="#{editarBarrioBean.barrioEdicion.ciudad}" effect="fold" editable="true" 
+			 required="true" requiredMessage="Ciudad no puede estar vacio">
+	            <f:selectItem itemLabel="Seleccione una Ciudad" itemValue="Seleccione una Ciudad" />
+	            <f:selectItems value="#{editarBarrioBean.ciudades}"  var= "pais" itemLabel="#{pais.nombrePais}" />
+        	</p:selectOneMenu>
+        	
+        	<p:outputLabel value="Estado" for="estado"/>
+			 <p:selectOneMenu id="estado" value="#{editarBarrioBean.barrioEdicion.estado}" effect="fold" editable="true" 
+			 required="true" requiredMessage="Estado de barrio no puede estar vacio">
+	            <f:selectItem itemLabel="Seleccione estado" itemValue="Seleccione estado" />
+	            <f:selectItem  itemValue="Activo"  itemLabel="Activo" />
+	            <f:selectItem  itemValue="Inactivo"  itemLabel="Inactivo" />
+        	</p:selectOneMenu>
+			
+		</p:panelGrid>
+		
+			<p:commandButton id="guardarBarrio" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
+				action="#{editarBarrioBean.guardarBarrio()}" update="templateForm:formEditBarrio:panelEditBarrio"/>
+			<p:button id="salirBarrio" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				outcome="/barrioList.xhtml?faces-redirect=true"/>
+		</p:panel>
+		
+		
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>
