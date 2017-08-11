@@ -111,6 +111,11 @@ public class UsuarioBean implements Serializable{
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		session = request.getSession();      
         //System.out.println("usuario logueado :" + session.getAttribute("usuario"));
+		if (request.isUserInRole("Administrador")) {
+		     System.out.println("Ingreso como Administrador situado en login.html");
+		  } else{
+			  System.out.println("Ingreso como Otro situado en login.html");
+		  }
 		try {
 			userVista = usuarioEjb.findIdUsuario(Long.valueOf((String)session.getAttribute("idUsuario")));
 		}

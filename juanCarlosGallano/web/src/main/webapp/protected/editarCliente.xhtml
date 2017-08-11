@@ -11,7 +11,19 @@
 	<h:form id="formEditCliente">
 		<p:panel id="panelEdicion">
 		<p:panelGrid columns="2" id="panelEditCliente">
-			
+		
+			<p:outputLabel value="Imagen de Cliente" for="foto"/>
+			<h:panelGrid columns="3" cellpadding="5" id="foto">
+				<p:photoCam widgetVar="pc" listener="#{editarClienteBean.oncapture}" update="photo"/>
+				<p:commandButton type="button" value="Capturar" onclick="PF('pc').capture()"/>
+				<p:outputPanel id="photo">
+					<p:graphicImage  name="demo/images/photocam/#{editarClienteBean.filename}.jpeg" rendered="#{not empty editarClienteBean.filename}"/>
+				</p:outputPanel>
+				
+				
+			</h:panelGrid>
+			<p:graphicImage  value="demo/images/photocam/#{editarClienteBean.filename}.jpeg" />
+					
 			<p:outputLabel value="Nombre" for="nombre"/>
 			<p:inputText id="nombre" value="#{editarClienteBean.clienteEdicion.nombre}"
 				requiredMessage="Se requiere un datos de la persona" required="true"></p:inputText>
@@ -61,7 +73,7 @@
 			<p:commandButton id="guardarDeposito" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
 				action="#{editarClienteBean.guardarCliente()}" update="templateForm:formEditCliente:panelEditCliente"/>
 			<p:button id="salirCliente" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
-				outcome="/clienteList.xhtml?faces-redirect=true"/>
+				outcome="/protected/clienteList.xhtml?faces-redirect=true"/>
 		</p:panel>
 		
 		

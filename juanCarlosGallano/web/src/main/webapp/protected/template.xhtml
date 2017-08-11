@@ -65,13 +65,13 @@
     	<td style="width:20%">
 		    <p:panelMenu >
 		    	<p:submenu label="Datos Principales" expanded="false" >
-		    		<p:menuitem value="Clientes" icon="ui-icon-disk" outcome="/clienteList.xhtml?faces-redirect=true" />
-		    		<p:menuitem value="Proveedores" outcome="/proveedorList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
-		    		<p:menuitem value="Producto" outcome="/productoList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
-		    		<p:menuitem value="Tipo Producto" outcome="/tipoProductoList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
-		    		<p:menuitem value="Marca Producto" outcome="/marcaList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
-		    		<p:menuitem value="Tipo Venta" outcome="/tipoVentaList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
-		    		<p:menuitem value="Depositos" outcome="/depositoList.xhtml?faces-redirect=true" ajax="false" icon="ui-icon-disk" />
+		    		<p:menuitem value="Clientes" icon="ui-icon-disk" outcome="/protected/clienteList.xhtml?faces-redirect=true" />
+		    		<p:menuitem value="Proveedores" outcome="/protected/proveedorList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
+		    		<p:menuitem value="Producto" outcome="/protected/productoList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
+		    		<p:menuitem value="Tipo Producto" outcome="/protected/tipoProductoList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
+		    		<p:menuitem value="Marca Producto" outcome="/protected/marcaList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
+		    		<p:menuitem value="Tipo Venta" outcome="/protected/tipoVentaList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
+		    		<p:menuitem value="Depositos" outcome="/protected/depositoList.xhtml?faces-redirect=true" ajax="false" icon="ui-icon-disk" />
 		    		
 		    	</p:submenu>
 		        <p:submenu label="Compras" expanded="false" >
@@ -86,13 +86,13 @@
 	                    
 		        </p:submenu>
 		        <p:submenu label="Seguridad" >
-		            <p:menuitem value="Usuarios" outcome="/usuarioList.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
-		        	<p:menuitem value="Grupos"   outcome="/grupos.xhtml?faces-redirect=true" ajax="false" icon="ui-icon-close"/>
+		            <p:menuitem value="Usuarios" outcome="/protected/usuarioList.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
+		        	<p:menuitem value="Grupos"   outcome="/protected/grupos.xhtml?faces-redirect=true" ajax="false" icon="ui-icon-close"/>
 		        </p:submenu>
 		        
 		        <p:submenu label="Caja" >
-		        	<p:menuitem value="Abrir Caja" outcome="/abrirCaja.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
-		        	<p:menuitem value="Cerrar Caja"   ajax="false" icon="ui-icon-close"/>
+		        	<p:menuitem value="Abrir Caja" outcome="/protected/caja/abrirCaja.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
+		        	<p:menuitem value="Cerrar Caja"  outcome="/protected/caja/cerrarCaja.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
 		        	<p:menuitem value="Agregar Dinero Caja"  ajax="false" icon="ui-icon-close"/>
 		        </p:submenu>
 		    </p:panelMenu>
