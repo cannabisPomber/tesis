@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 
 @Entity (name = "marca")
@@ -20,7 +21,8 @@ public class Marca implements Serializable{
 
 	@Id
 	@Column(name="id_marca")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "marca_generator")
+	@SequenceGenerator(name="marca_generator", sequenceName = "marca_seq", allocationSize=1)
 	private Long idMarca;
 	
 	@Column (name = "nombre_marca")

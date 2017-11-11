@@ -11,12 +11,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 @Entity (name = "caja_detalle")
 @NamedQuery(name="CajaDetalle.findAll", query="SELECT p FROM caja_detalle p")
 public class CajaDetalle implements Serializable{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "caja_detalle_generator")
+	@SequenceGenerator(name="caja_detalle_generator", sequenceName = "caja_detalle_seq", allocationSize=1)
 	@Column (name = "id_caja_detalle")
 	private Long idCajaDetalle;
 	

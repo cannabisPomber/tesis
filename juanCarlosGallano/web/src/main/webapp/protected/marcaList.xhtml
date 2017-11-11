@@ -17,7 +17,7 @@
 		<p:outputLabel value="Listado de Marcas" />
 		<p:dataTable id="tablaMarca" var="marca" value="#{marcaBean.marcaList}" emptyMessage="No se registran elementos cargados"
 			style="margin-top:10px">
-			<p:column headerText="">
+			<p:column headerText="Marca">
 				<h:outputText value="#{marca.nombreMarca}" />
 			</p:column>
 			
@@ -26,18 +26,13 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<p:button outcome="editarMarca.xhtml" title="Nueva Marca" value="Nuevo"/>
+					<p:button outcome="editarMarca" title="Nueva Marca" value="Nuevo"/>
 					<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
 				</f:facet>
 				
-				<p:button outcome="/editarMarca" icon="ui-icon-pencil" id="editMarca">
+				<p:button outcome="editarMarca" icon="ui-icon-pencil" id="editMarca">
 					<f:param name="idMarca" value="#{marca.idMarca}"></f:param>
 				</p:button>
-				
-				<p:commandButton action="#{marcaBean.eliminarMarca(marca)}"
-					update="templateForm:formMarcaList:tablaMarca" icon="ui-icon-trash">
-						
-				</p:commandButton>
 
 			</p:column>
 		</p:dataTable>

@@ -25,22 +25,19 @@
 				<h:outputText value="#{tipoProducto.cantidad}" />
 			</p:column>
 			
+			<p:column headerText="Estado">
+				<h:outputText value="#{tipoProducto.estado}" />
+			</p:column>
+			
 			<p:column>
 					<f:facet name="header">
-						<p:button outcome="editarTipoProducto.xhtml" title="Nuevo tipoProducto" value="Nuevo"/>
+						<p:button outcome="editarTipoProducto" title="Nuevo tipoProducto" value="Nuevo"/>
 						<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
 					</f:facet>
 					
-					<p:button outcome="/editarTipoProducto" icon="ui-icon-pencil" id="editTipoProducto">
+					<p:button outcome="editarTipoProducto" icon="ui-icon-pencil" id="editTipoProducto">
 						<f:param name="idTipoProducto" value="#{tipoProducto.idTipoProducto}"></f:param>
 					</p:button>
-					
-					<p:commandButton action="#{tipoProductoBean.eliminarTipoProducto(tipoProducto)}"
-						update="templateForm:formTipoProductoList:tipoProductoTable" icon="ui-icon-trash">
-					</p:commandButton>
-
-					
-					
 			</p:column>
 		</p:dataTable>
 	</p:panel>

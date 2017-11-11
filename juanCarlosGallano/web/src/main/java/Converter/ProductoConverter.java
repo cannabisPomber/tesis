@@ -1,23 +1,24 @@
-package Converter;
+ package Converter;
 
 import javax.ejb.EJB;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 import javax.inject.Named;
 
 import ejb.ProductoEJB;
-import entities.Marca;
 import entities.Producto;
-
 @Named ("productoConverter")
-@FacesConverter(forClass = Producto.class)
-public class ProductoConverter {
+@FacesConverter(forClass = Producto.class) 
+public class ProductoConverter implements Converter{
+	
 	@EJB
 	ProductoEJB productoEjb;
 	
 	Producto producto;
+	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String newValue) {
 		// TODO Auto-generated method stub
 		//String convertedValue = null;
@@ -38,6 +39,7 @@ public class ProductoConverter {
 	    }
 	}
 
+	@Override
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
 		// TODO Auto-generated method stub
 		
@@ -54,6 +56,6 @@ public class ProductoConverter {
 		} else {
 			return "";
 		}
+	}
 
-}
 }

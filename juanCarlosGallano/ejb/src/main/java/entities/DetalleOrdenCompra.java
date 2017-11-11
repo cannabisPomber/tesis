@@ -2,6 +2,7 @@ package entities;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,25 +13,35 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 @Entity (name = "detalle_orden_compra")
 @NamedQuery(name="DetalleOrdenCompra.findAll", query="SELECT p FROM detalle_orden_compra p")
 public class DetalleOrdenCompra implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
-	@GeneratedValue (strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "detalle_orden_compra_generator")
+	@SequenceGenerator(name="detalle_orden_compra_generator", sequenceName = "detalle_orden_compra_seq", allocationSize=1)
 	@Column (name = "id_detalle_orden_compra")
 	private Long idDetalleOrdenCompra;
 	
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false, cascade=CascadeType.ALL)
 	@JoinColumn(name = "id_orden_compra", nullable = false)
 	private OrdenCompra ordenCompra;
 	
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "id_producto", nullable = false)
+	@JoinColumn(name = "id_producto", nullable = false,unique = false)
 	private Producto producto;
 	
-	@Column (name = "cantidad" ,  nullable = false)
-	private Integer cantidad;
+	@Column (name = "cantidad" ,  nullable = true)
+	private Long cantidad;
+	
+	@Column (name = "precio_compra" ,  nullable = false)
+	private Long precioCompra;
 
 	public Long getIdDetalleOrdenCompra() {
 		return idDetalleOrdenCompra;
@@ -56,12 +67,22 @@ public class DetalleOrdenCompra implements Serializable{
 		this.producto = producto;
 	}
 
-	public Integer getCantidad() {
+
+	
+	public Long getCantidad() {
 		return cantidad;
 	}
 
-	public void setCantidad(Integer cantidad) {
+	public void setCantidad(Long cantidad) {
 		this.cantidad = cantidad;
+	}
+
+	public Long getPrecioCompra() {
+		return precioCompra;
+	}
+
+	public void setPrecioCompra(Long precioCompra) {
+		this.precioCompra = precioCompra;
 	}
 
 	@Override

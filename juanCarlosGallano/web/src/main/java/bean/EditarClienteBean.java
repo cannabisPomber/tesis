@@ -15,6 +15,13 @@ import javax.imageio.stream.FileImageOutputStream;
 
 import org.primefaces.event.CaptureEvent;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.GeocodingResult;
+
 import ejb.ClienteEJB;
 import entities.Cliente;
 @ManagedBean (name = "editarClienteBean")
@@ -23,11 +30,10 @@ public class EditarClienteBean {
 	@EJB
 	ClienteEJB clienteEjb;
 	
-	//Valores para Foto
-	private String filename;
 	private Long idCliente;
 	private Cliente clienteEdicion;
-	private byte[] data;
+	
+	private Boolean rucoCedula;
 	public Long getIdCliente() {
 		return idCliente;
 	}
@@ -41,32 +47,44 @@ public class EditarClienteBean {
 		this.clienteEdicion = clienteEdicion;
 	}
 	
-	
-	
-	public byte[] getData() {
-		return data;
-	}
-	public void setData(byte[] data) {
-		this.data = data;
-	}
 	public void init(){
 		if (!FacesContext.getCurrentInstance().isPostback()){
-			Map<String,String> params =
-	                FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-			try{
-				idCliente = Long.parseLong(params.get("idCliente"));
-				filename = "";
-			} catch (Exception ex){
-				System.out.println("Se tiene un error al parsear el ID Param :" + ex.getMessage());
-			}
 			if (idCliente != null){
 				clienteEdicion = clienteEjb.findClienteIdCliente(idCliente);
 			} else {
 				clienteEdicion = new Cliente();
 			}
+			
+			GeoApiContext context = new GeoApiContext.Builder()
+				    .apiKey("AIzaSyDp4nE1vThZ0FdRKKzUBXFMJqALl587DKI")
+				    .build();
+				GeocodingResult[] results = null;
+				try {
+					results = GeocodingApi.geocode(context,
+					    "La nueva Olla").await();
+				} catch (ApiException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					System.out.println("Error mapa la nueva olla :" + e.getMessage());
+				}
+				Gson gson = new GsonBuilder().setPrettyPrinting().create();
+				System.out.println(gson.toJson(results[0].geometry.location));
 		}
 	}
 	
+	
+	public Boolean getRucoCedula() {
+		return rucoCedula;
+	}
+	public void setRucoCedula(Boolean rucoCedula) {
+		this.rucoCedula = rucoCedula;
+	}
 	public void guardarCliente(){
 		// Debe persistir el usuario
 		if(clienteEdicion.getIdCliente() == null){
@@ -79,30 +97,5 @@ public class EditarClienteBean {
 			FacesContext.getCurrentInstance().addMessage("Cliente Modificado", new FacesMessage("Cliente Modificado."));
 		}
 	}
-	private String getRandomImage(){
-		int i = (int) (Math.random()*1000000);
-		return String.valueOf(i);
-	}
-	public String getFilename() {
-		return filename;
-	}
-	public void oncapture(CaptureEvent captureEvent){
-		filename = getRandomImage();
-		data = captureEvent.getData();
-		System.out.println("cargado Byte de imagen");
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String newFilename = externalContext.getRealPath(" ") + File.separator + "resources" + File.separator + "demo" 
-				+ File.separator + "images" + File.separator + "photocam" + File.separator + filename + ".jpeg";
-		
-		FileImageOutputStream imageOutput;
-		try {
-			imageOutput = new FileImageOutputStream ( new File(newFilename));
-			imageOutput.write(data, 0 ,data.length);
-			imageOutput.close();
-			System.out.println("Filename Cargado..........");
-		} catch (IOException e) {
-			// TODO: handle exception
-			throw new FacesException("Error al escribir imagen capturada");
-		}
-	}
+	
 }

@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 
 @Entity (name = "usuario")
@@ -20,7 +21,8 @@ public class Usuario implements Serializable{
 
 	@Id
 	@Column(name="id_usuario")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_generator")
+	@SequenceGenerator(name="usuario_generator", sequenceName = "usuario_seq", allocationSize=1)
 	private Long idUsuario;
 	
 	@Column(name="usuario")

@@ -15,20 +15,23 @@
 		<p:panel id="panelEdicion">
 		<p:panelGrid columns="2" id="panelEditFormaPago">
 			
-			<p:outputLabel value="Descripción" required= "true" for="formaPagoDescripcion"/>
-			<p:inputText required="true" id="formaPagoDescripcion" value="#{editarFormaPagoBean.formaPagoEdicion.descripcion}"
-				requiredMessage="Descripcion de Forma Pago no puede ser vacio"></p:inputText>
-				
-			<p:outputLabel value="Abreviatura" required= "true" for="formaPagoAbreviatura"/>
-			<p:inputText required="true" id="formaPagoAbreviatura" value="#{editarFormaPagoBean.formaPagoEdicion.abreviatura}"
-				requiredMessage="Abreviatura de Forma Pago no puede ser vacio"></p:inputText>
-			
+			<p:outputLabel value="Nombre Forma de Pago" for="formaPago"/>
+			<p:inputText id="formaPago" required="true" requiredMessage="Nombre de Forma  de Pago Requerido" 
+				size="30" value="#{editarFormaPagoBean.formaPagoEdicion.nombreFormaPago}" maxlenght="60"/>
+			<p:outputLabel value="Descripción" for="descripcion"/>
+			<p:inputText id="descripcion"  value="#{editarFormaPagoBean.formaPagoEdicion.descripcion}" size="30" maxlenght="60"/>
+			<p:outputLabel value="Estado" for="estadoFormaPago"/>
+			<p:selectOneMenu required= "true" requiredMessage="Estado debe ser seleccionado" id="estadoFormaPago" value="#{editarFormaPagoBean.formaPagoEdicion.estadoFormaPago}" style="width:125px" >
+            	<f:selectItem itemLabel="Seleccione Estado"  />
+            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
+            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+        	</p:selectOneMenu>
 		</p:panelGrid>
 		
 			<p:commandButton id="guardarFormaPago" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
 				action="#{editarFormaPagoBean.guardarFormaPago()}" update="templateForm:formEditFormaPago:panelEditFormaPago"/>
-			<p:button id="salir" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
-				outcome="/formaPagoList.xhtml?faces-redirect=true"/>
+			<p:button id="salirGrupo" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				outcome="/protected/formaPagoList.xhtml?faces-redirect=true"/>
 		</p:panel>
 		
 		

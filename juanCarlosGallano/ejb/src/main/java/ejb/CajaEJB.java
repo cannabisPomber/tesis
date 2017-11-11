@@ -52,7 +52,7 @@ public class CajaEJB extends GenericDaoImpl<Caja, Serializable>{
 	
 	public Caja cajaAbierta(Usuario user){
 		try {
- 		   Query query = em.createQuery("select u from caja u where u.usuario.idUsuario = :idUser and u.fechaFin = null");
+ 		   Query query = em.createQuery("select u from caja u where u.usuario.idUsuario = :idUser and u.fechaFin is null");
  		   query.setParameter("idUser", user.getIdUsuario());
  		   
  		   

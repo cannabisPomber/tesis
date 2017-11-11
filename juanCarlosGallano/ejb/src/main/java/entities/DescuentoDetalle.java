@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -17,7 +18,8 @@ import javax.persistence.TemporalType;
 public class DescuentoDetalle implements Serializable {
 
 	@Id
-	@GeneratedValue (strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "descuento_detalle_generator")
+	@SequenceGenerator(name="descuento_detalle_generator", sequenceName = "descuento_detalle_seq", allocationSize=1)
 	@Column (name = "id_descuento")
 	private Integer idDescuento;
 	

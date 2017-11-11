@@ -2,27 +2,16 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui" >
 <f:metadata>
 		<f:event listener="#{editarClienteBean.init()}" type="preRenderView"></f:event>
 	</f:metadata>
 <ui:composition template="template.xhtml">
+	
 	<ui:define name="contenido">
 	<h:form id="formEditCliente">
 		<p:panel id="panelEdicion">
 		<p:panelGrid columns="2" id="panelEditCliente">
-		
-			<p:outputLabel value="Imagen de Cliente" for="foto"/>
-			<h:panelGrid columns="3" cellpadding="5" id="foto">
-				<p:photoCam widgetVar="pc" listener="#{editarClienteBean.oncapture}" update="photo"/>
-				<p:commandButton type="button" value="Capturar" onclick="PF('pc').capture()"/>
-				<p:outputPanel id="photo">
-					<p:graphicImage  name="demo/images/photocam/#{editarClienteBean.filename}.jpeg" rendered="#{not empty editarClienteBean.filename}"/>
-				</p:outputPanel>
-				
-				
-			</h:panelGrid>
-			<p:graphicImage  value="demo/images/photocam/#{editarClienteBean.filename}.jpeg" />
 					
 			<p:outputLabel value="Nombre" for="nombre"/>
 			<p:inputText id="nombre" value="#{editarClienteBean.clienteEdicion.nombre}"
@@ -32,19 +21,24 @@
 			<p:inputText id="apellido" value="#{editarClienteBean.clienteEdicion.apellido}"
 				requiredMessage="Se requiere un datos de la persona" required="true"></p:inputText>
 			
-			<p:outputLabel value="RUC" for="ruc"/>
-			<p:inputText id="ruc" value="#{editarClienteBean.clienteEdicion.ruc}"></p:inputText>
+			<p:outputLabel value="Cargar Documento" for="cargaDocumento"/>
+			<p:selectOneMenu required= "true" requiredMessage="seleccionar documento a cargar" id="cargaDocumento" value="#{editarClienteBean.rucoCedula}" 
+				style="width:125px">
+            	<f:selectItem itemLabel="Seleccione Documento"  />
+            	<f:selectItem itemLabel="RUC" itemValue="true" />
+            	<f:selectItem itemLabel="Cedula" itemValue="false" />
+            	<p:ajax update="templateForm:formEditCliente:panelEditCliente"></p:ajax>
+        	</p:selectOneMenu>
+			<p:outputLabel value="RUC" for="ruc" rendered="#{editarClienteBean.rucoCedula}"/>
+			<p:inputText id="ruc" value="#{editarClienteBean.clienteEdicion.ruc}" rendered="#{editarClienteBean.rucoCedula}"></p:inputText>
 			
-			<p:outputLabel value="Cedula" for="cedula"/>
+			<p:outputLabel value="Cedula" for="cedula" rendered="#{!editarClienteBean.rucoCedula}"/>
 			<p:inputText id="cedula" value="#{editarClienteBean.clienteEdicion.cedula}"
-				requiredMessage="Se requiere cedula del cliente" required="true"
+				rendered="#{!editarClienteBean.rucoCedula}"
 				validatorMessage="Cedula debe ser numerico">
 					<f:validateRegex pattern="[0-9]*" />
 				</p:inputText>
 			
-			<p:outputLabel value="Direccion" for="direccion"/>
-			<p:inputText id="direccion" value="#{editarClienteBean.clienteEdicion.direccion}"
-				requiredMessage="Se requiere una direccion" required="true"></p:inputText>
 			
 			<p:outputLabel value="Telefono" for="telefono"/>
 			<p:inputText id="telefono" value="#{editarClienteBean.clienteEdicion.telefono}"
@@ -69,6 +63,11 @@
         	</p:selectOneMenu>
 			
 		</p:panelGrid>
+		
+		
+		<p:outputLabel value="Direccion"/>
+
+		
 		
 			<p:commandButton id="guardarDeposito" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
 				action="#{editarClienteBean.guardarCliente()}" update="templateForm:formEditCliente:panelEditCliente"/>

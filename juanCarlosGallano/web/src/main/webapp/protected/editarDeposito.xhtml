@@ -17,7 +17,7 @@
 			
 			<p:outputLabel value="Nombre Deposito" for="deposito"/>
 			<p:inputText id="deposito" value="#{editarDepositoBean.depositoEdicion.nombreDeposito}"
-				required="true" requiredMessage="Nombre de deposito no puede ser vacio"></p:inputText>
+				required="true" maxlenght="60" requiredMessage="Nombre de deposito no puede ser vacio"/>
 			<p:outputLabel value="Estado Deposito" for="estadoDeposito"/>
 			<p:selectOneMenu required= "true" requiredMessage="Estado debe ser seleccionado" id="estadoDeposito" value="#{editarDepositoBean.depositoEdicion.estado}" style="width:125px" >
             	<f:selectItem itemLabel="Seleccione Estado"  />
@@ -29,7 +29,7 @@
 			<p:commandButton id="guardarDeposito" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
 				action="#{editarDepositoBean.guardarDeposito()}" update="templateForm:formEditDeposito:panelEditDeposito"/>
 			<p:button id="salirDeposito" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
-				outcome="/depositoList.xhtml?faces-redirect=true"/>
+				outcome="/protected/depositoList.xhtml?faces-redirect=true"/>
 		</p:panel>
 		
 		

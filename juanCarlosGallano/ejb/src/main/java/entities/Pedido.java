@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -19,22 +20,38 @@ import javax.persistence.TemporalType;
 @NamedQuery(name = "Pedido.findAll", query = "SELECT u FROM pedido u")
 public class Pedido implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
-	@GeneratedValue (strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pedido_generator")
+	@SequenceGenerator(name="pedido_generator", sequenceName = "pedido_seq", allocationSize=1)
 	@Column (name = "id_pedido")
 	private Long idPedido;
 	
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "id_proveedor", nullable = false)
-	private Proveedor proveedor;
+	@Column (name = "id_orden_compra", nullable = true)
+	private Long idOrdenCompra;
 	
-	@Column (name = "estado" ,  nullable = false)
-	private String estado;
+	/*@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "id_producto", nullable = false)
+	private Producto producto;*/
+	
 	
 	@Column (name = "fecha" , nullable = false)
 	@Temporal (TemporalType.TIMESTAMP)
 	private Date fecha;
-
+	
+	/*@Column (name = "cantidad" , nullable = false)
+	private Long cantidad;*/
+	
+	@Column (name = "usuario" , nullable = false)
+	private String usuario;
+	
+	
+	@Column (name = "estado" , nullable = false)
+	private String estado;
 	public Long getIdPedido() {
 		return idPedido;
 	}
@@ -43,13 +60,15 @@ public class Pedido implements Serializable {
 		this.idPedido = idPedido;
 	}
 
-	public Proveedor getProveedor() {
-		return proveedor;
+	public Date getFecha() {
+		return fecha;
 	}
 
-	public void setProveedor(Proveedor proveedor) {
-		this.proveedor = proveedor;
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
 	}
+	
+	
 
 	public String getEstado() {
 		return estado;
@@ -57,14 +76,6 @@ public class Pedido implements Serializable {
 
 	public void setEstado(String estado) {
 		this.estado = estado;
-	}
-
-	public Date getFecha() {
-		return fecha;
-	}
-
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
 	}
 
 	@Override
@@ -93,5 +104,13 @@ public class Pedido implements Serializable {
 		return true;
 	}
 
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+	
 	
 }

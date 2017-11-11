@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 
 @Entity (name = "cliente")
@@ -16,12 +17,13 @@ public class Cliente implements Serializable{
 	
 	@Id
 	@Column(name="id_cliente")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cliente_generator")
+	@SequenceGenerator(name="cliente_generator", sequenceName = "cliente_seq", allocationSize=1)
 	private Long idCliente;
 	
 	
 	//Falta Tipo de Documnento
-	@Column (name = "ruc", nullable = false)
+	@Column (name = "ruc", nullable = true)
 	private String ruc;
 	@Column (name = "cedula", nullable = true)
 	private String cedula;

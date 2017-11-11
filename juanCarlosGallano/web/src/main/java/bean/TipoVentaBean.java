@@ -30,7 +30,8 @@ public class TipoVentaBean {
 	}
 
 	public List<TipoVenta> getTipoVentaList() {
-		return tipoVentaEJB.findAll();
+		tipoVentaList = tipoVentaEJB.findAll();
+		return tipoVentaList;
 	}
 
 	public void setTipoVentaList(List<TipoVenta> grupoList) {

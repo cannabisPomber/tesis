@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 
 @Entity (name  = "detalle_factura")
 @NamedQuery(name="DetalleFactura.findAll", query="SELECT p FROM detalle_factura p")
@@ -18,12 +19,13 @@ public class DetalleFactura implements Serializable {
 
 	
 	@Id
-	@GeneratedValue (strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "detalle_factura_generator")
+	@SequenceGenerator(name="detalle_factura_generator", sequenceName = "detalle_factura_seq", allocationSize=1)
 	@Column (name = "id_detalle_factura")
 	private Long idDetalleFactura;
 	
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "nroFactura", nullable = false)
+	@JoinColumn(name = "idFactura", nullable = false)
 	private Factura factura; 
 	
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)

@@ -14,24 +14,25 @@
 	<ui:define name="contenido">
 	<h:form id="formTipoVentaList">
 		<p:panel id="panelTipoVentaList">
-		<p:outputLabel value="Listado de tipoVentas" />
+		<p:outputLabel value="Listado de Tipo Ventas" />
 		<p:dataTable id="tipoVentaTable" value="#{tipoVentaBean.tipoVentaList}" emptyMessage="No se registran elementos cargados"
 			style="margin-top:10px" var="tipoVenta">
 			<p:column headerText="Nombre">
 				<h:outputText value="#{tipoVenta.nombreTipoVenta}" />
 			</p:column>
 			
+			<p:column headerText="Estado">
+				<h:outputText value="#{tipoVenta.estado}" />
+			</p:column>
+			
 			<p:column>
 					<f:facet name="header">
-						<p:button outcome="editarTipoVenta.xhtml" title="Nuevo tipoVenta" value="Nuevo"/>
+						<p:button outcome="editarTipoVenta" title="Nuevo tipoVenta" value="Nuevo"/>
 						<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
 					</f:facet>
 					
-					<p:commandButton action="#{tipoVentaBean.eliminarTipoVenta(tipoVenta)}"
-						update="templateForm:formTipoVentaList:tipoVentaTable" icon="ui-icon-trash">
-					</p:commandButton>
 					
-					<p:button outcome="/editarTipoVenta" icon="ui-icon-pencil" id="editTipoVenta">
+					<p:button outcome="editarTipoVenta" icon="ui-icon-pencil" id="editTipoVenta">
 						<f:param name="idTipoVenta" value="#{tipoVenta.idTipoVenta}"></f:param>
 					</p:button>
 

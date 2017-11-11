@@ -36,8 +36,19 @@
          <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
       </license>
    </licenses>
-
    <dependencies>
+   
+   		<!-- https://mvnrepository.com/artifact/com.google.maps/google-maps-services -->
+		<dependency>
+		    <groupId>com.google.maps</groupId>
+		    <artifactId>google-maps-services</artifactId>
+		    <version>0.2.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-nop</artifactId>
+		    <version>1.7.25</version>
+		</dependency>
 
       <!-- Dependency on the EJB module so we can use it's services if needed -->
       <dependency>
@@ -80,6 +91,8 @@
         <artifactId>primefaces</artifactId>  
         <version>6.0</version>  
     </dependency> 
+    
+    <!-- https://mvnrepository.com/artifact/cljsjs/google-maps -->
     <dependency>  
 	    <groupId>org.primefaces.themes</groupId>  
 	    <artifactId>start</artifactId>  

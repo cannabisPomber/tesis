@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -24,10 +25,14 @@ public class Factura implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	
 	@Column (name = "nroFactura")
-	private Long nroFactura;
+	private String nroFactura;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "factura_generator")
+	@SequenceGenerator(name="factura_generator", sequenceName = "factura_seq", allocationSize=1)
+	@Column (name = "idFactura")
+	private Long idFactura;
 	
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "id_cliente", nullable = false)
@@ -67,11 +72,11 @@ public class Factura implements Serializable {
 	@Column (name = "usuario", nullable = false)
 	private String usuario;
 
-	public Long getNroFactura() {
+	public String getNroFactura() {
 		return nroFactura;
 	}
 
-	public void setNroFactura(Long nroFactura) {
+	public void setNroFactura(String nroFactura) {
 		this.nroFactura = nroFactura;
 	}
 
@@ -187,6 +192,14 @@ public class Factura implements Serializable {
 		} else if (!nroFactura.equals(other.nroFactura))
 			return false;
 		return true;
+	}
+
+	public Long getIdFactura() {
+		return idFactura;
+	}
+
+	public void setIdFactura(Long idFactura) {
+		this.idFactura = idFactura;
 	}
 	
 	

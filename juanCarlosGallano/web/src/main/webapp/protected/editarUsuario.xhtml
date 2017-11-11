@@ -18,7 +18,7 @@
 			<p:outputLabel value="Usuario" required= "true" for="usuario"/>
 			<p:inputText id="usuario" value="#{editarUsuarioBean.usuarioEdit.usuario}"></p:inputText>
 			<p:outputLabel value="Password" required= "true" for="password"/>
-			<p:inputText  id="password" value="#{editarUsuarioBean.usuarioEdit.password}"/>
+			<p:password id="password" value="#{editarUsuarioBean.usuarioEdit.password}"/>
 			<p:outputLabel value="Grupo" for="grupo"/>
 			<p:selectOneMenu id="grupo" value="#{editarUsuarioBean.idGrupo}" 
 				style="width:125px"  effect="fade">

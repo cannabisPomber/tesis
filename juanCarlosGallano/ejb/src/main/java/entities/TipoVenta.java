@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 @Entity (name = "tipo_venta")
 public class TipoVenta implements Serializable{
@@ -15,14 +16,22 @@ public class TipoVenta implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Id
+	/*@Id
 	@Column(name="id_tipo_venta")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)*/
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tipo_venta_generator")
+	@SequenceGenerator(name="tipo_venta_generator", sequenceName = "tipo_venta_seq", allocationSize=1)
+	@Column(name = "id_tipo_venta", updatable = false, nullable = false)
 	private Long idTipoVenta;
 	
 	@Column (name = "nombre_tipo_venta")
 	@NotNull
 	private String nombreTipoVenta;
+	
+	@Column (name = "estado_tipo_venta")
+	private String estado;
 
 	public Long getIdTipoVenta() {
 		return idTipoVenta;
@@ -40,6 +49,16 @@ public class TipoVenta implements Serializable{
 		this.nombreTipoVenta = nombreTipoVenta;
 	}
 	
+	
+	
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

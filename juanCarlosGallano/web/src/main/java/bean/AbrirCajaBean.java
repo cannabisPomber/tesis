@@ -36,15 +36,40 @@ public class AbrirCajaBean {
 	
 	private Caja cajaExistente = new Caja(); 
 	
+	private Boolean cajaExiste;
+	
+	private Long montoCaja;
+	
 	public void buscarCaja(){
-		HttpSession session;
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		session = request.getSession(); 
-		Usuario usuarioCaja = usuarioEJB.findIdUsuario(Long.valueOf((String)session.getAttribute("idUsuario")));
-		this.cajaExistente = cajaEJB.cajaAbierta(usuarioCaja);
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		FacesMessage facesMessage = new FacesMessage("Ya Existe una Caja Abierta por este Usuario.");
-		facesContext.addMessage(null, facesMessage);
+		if (!FacesContext.getCurrentInstance().isPostback()){
+			montoCaja = (long) 0;
+			HttpSession session;
+			HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+			session = request.getSession(); 
+			Usuario usuarioCaja = usuarioEJB.findIdUsuario(Long.valueOf((String)session.getAttribute("idUsuario")));
+			cajaExistente = cajaEJB.cajaAbierta(usuarioCaja);
+			
+			if (cajaExistente == null){
+				System.out.println("CAJA RETORNADA : null");
+				cajaExiste = false;
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				FacesMessage facesMessage = new FacesMessage("Abrir nueva sesion de caja de Usuario.");
+				facesContext.addMessage(null, facesMessage);
+			} else {
+				if (cajaExistente.getFechaFin() == null){
+					cajaExiste = false;
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					FacesMessage facesMessage = new FacesMessage("Abrir nueva sesion de caja de Usuario.");
+					facesContext.addMessage(null, facesMessage);
+				} else {
+					cajaExiste = true;
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					FacesMessage facesMessage = new FacesMessage("Ya Existe una Caja Abierta por este Usuario.");
+					facesContext.addMessage(null, facesMessage);
+				}
+				
+			}
+		}
 		
 	}
 
@@ -78,14 +103,40 @@ public class AbrirCajaBean {
 		session = request.getSession(); 
 		Usuario usuarioCaja = usuarioEJB.findIdUsuario(Long.valueOf((String)session.getAttribute("idUsuario")));
 		// Set Datos de Caja
+		cajaAbierta = new Caja();
 		cajaAbierta.setUsuario(usuarioCaja);
+		fechaSistema = new Date();
 		cajaAbierta.setFechaInicio(this.fechaSistema);
+		if (montoCaja > 0){
+			System.out.println("setea monto caja");
+			cajaAbierta.setMontoCaja(montoCaja);
+		}
 		//Persiste dato de caja cargado.
 		cajaEJB.create(cajaAbierta);
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		FacesMessage facesMessage = new FacesMessage("Caja Abierta.");
 		facesContext.addMessage(null, facesMessage);
 		RequestContext.getCurrentInstance().execute("PF('cargarMontoInicial').hide();");
+	}
+	
+	
+	public void cerrarCaja(){
+		System.out.println("Cerrando Caja.. debe mostrar reporte");
+		cajaExistente.setFechaFin(fechaSistema);
+		cajaEJB.update(cajaExistente);
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		FacesMessage facesMessage = new FacesMessage("Caja Cerrada.");
+		facesContext.addMessage(null, facesMessage);
+		
+	}
+
+
+	public Boolean getCajaExiste() {
+		return cajaExiste;
+	}
+
+	public void setCajaExiste(Boolean cajaExiste) {
+		this.cajaExiste = cajaExiste;
 	}
 
 	public Caja getCajaExistente() {
@@ -95,5 +146,22 @@ public class AbrirCajaBean {
 	public void setCajaExistente(Caja cajaExistente) {
 		this.cajaExistente = cajaExistente;
 	}
+
+	public CajaEJB getCajaEJB() {
+		return cajaEJB;
+	}
+
+	public void setCajaEJB(CajaEJB cajaEJB) {
+		this.cajaEJB = cajaEJB;
+	}
+
+	public Long getMontoCaja() {
+		return montoCaja;
+	}
+
+	public void setMontoCaja(Long montoCaja) {
+		this.montoCaja = montoCaja;
+	}
+	
 	
 }

@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 
 @Entity (name = "tipo_producto")
@@ -19,7 +20,8 @@ public class TipoProducto implements Serializable{
 
 	@Id
 	@Column(name="id_tipo_producto")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tipo_producto_generator")
+	@SequenceGenerator(name="tipo_producto_generator", sequenceName = "tipo_producto_seq", allocationSize=1)
 	private Long idTipoProducto;
 	
 	@Column (name = "nombre_tipo_producto")

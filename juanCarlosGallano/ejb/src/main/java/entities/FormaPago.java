@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 @Entity (name = "forma_pago")
 @NamedQuery(name="FormaPago.findAll", query="SELECT u FROM forma_pago u")
@@ -21,15 +22,20 @@ public class FormaPago implements Serializable{
 
 	@Id
 	@Column(name="id_forma_pago")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "forma_pago_generator")
+	@SequenceGenerator(name="forma_pago_generator", sequenceName = "forma_pago_seq", allocationSize=1)
 	private Long idFormaPago;
 	
+	@Column(name ="nombre", length = 60)
+	@NotNull
+	private String nombreFormaPago;
+	
 	@Column(name ="descripcion", length = 60)
-	@NotNull
 	private String descripcion;
-	@Column(name ="abreviatura", length = 5)
+	
+	@Column (name = "estado_forma_pago",  length = 30)
 	@NotNull
-	private String abreviatura;
+	private String estadoFormaPago;
 
 	public Long getIdFormaPago() {
 		return idFormaPago;
@@ -45,14 +51,23 @@ public class FormaPago implements Serializable{
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}	
+	
+
+	public String getEstadoFormaPago() {
+		return estadoFormaPago;
 	}
 
-	public String getAbreviatura() {
-		return abreviatura;
+	public void setEstadoFormaPago(String estadoFormaPago) {
+		this.estadoFormaPago = estadoFormaPago;
+	}
+	
+	public String getNombreFormaPago() {
+		return nombreFormaPago;
 	}
 
-	public void setAbreviatura(String abreviatura) {
-		this.abreviatura = abreviatura;
+	public void setNombreFormaPago(String nombreFormaPago) {
+		this.nombreFormaPago = nombreFormaPago;
 	}
 
 	@Override

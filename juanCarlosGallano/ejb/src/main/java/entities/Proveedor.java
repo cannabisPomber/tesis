@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 
 @Entity (name = "proveedor")
@@ -16,7 +17,8 @@ import javax.validation.constraints.NotNull;
 public class Proveedor {
 	@Id
 	@Column(name="id_proveedor")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "proveedor_generator")
+	@SequenceGenerator(name="proveedor_generator", sequenceName = "proveedor_seq", allocationSize=1)
 	private Long idProveedor;
 	
 	@Column (name = "ruc_cedula")

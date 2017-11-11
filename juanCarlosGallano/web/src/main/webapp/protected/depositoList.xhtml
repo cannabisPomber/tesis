@@ -27,16 +27,13 @@
 			
 			<p:column>
 					<f:facet name="header">
-						<p:button outcome="editarDeposito.xhtml" title="Nuevo deposito" value="Nuevo"/>
+						<p:button outcome="editarDeposito" title="Nuevo deposito" value="Nuevo"/>
 						<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
 					</f:facet>
 					
-					<p:button outcome="/editarDeposito" icon="ui-icon-pencil" id="editDeposito">
+					<p:button outcome="editarDeposito" icon="ui-icon-pencil" id="editDeposito">
 						<f:param name="idDeposito" value="#{deposito.idDeposito}"></f:param>
 					</p:button>
-					<p:commandButton action="#{depositoBean.eliminarDeposito(deposito)}"
-						update="templateForm:formDepositoList:tablaDeposito" icon="ui-icon-trash">
-					</p:commandButton>		
 					
 			</p:column>
 		</p:dataTable>

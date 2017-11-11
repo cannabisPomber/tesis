@@ -43,7 +43,7 @@ public class UsuarioBean implements Serializable{
 		this.user = user;
 	}
 	// Init para listar los usuarios en pagina
-	public void initUsuario() {
+	public void initUsuario() throws IOException {
 		if (!FacesContext.getCurrentInstance().isPostback()){
 			
 			session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
@@ -72,6 +72,8 @@ public class UsuarioBean implements Serializable{
 		if ((user = usuarioEjb.findUsuario(user)) != null){
 	        session.setAttribute("usuario", user.getUsuario());
 	        session.setAttribute("idUsuario", Long.toString(user.getIdUsuario()) );
+	        //Cargando Valor de Grupo en sesion
+	        session.setAttribute("grupo", user.getGrupo().getNombreGrupo());
 			 
 			/*FacesContext.getCurrentInstance().getExternalContext()
 				.getSessionMap().put("usuario", user.getUsuario());*/
@@ -131,7 +133,12 @@ public class UsuarioBean implements Serializable{
 		System.out.println("usuario :" + params.get("usuario"));
 		return params.get("usuario");*/
 	}
-
+	
+	public String getGrupoUsuario() throws IOException{
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		session = request.getSession();
+		return (String)session.getAttribute("grupo");
+	}
 	public Usuario getUserVista() {
 		return userVista;
 	}

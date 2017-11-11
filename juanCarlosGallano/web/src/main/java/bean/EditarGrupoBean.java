@@ -1,5 +1,8 @@
 package bean;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJB;
@@ -7,9 +10,15 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.primefaces.model.DualListModel;
 
 import ejb.GrupoEJB;
+import ejb.RolEJB;
 import entities.Grupo;
+import entities.Rol;
 
 @ManagedBean (name = "editarGrupoBean")
 @ViewScoped
@@ -23,7 +32,15 @@ public class EditarGrupoBean {
 		
 	}
 	// Proceso inicial del Bean
-	public void init(){
+	public void init() throws IOException{
+		//verificar que pertenezca al grupo Admin
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		HttpSession session = request.getSession();
+		String grupoUsuario = (String)session.getAttribute("grupo");
+		if (!grupoUsuario.equals("admin")){
+				//Si no pertenece al grupo envia al menu principal
+				FacesContext.getCurrentInstance().getExternalContext().responseSendError(401, "You are not authorized.");
+		}
 		if (!FacesContext.getCurrentInstance().isPostback()){
 			Map<String,String> params =
 	                FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
@@ -48,6 +65,12 @@ public class EditarGrupoBean {
 		this.grupoEdicion = grupoEdicion;
 	}
 	
+	public Long getIdGrupo() {
+		return idGrupo;
+	}
+	public void setIdGrupo(Long idGrupo) {
+		this.idGrupo = idGrupo;
+	}
 	public void guardarGrupo(){
 		// Debe persistir el usuario
 		if(grupoEdicion.getIdGrupo() == null){

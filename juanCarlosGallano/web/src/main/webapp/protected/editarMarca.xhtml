@@ -26,10 +26,10 @@
 			
 		</p:panelGrid>
 		
-			<p:commandButton id="guardarGrupo" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
+			<p:commandButton id="guardarMarca" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
 				action="#{editarMarcaBean.guardarMarca()}" update="templateForm:formEditMarca:panelEditMarca"/>
 			<p:button id="salirGrupo" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
-				outcome="/marcaList.xhtml?faces-redirect=true"/>
+				outcome="/protected/marcaList.xhtml?faces-redirect=true"/>
 		</p:panel>
 		
 		

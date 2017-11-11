@@ -57,6 +57,21 @@ public class UsuarioEJB extends GenericDaoImpl<Usuario, Serializable>{
 	   }
    }
    
+   public Usuario findUserUsuario(String user){
+	   try {
+	   Query query = em.createQuery("select u from usuario u where u.usuario = :user");
+	   query.setParameter("user", user);
+	   
+	   Usuario prueba = (Usuario) query.getSingleResult();
+	   return prueba;
+//	   return (Usuario) query.getSingleResult();
+	   }
+	   catch (Exception ex){
+		   System.out.println(" Error " + ex.getMessage());
+		   return null;
+	   }
+   }
+   
    public void eliminarUsuario(Usuario user){
 	   em.createQuery("delete from usuario where idUsuario = : id").setParameter("id", user.getIdUsuario()).executeUpdate();
    }

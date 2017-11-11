@@ -2,33 +2,126 @@
 <PROCESS model-entity="JSFProcess">
  <PROCESS-ITEM NAME="rules:*" PATH="*" SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules:*:0" NAME="item" PATH="*" model-entity="JSFProcessItem">
-   <PROCESS-ITEM-OUTPUT ID="grupos::#grupos.xhtml" NAME="output"
-    PATH="/grupos.xhtml" TARGET="rules:#grupos.xhtml" TITLE="grupos" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="usuarios::#usuarioList.xhtml" NAME="output1"
-    PATH="/usuarioList.xhtml" TARGET="rules:#usuarioList.xhtml"
-    TITLE="usuarios" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="editarUsuario::#editarUsuario.xhtml"
-    NAME="output2" PATH="/editarUsuario.xhtml"
-    TARGET="rules:#editarUsuario.xhtml" TITLE="editarUsuario" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="editarGrupo::#editarGrupo.xhtml"
-    NAME="output3" PATH="/editarGrupo.xhtml"
-    TARGET="rules:#editarGrupo.xhtml" TITLE="editarGrupo" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="index::#index.xhtml" NAME="output4"
-    PATH="/index.xhtml" TARGET="rules:#index.xhtml" TITLE="index" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="login::#login.xhtml" NAME="output6"
+   <PROCESS-ITEM-OUTPUT ID="grupos::#protected#gruposList.xhtml"
+    NAME="output" PATH="/protected/gruposList.xhtml"
+    TARGET="rules:#protected#gruposList.xhtml" TITLE="grupos" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="usuarios::#protected#usuarioList.xhtml"
+    NAME="output1" PATH="/protected/usuarioList.xhtml"
+    TARGET="rules:#protected#usuarioList.xhtml" TITLE="usuarios" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="editarUsuario::#protected#editarUsuario.xhtml" NAME="output2"
+    PATH="/protected/editarUsuario.xhtml"
+    TARGET="rules:#protected#editarUsuario.xhtml" TITLE="editarUsuario" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="editarProveedor::#protected#editarProveedor.xhtml"
+    NAME="output3" PATH="/protected/editarProveedor.xhtml"
+    TARGET="rules:#protected#editarProveedor.xhtml"
+    TITLE="editarProveedor" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="editarFormaPago::#protected#editarFormaPago.xhtml"
+    NAME="output4" PATH="/protected/editarFormaPago.xhtml"
+    TARGET="rules:#protected#editarFormaPago.xhtml"
+    TITLE="editarFormaPago" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="editarMoneda::#protected#editarMoneda.xhtml"
+    NAME="output5" PATH="/protected/editarMoneda.xhtml"
+    TARGET="rules:#protected#editarMoneda.xhtml" TITLE="editarMoneda" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="depositos::#protected#depositoList.xhtml"
+    NAME="output6" PATH="/protected/depositoList.xhtml"
+    TARGET="rules:#protected#depositoList.xhtml" TITLE="depositos" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="editarDeposito::#protected#editarDeposito.xhtml" NAME="output7"
+    PATH="/protected/editarDeposito.xhtml"
+    TARGET="rules:#protected#editarDeposito.xhtml"
+    TITLE="editarDeposito" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="editarGrupo::#protected#editarGrupo.xhtml"
+    NAME="output8" PATH="/protected/editarGrupo.xhtml"
+    TARGET="rules:#protected#editarGrupo.xhtml" TITLE="editarGrupo" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="marcas::#protected#marcaList.xhtml"
+    NAME="output9" PATH="/protected/marcaList.xhtml"
+    TARGET="rules:#protected#marcaList.xhtml" TITLE="marcas" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="editarMarca::#protected#editarMarca.xhtml"
+    NAME="output10" PATH="/protected/editarMarca.xhtml"
+    TARGET="rules:#protected#editarMarca.xhtml" TITLE="editarMarca" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="editarRol::#protected#editarRol.xhtml"
+    NAME="output11" PATH="/protected/editarRol.xhtml"
+    TARGET="rules:#protected#editarRol.xhtml" TITLE="editarRol" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="editarProductoProveedor::#protected#editarProductoProveedor.xhtml"
+    NAME="output12" PATH="/protected/editarProductoProveedor.xhtml"
+    TARGET="rules:#protected#editarProductoProveedor.xhtml"
+    TITLE="editarProductoProveedor" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="productoProveedor::#protected#productoProveedorList.xhtml"
+    NAME="output13" PATH="/protected/productoProveedorList.xhtml"
+    TARGET="rules:#protected#productoProveedorList.xhtml"
+    TITLE="productoProveedor" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="anularPedido::#protected#anularPedido.xhtml"
+    NAME="output14" PATH="/protected/anularPedido.xhtml"
+    TARGET="rules:#protected#anularPedido.xhtml" TITLE="anularPedido" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="crearPedido::#protected#crearPedido.xhtml"
+    NAME="output15" PATH="/protected/crearPedido.xhtml"
+    TARGET="rules:#protected#crearPedido.xhtml" TITLE="crearPedido" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="tipoVentaList::#protected#tipoVentaList.xhtml" NAME="output16"
+    PATH="/protected/tipoVentaList.xhtml"
+    TARGET="rules:#protected#tipoVentaList.xhtml" TITLE="tipoVentaList" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="unidadMedidaList::#protected#unidadMedidaList.xhtml"
+    NAME="output17" PATH="/protected/unidadMedidaList.xhtml"
+    TARGET="rules:#protected#unidadMedidaList.xhtml"
+    TITLE="unidadMedidaList" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="index::#protected#index.xhtml"
+    NAME="output18" PATH="/protected/index.xhtml"
+    TARGET="rules:#protected#index.xhtml" TITLE="index" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="login::#login.xhtml" NAME="output19"
     PATH="/login.xhtml" TARGET="rules:#login.xhtml" TITLE="login" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="map::#protected#map.html" NAME="output20"
+    PATH="/protected/map.html" TARGET="rules:#protected#map.html"
+    TITLE="map" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#login.xhtml" PATH="/login.xhtml"
   SHAPE="304,305,0,0" model-entity="JSFProcessGroup"/>
- <PROCESS-ITEM NAME="rules:#grupos.xhtml" PATH="/grupos.xhtml"
-  SHAPE="304,33,0,0" model-entity="JSFProcessGroup"/>
- <PROCESS-ITEM NAME="rules:#usuarioList.xhtml" PATH="/usuarioList.xhtml"
-  SHAPE="304,305,0,0" model-entity="JSFProcessGroup"/>
- <PROCESS-ITEM NAME="rules:#editarUsuario.xhtml"
-  PATH="/editarUsuario.xhtml" SHAPE="304,305,0,0" model-entity="JSFProcessGroup"/>
- <PROCESS-ITEM NAME="rules:#editarGrupo.xhtml" PATH="/editarGrupo.xhtml"
-  SHAPE="304,305,0,0" model-entity="JSFProcessGroup"/>
- <PROCESS-ITEM NAME="rules:#index.xhtml" PATH="/index.xhtml"
-  SHAPE="304,305,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#editarGrupo.xhtml"
+  PATH="/protected/editarGrupo.xhtml" SHAPE="304,1169,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#tipoVentaList.xhtml"
+  PATH="/protected/tipoVentaList.xhtml" SHAPE="304,1617,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#depositoList.xhtml"
+  PATH="/protected/depositoList.xhtml" SHAPE="304,945,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#editarDeposito.xhtml"
+  PATH="/protected/editarDeposito.xhtml" SHAPE="304,1057,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#usuarioList.xhtml"
+  PATH="/protected/usuarioList.xhtml" SHAPE="304,497,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#index.xhtml"
+  PATH="/protected/index.xhtml" SHAPE="304,1729,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#marcaList.xhtml"
+  PATH="/protected/marcaList.xhtml" SHAPE="304,1281,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#editarMarca.xhtml"
+  PATH="/protected/editarMarca.xhtml" SHAPE="304,1393,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#editarProveedor.xhtml"
+  PATH="/protected/editarProveedor.xhtml" SHAPE="304,833,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#editarUsuario.xhtml"
+  PATH="/protected/editarUsuario.xhtml" SHAPE="304,721,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#editarTipoVenta.xhtml"
+  PATH="/protected/editarTipoVenta.xhtml" SHAPE="304,1505,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#gruposList.xhtml"
+  PATH="/protected/gruposList.xhtml" SHAPE="304,33,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#editarFormaPago.xhtml"
+  PATH="/protected/editarFormaPago.xhtml" SHAPE="304,529,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#editarMoneda.xhtml"
+  PATH="/protected/editarMoneda.xhtml" SHAPE="304,529,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#crearPedido.xhtml"
+  PATH="/protected/crearPedido.xhtml" SHAPE="304,529,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#anularPedido.xhtml"
+  PATH="/protected/anularPedido.xhtml" SHAPE="304,593,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#map.html"
+  PATH="/protected/map.html" SHAPE="304,657,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#unidadMedidaList.xhtml"
+  PATH="/protected/unidadMedidaList.xhtml" SHAPE="304,657,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#editarProductoProveedor.xhtml"
+  PATH="/protected/editarProductoProveedor.xhtml" SHAPE="304,721,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#productoProveedorList.xhtml"
+  PATH="/protected/productoProveedorList.xhtml" SHAPE="304,785,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#editarRol.xhtml"
+  PATH="/protected/editarRol.xhtml" SHAPE="304,785,0,0" model-entity="JSFProcessGroup"/>
 </PROCESS>

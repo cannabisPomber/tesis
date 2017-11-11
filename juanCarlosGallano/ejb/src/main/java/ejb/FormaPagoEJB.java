@@ -36,7 +36,7 @@ public List<FormaPago> FormaPagos = new ArrayList<FormaPago>();
 	   
 	   public FormaPago findIdFormaPago(Long id){
 		   try {
-		   Query query = em.createQuery("select u from tipo_venta u where u.idFormaPago = :id");
+		   Query query = em.createQuery("select u from forma_pago u where u.idFormaPago = :id");
 		   query.setParameter("id", id);
 		   
 		   

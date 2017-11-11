@@ -29,11 +29,11 @@
 			
 			<p:column>
 				<f:facet name="header">
-					<p:button outcome="editarProveedor.xhtml" title="Nuevo Proveedor" value="Nuevo"/>
+					<p:button outcome="editarProveedor" title="Nuevo Proveedor" value="Nuevo"/>
 					<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
 				</f:facet>
 				
-				<p:button outcome="/editarProveedor" icon="ui-icon-pencil" id="editProveedor">
+				<p:button outcome="editarProveedor" icon="ui-icon-pencil" id="editProveedor">
 						<f:param name="idProveedor" value="#{proveedor.idProveedor}"></f:param>
 					</p:button>
 			</p:column>

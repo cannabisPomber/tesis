@@ -1,5 +1,6 @@
 package bean;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,8 @@ import javax.faces.bean.*;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import ejb.GrupoEJB;
 import ejb.UsuarioEJB;
@@ -38,7 +41,15 @@ public class EditarUsuarioBean {
 		
 	}
 	//Metodo que inicializa la edicion de usuario
-	public void init(){
+	public void init() throws IOException{
+		//verificar que pertenezca al grupo Admin
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		HttpSession session = request.getSession();
+		String grupoUsuario = (String)session.getAttribute("grupo");
+		if (!grupoUsuario.equals("admin")){
+				//Si no pertenece al grupo envia al menu principal
+				FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+		}
 		if (!FacesContext.getCurrentInstance().isPostback()){
 		grupoEdit = new Grupo();
 		grupos = grupoEjb.findAll();

@@ -16,16 +16,17 @@
 		<p:panelGrid columns="2" id="panelEditProvedor">
 			
 			<p:outputLabel value="Nombre Empresa" for="empresa"/>
-			<p:inputText required="true" id="empresa" value="#{editarProveedorBean.proveedorEdicion.nombreEmpresa}"></p:inputText>
+			<p:inputText required="true" id="empresa" value="#{editarProveedorBean.proveedorEdicion.nombreEmpresa}"
+				requiredMessage="Nombre Empresa debe ser seleccionado"/>
 			
 			<p:outputLabel value="Telefono Empresa" for="telefonoEmpresa"/>
 			<p:inputText required="true" id="telefonoEmpresa" value="#{editarProveedorBean.proveedorEdicion.telefonoEmpresa}"
-				validatorMessage="Telefono debe ser numerico">
+				validatorMessage="Telefono debe ser numerico" requiredMessage="Telefono Empresa debe ser seleccionado">
 				<f:validateRegex pattern="[0-9]*" />
 			</p:inputText>
 			
 			<p:outputLabel required="true" value="Contacto" for="contacto"/>
-			<p:inputText id="contacto" value="#{editarProveedorBean.proveedorEdicion.contacto}"></p:inputText>
+			<p:inputText id="contacto" value="#{editarProveedorBean.proveedorEdicion.contacto}"/>
 			
 			<p:outputLabel value="Telefono Contacto" for="telContacto"/>
 			<p:inputText id="telContacto" value="#{editarProveedorBean.proveedorEdicion.telefonoContacto}"
@@ -34,7 +35,8 @@
 				</p:inputText>
 			
 			<p:outputLabel required="true" value="Ruc o Cedula" for="rucCedula"/>
-			<p:inputText id="rucCedula" value="#{editarProveedorBean.proveedorEdicion.rucCedula}"></p:inputText>
+			<p:inputText id="rucCedula" required="true" value="#{editarProveedorBean.proveedorEdicion.rucCedula}"
+				requiredMessage="Ruc O Cedula debe ser seleccionado"/>
 			
 			<p:outputLabel required="true" value="Estado" for="estado"/>
 			<p:selectOneMenu  id="estado" required= "true" requiredMessage="Estado debe ser seleccionado" 
@@ -49,7 +51,7 @@
 			<p:commandButton id="guardarProveedor" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
 				action="#{editarProveedorBean.guardarProveedor()}" update="templateForm:formEditProveedor:panelEdicion"/>
 			<p:button id="salirProveedor" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
-				outcome="/proveedorList.xhtml?faces-redirect=true"/>
+				outcome="/protected/proveedorList.xhtml?faces-redirect=true"/>
 		</p:panel>
 		
 		

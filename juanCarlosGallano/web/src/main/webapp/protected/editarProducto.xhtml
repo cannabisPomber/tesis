@@ -19,13 +19,26 @@
 			<p:inputText id="producto" value="#{editarProductoBean.productoEdicion.nombreProducto}"
 				required="true" requiredMessage="Nombre de producto no puede ser vacio"></p:inputText>
 				
+				
+			<p:outputLabel value="Codigo de Barra" for="codBarra"/>
+			<p:inputText id="codBarra" value="#{editarProductoBean.productoEdicion.codigoBarra}"
+				required="true" requiredMessage="Código de Barra de producto no puede ser vacio"></p:inputText>
+				
 			<p:outputLabel value="Precio de venta" for="precio"/>
 			<p:inputNumber id="precio" value="#{editarProductoBean.productoEdicion.precioUnitario}"
 				required="true" requiredMessage="Precio de producto no puede ser vacio"></p:inputNumber>
 				
-			<p:outputLabel value="Cantidad Minima" for="cantidad"/>
-			<p:inputNumber id="cantidad" value="#{editarProductoBean.productoEdicion.cantidadMinima}"
-				required="true" requiredMessage="Cantidad Minima no puede ser vacio"></p:inputNumber>
+			<p:outputLabel value="IVA Producto" for="iva"/>
+			<p:inputNumber id="iva" value="#{editarProductoBean.productoEdicion.ivaProducto}"
+				required="true" requiredMessage="IVA de producto no puede ser vacio" decimalPlaces="2" maxValue="99" minValue="1"></p:inputNumber>
+				
+			<p:outputLabel value="Cantidad Minima" for="cantidadMinima"/>
+			<p:inputNumber id="cantidadMinima" value="#{editarProductoBean.productoEdicion.cantidadMinima}"
+				required="true" requiredMessage="Cantidad Mínima no puede ser vacio"></p:inputNumber>
+				
+			<p:outputLabel value="Cantidad Maxima" for="cantidadMaxima"/>
+			<p:inputNumber id="cantidadMaxima" value="#{editarProductoBean.productoEdicion.cantidadMaxima}"
+				required="true" requiredMessage="Cantidad Máxima no puede ser vacio"></p:inputNumber>
 				
 			<p:outputLabel value="Tipo Producto" for="tipoProducto"/>
 			<p:selectOneMenu required= "true" requiredMessage="Tipo de Producto debe ser seleccionado" 
@@ -34,6 +47,15 @@
             	<f:selectItem itemLabel="Seleccione Tipo de Producto"  />
             	<f:selectItems value="#{editarProductoBean.tiposProductos}" var="gru" itemValue="#{gru.idTipoProducto}" itemLabel="#{gru.nombreTipoProducto}" />
         	</p:selectOneMenu>
+        	
+        	<p:outputLabel value="Unidad de medida" for="unidadMedida"/>
+			<p:selectOneMenu required= "true" requiredMessage="Tipo de Unidad de Medida debe ser seleccionado" 
+				id="unidadMedida" value="#{editarProductoBean.idTipoUnidadMedida}" 
+				style="width:125px"  >
+            	<f:selectItem itemLabel="Seleccione Unidad de Medida"  />
+            	<f:selectItems value="#{editarProductoBean.unidadMedidaList}" var="gru" itemValue="#{gru.id}" itemLabel="#{gru.dimension} #{gru.unidad}" />
+        	</p:selectOneMenu>
+
         	
         	<p:outputLabel value="Marca Producto" for="marcaProducto"/>
 			<p:selectOneMenu required= "true" requiredMessage="Marca debe ser seleccionado" 
@@ -55,7 +77,7 @@
 			<p:commandButton id="guardarProducto" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
 				action="#{editarProductoBean.guardarProducto()}" update="templateForm:formEditProducto:panelEditProducto"/>
 			<p:button id="salirProducto" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
-				outcome="/productoList.xhtml?faces-redirect=true"/>
+				outcome="/protected/productoList.xhtml?faces-redirect=true"/>
 		</p:panel>
 		
 		

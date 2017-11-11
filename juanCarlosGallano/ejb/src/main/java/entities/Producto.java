@@ -17,7 +17,8 @@ public class Producto implements Serializable {
 
 	@Id
 	@Column(name = "id_producto")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "producto_generator")
+	@SequenceGenerator(name="producto_generator", sequenceName = "producto_seq", allocationSize=1)
 	private Long idProducto;
 
 	@Column(name = "nombre_producto")
@@ -31,10 +32,22 @@ public class Producto implements Serializable {
 	@Column(name = "cantidad_minima")
 	@NotNull
 	private Long cantidadMinima;
+	
+	@Column(name ="codigo_barra", nullable = false)
+	private String codigoBarra;
+	
+	
+	@Column(name = "cantidad_maxima")
+	@NotNull
+	private Long cantidadMaxima;
 
 	@Column(name = "precio_unitario")
 	@NotNull
 	private Long precioUnitario;
+	
+	@Column(name = "iva_producto")
+	@NotNull
+	private Float ivaProducto;
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "id_marca", nullable = false)
@@ -43,9 +56,10 @@ public class Producto implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "id_tipo_producto", nullable = false)
 	private TipoProducto tipoProducto;
-	
-	@ManyToMany (targetEntity = Proveedor.class, mappedBy = "productos")
-	private List<Proveedor> proveedor;
+
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "id_unidad_medida", nullable = false)
+	private UnidadMedida unidadMedida;
 
 	public Long getIdProducto() {
 		return idProducto;
@@ -53,6 +67,16 @@ public class Producto implements Serializable {
 
 	public void setIdProducto(Long idProducto) {
 		this.idProducto = idProducto;
+	}
+	
+	
+
+	public UnidadMedida getUnidadMedida() {
+		return unidadMedida;
+	}
+
+	public void setUnidadMedida(UnidadMedida unidadMedida) {
+		this.unidadMedida = unidadMedida;
 	}
 
 	public String getNombreProducto() {
@@ -94,16 +118,6 @@ public class Producto implements Serializable {
 	public void setTipoProducto(TipoProducto tipoProducto) {
 		this.tipoProducto = tipoProducto;
 	}
-
-	public List<Proveedor> getProveedor() {
-		return proveedor;
-	}
-
-	public void setProveedor(List<Proveedor> proveedor) {
-		this.proveedor = proveedor;
-	}
-	
-	
 	
 	public Long getPrecioUnitario() {
 		return precioUnitario;
@@ -111,6 +125,33 @@ public class Producto implements Serializable {
 
 	public void setPrecioUnitario(Long precioUnitario) {
 		this.precioUnitario = precioUnitario;
+	}
+	
+	
+
+	public Long getCantidadMaxima() {
+		return cantidadMaxima;
+	}
+
+	public void setCantidadMaxima(Long cantidadMaxima) {
+		this.cantidadMaxima = cantidadMaxima;
+	}
+
+	
+	public String getCodigoBarra() {
+		return codigoBarra;
+	}
+
+	public void setCodigoBarra(String codigoBarra) {
+		this.codigoBarra = codigoBarra;
+	}
+
+	public Float getIvaProducto() {
+		return ivaProducto;
+	}
+
+	public void setIvaProducto(Float ivaProducto) {
+		this.ivaProducto = ivaProducto;
 	}
 
 	@Override

@@ -13,10 +13,12 @@ import ejb.MarcaEJB;
 import ejb.ProductoEJB;
 import ejb.ProveedorEJB;
 import ejb.TipoProductoEJB;
+import ejb.UnidadMedidaEJB;
 import entities.Marca;
 import entities.Producto;
 import entities.Proveedor;
 import entities.TipoProducto;
+import entities.UnidadMedida;
 
 @ManagedBean (name = "editarProductoBean")
 @ViewScoped
@@ -33,13 +35,18 @@ public class EditarProductoBean {
 	@EJB
 	TipoProductoEJB tipoProductoEjb;
 	
+	@EJB
+	UnidadMedidaEJB unidadMedidaEjb;
+	
 	private Long idProducto;
 	private Producto productoEdicion;
 	
 	private List<Marca> marcas;
 	private Long idMarca;
 	private Long idTipoProducto;
+	private Long idTipoUnidadMedida;
 	private List<TipoProducto> tiposProductos;
+	private List<UnidadMedida> unidadMedidaList;
 	private List<Proveedor> proveedores;
 	private List<Proveedor> proveedorProducto;
 	
@@ -61,6 +68,7 @@ public class EditarProductoBean {
 		if (!FacesContext.getCurrentInstance().isPostback()){
 			marcas = marcaEjb.findAll();
 			tiposProductos = tipoProductoEjb.findAll();
+			unidadMedidaList = unidadMedidaEjb.findAllActivo();
 			proveedores = proveedorEjb.findAll();
 			Map<String,String> params =
 	                FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
@@ -71,6 +79,8 @@ public class EditarProductoBean {
 			}
 			if (idProducto != null){
 				productoEdicion = productoEjb.findIdProducto(idProducto);
+				idMarca = productoEdicion.getMarca().getIdMarca();
+				idTipoProducto = productoEdicion.getTipoProducto().getIdTipoProducto();
 			} else {
 				productoEdicion = new Producto();
 			}
@@ -80,6 +90,8 @@ public class EditarProductoBean {
 	public void guardarProducto(){
 		// Debe persistir el usuario
 		if(productoEdicion.getIdProducto() == null){
+			System.out.println(" unidad de medida: " + idTipoUnidadMedida);
+			productoEdicion.setUnidadMedida(unidadMedidaEjb.findIdUnidadMedida(idTipoUnidadMedida));
 			productoEdicion.setMarca(marcaEjb.findMarcaId(idMarca));
 			productoEdicion.setTipoProducto(tipoProductoEjb.findIdTipoProducto(idTipoProducto));
 			productoEdicion = productoEjb.create(productoEdicion);
@@ -89,6 +101,7 @@ public class EditarProductoBean {
 			 // Crear cabecera de producto y detalle
 		} else {
 			// Modificar Producto
+			productoEdicion.setUnidadMedida(unidadMedidaEjb.findIdUnidadMedida(idTipoUnidadMedida));
 			productoEdicion.setMarca(marcaEjb.findMarcaId(idMarca));
 			productoEdicion.setTipoProducto(tipoProductoEjb.findIdTipoProducto(idTipoProducto));
 			productoEdicion = productoEjb.update(productoEdicion);
@@ -131,6 +144,18 @@ public class EditarProductoBean {
 	}
 	public void setIdTipoProducto(Long idTipoProducto) {
 		this.idTipoProducto = idTipoProducto;
+	}
+	public Long getIdTipoUnidadMedida() {
+		return idTipoUnidadMedida;
+	}
+	public void setIdTipoUnidadMedida(Long idTipoUnidadMedida) {
+		this.idTipoUnidadMedida = idTipoUnidadMedida;
+	}
+	public List<UnidadMedida> getUnidadMedidaList() {
+		return unidadMedidaList;
+	}
+	public void setUnidadMedidaList(List<UnidadMedida> unidadMedidaList) {
+		this.unidadMedidaList = unidadMedidaList;
 	}
 	
 	

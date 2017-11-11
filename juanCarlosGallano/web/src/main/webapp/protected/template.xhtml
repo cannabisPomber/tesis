@@ -5,12 +5,10 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:c="http://java.sun.com/jsp/jstl/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui" >
 
 
 <f:view contentType="text/html" id="fview">
-
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Sistema Web Delfra</title>
     <ui:debug />
     <f:metadata>
@@ -64,35 +62,48 @@
     <tr>
     	<td style="width:20%">
 		    <p:panelMenu >
-		    	<p:submenu label="Datos Principales" expanded="false" >
-		    		<p:menuitem value="Clientes" icon="ui-icon-disk" outcome="/protected/clienteList.xhtml?faces-redirect=true" />
-		    		<p:menuitem value="Proveedores" outcome="/protected/proveedorList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
-		    		<p:menuitem value="Producto" outcome="/protected/productoList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
-		    		<p:menuitem value="Tipo Producto" outcome="/protected/tipoProductoList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
-		    		<p:menuitem value="Marca Producto" outcome="/protected/marcaList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
-		    		<p:menuitem value="Tipo Venta" outcome="/protected/tipoVentaList.xhtml?faces-redirect=true" icon="ui-icon-disk" />
-		    		<p:menuitem value="Depositos" outcome="/protected/depositoList.xhtml?faces-redirect=true" ajax="false" icon="ui-icon-disk" />
+		    	<p:submenu label="Datos Principales" expanded="false" rendered="#{usuarioBean.grupoUsuario  eq 'admin'}">
+		    		<p:menuitem value="Empresa" icon="ui-icon-triangle-1-e" outcome="/protected/empresa.xhtml?faces-redirect=true" />
+		    		<p:menuitem value="Clientes" icon="ui-icon-triangle-1-e" outcome="/protected/clienteList.xhtml?faces-redirect=true" />
+		    		<p:menuitem value="Proveedores" outcome="/protected/proveedorList.xhtml?faces-redirect=true" icon="ui-icon-triangle-1-e" />
+		    		<p:menuitem value="Producto" outcome="/protected/productoList.xhtml?faces-redirect=true" icon="ui-icon-triangle-1-e" />
+		    		<p:menuitem value="Producto por Proveedor" outcome="/protected/productoProveedorList.xhtml?faces-redirect=true" icon="ui-icon-triangle-1-e" />
+		    		<p:menuitem value="Unidad de Medida" outcome="/protected/unidadMedidaList.xhtml?faces-redirect=true" icon="ui-icon-triangle-1-e" />
+		    		<p:menuitem value="Tipo Producto" outcome="/protected/tipoProductoList.xhtml?faces-redirect=true" icon="ui-icon-triangle-1-e" />
+		    		<p:menuitem value="Marca Producto" outcome="/protected/marcaList.xhtml?faces-redirect=true" icon="ui-icon-triangle-1-e" />
+		    		<p:menuitem value="Tipo Documento" outcome="/protected/tipoDocumentoList.xhtml?faces-redirect=true" icon="ui-icon-triangle-1-e" />
+		    		<p:menuitem value="Tipo Venta" outcome="/protected/tipoVentaList.xhtml?faces-redirect=true" icon="ui-icon-triangle-1-e" />
+		    		<p:menuitem value="Forma de Pago" outcome="/protected/formaPagoList.xhtml?faces-redirect=true" icon="ui-icon-triangle-1-e" />
+		    		<p:menuitem value="Depositos" outcome="/protected/depositoList.xhtml?faces-redirect=true" icon="ui-icon-triangle-1-e" />
 		    		
 		    	</p:submenu>
-		        <p:submenu label="Compras" expanded="false" >
-		        	<p:menuitem value="Proveedores" icon="ui-icon-disk" />
+		        <p:submenu label="Compras" expanded="false" rendered="#{usuarioBean.grupoUsuario  eq 'Compras'}" >
+		        	<p:menuitem value="Crear Pedido" outcome="/protected/pedidoList.xhtml?faces-redirect=true"  icon="ui-icon-triangle-1-e" />
+		        	<p:menuitem value="Anular Pedido" outcome="/protected/anularPedido.xhtml?faces-redirect=true"  icon="ui-icon-triangle-1-e" />
+		        	<p:menuitem value="Generar Pedido Automatico" outcome="/protected/generarPedidoAutomatico.xhtml?faces-redirect=true"  icon="ui-icon-triangle-1-e" />
+		        	<p:menuitem value="Busqueda Presupuesto" outcome="/protected/busquedaPresupuesto.xhtml?faces-redirect=true"  icon="ui-icon-triangle-1-e" />
+		        	<p:menuitem value="Generar Orden de Compra" outcome="/protected/generarPedidoAutomatico.xhtml?faces-redirect=true"  icon="ui-icon-triangle-1-e" />
+		        	<p:menuitem value="Confirmar Orden de Compra" outcome="/protected/confirmarOrdenCompra.xhtml?faces-redirect=true"  icon="ui-icon-triangle-1-e" />
+		        	<p:menuitem value="Recibir Pedido" outcome="/protected/recibirPedido.xhtml?faces-redirect=true"  icon="ui-icon-triangle-1-e" />
 		        </p:submenu>
-		        <p:submenu label="Ventas" expanded="false" >
-		            <p:menuitem value="Delete"   ajax="false" icon="ui-icon-close"/>
+		        <p:submenu label="Ventas" expanded="false" rendered="#{usuarioBean.grupoUsuario  eq 'Caja'}" >
+		            <p:menuitem value="Venta Contado" outcome="/protected/ventaContado.xhtml?faces-redirect=true" icon="ui-icon-triangle-1-e" />
+		            <p:menuitem value="Venta Credito" outcome="/protected/ventaCredito.xhtml?faces-redirect=true" icon="ui-icon-triangle-1-e" />
+		            <p:menuitem value="Venta Consignacion" outcome="/protected/ventaConsignacion.xhtml?faces-redirect=true" icon="ui-icon-triangle-1-e" />
 		        </p:submenu>
 		        <p:separator />
-		        <p:submenu label="Inventario" expanded="false" >
+		        <p:submenu label="Inventario" expanded="false" rendered="#{usuarioBean.grupoUsuario eq 'Inventario'} " >
 	
 	                    
 		        </p:submenu>
-		        <p:submenu label="Seguridad" >
+		        <p:submenu label="Seguridad" rendered="#{usuarioBean.grupoUsuario eq 'admin'} " >
 		            <p:menuitem value="Usuarios" outcome="/protected/usuarioList.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
-		        	<p:menuitem value="Grupos"   outcome="/protected/grupos.xhtml?faces-redirect=true" ajax="false" icon="ui-icon-close"/>
+		        	<p:menuitem value="Grupos"   outcome="/protected/gruposList.xhtml?faces-redirect=true" ajax="false" icon="ui-icon-close"/>
 		        </p:submenu>
 		        
-		        <p:submenu label="Caja" >
-		        	<p:menuitem value="Abrir Caja" outcome="/protected/caja/abrirCaja.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
-		        	<p:menuitem value="Cerrar Caja"  outcome="/protected/caja/cerrarCaja.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
+		        <p:submenu label="Caja" rendered="#{usuarioBean.grupoUsuario eq 'Caja'} " >
+		        	<p:menuitem value="Abrir Caja" outcome="/protected/abrirCaja.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
+		        	<p:menuitem value="Cerrar Caja"  outcome="/protected/cerrarCaja.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
 		        	<p:menuitem value="Agregar Dinero Caja"  ajax="false" icon="ui-icon-close"/>
 		        </p:submenu>
 		    </p:panelMenu>

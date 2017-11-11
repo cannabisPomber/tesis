@@ -1,6 +1,7 @@
 package entities;
 
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,15 +14,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity (name = "caja")
 @NamedQuery(name="Caja.findAll", query="SELECT p FROM caja p")
-public class Caja {
+public class Caja implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "caja_generator")
+	@SequenceGenerator(name="caja_generator", sequenceName = "caja_seq", allocationSize=1)
 	@Column (name = "id_caja")
 	private Long idCaja;
 	

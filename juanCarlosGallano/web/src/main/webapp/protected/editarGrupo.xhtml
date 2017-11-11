@@ -28,13 +28,14 @@
             	<f:selectItem itemLabel="Activo" itemValue="Activo" />
             	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
         	</p:selectOneMenu>
+                
 			
 		</p:panelGrid>
 		
 			<p:commandButton id="guardarGrupo" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
 				action="#{editarGrupoBean.guardarGrupo()}" update="templateForm:formEditGrupo:panelEditGrupo"/>
 			<p:button id="salirGrupo" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
-				outcome="/grupos.xhtml?faces-redirect=true"/>
+				outcome="/protected/gruposList.xhtml?faces-redirect=true"/>
 		</p:panel>
 		
 		

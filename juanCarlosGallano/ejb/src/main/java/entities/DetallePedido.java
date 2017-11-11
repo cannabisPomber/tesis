@@ -29,15 +29,6 @@ public class DetallePedido {
 	
 	@Column (name = "cantidad" , nullable = false)
 	private Long cantidad;
-	
-	@Column (name = "cantidad_ofrecida" , nullable = true)
-	private Long cantidad_ofrecida;
-	
-	@Column (name = "precio" , nullable = false)
-	private Long precio;
-	
-	@Column (name = "precio_ofrecido" , nullable = true)
-	private Long precio_ofrecido;
 
 	public Long getIdDetallePedido() {
 		return idDetallePedido;
@@ -71,29 +62,7 @@ public class DetallePedido {
 		this.cantidad = cantidad;
 	}
 
-	public Long getCantidad_ofrecida() {
-		return cantidad_ofrecida;
-	}
-
-	public void setCantidad_ofrecida(Long cantidad_ofrecida) {
-		this.cantidad_ofrecida = cantidad_ofrecida;
-	}
-
-	public Long getPrecio() {
-		return precio;
-	}
-
-	public void setPrecio(Long precio) {
-		this.precio = precio;
-	}
-
-	public Long getPrecio_ofrecido() {
-		return precio_ofrecido;
-	}
-
-	public void setPrecio_ofrecido(Long precio_ofrecido) {
-		this.precio_ofrecido = precio_ofrecido;
-	}
+	
 
 	@Override
 	public int hashCode() {

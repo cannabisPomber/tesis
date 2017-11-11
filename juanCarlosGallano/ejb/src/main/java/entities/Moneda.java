@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.validation.constraints.NotNull;
 
 @Entity (name = "moneda")
 @NamedQuery(name="Moneda.findAll", query="SELECT u FROM moneda u")
@@ -28,13 +29,11 @@ public class Moneda implements Serializable{
 	private String nombreMoneda;
 	@Column(name="abreviatura_moneda", nullable = false)
 	private String abreviaturaMoneda;
-	
-	@Column(name="cambio", nullable = false)
-	private Double cambio;
-	
-	@Column(name="fecha_cotizacion", nullable = true)
-	private Date fechaCotizacion;
 
+
+	@Column (name = "estado_moneda", nullable = true)
+	private String estadoMoneda;
+	
 	public Long getIdMoneda() {
 		return idMoneda;
 	}
@@ -58,22 +57,15 @@ public class Moneda implements Serializable{
 	public void setAbreviaturaMoneda(String abreviaturaMoneda) {
 		this.abreviaturaMoneda = abreviaturaMoneda;
 	}
-
-	public Double getCambio() {
-		return cambio;
+	
+	public String getEstadoMoneda() {
+		return estadoMoneda;
 	}
 
-	public void setCambio(Double cambio) {
-		this.cambio = cambio;
+	public void setEstadoMoneda(String estadoMoneda) {
+		this.estadoMoneda = estadoMoneda;
 	}
-
-	public Date getFechaCotizacion() {
-		return fechaCotizacion;
-	}
-
-	public void setFechaCotizacion(Date fechaCotizacion) {
-		this.fechaCotizacion = fechaCotizacion;
-	}
+	
 
 	@Override
 	public int hashCode() {

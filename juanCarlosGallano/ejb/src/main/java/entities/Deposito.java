@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 
 @Entity (name = "deposito")
@@ -20,14 +21,15 @@ public class Deposito implements Serializable{
 
 	@Id
 	@Column(name="id_deposito")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "deposito_generator")
+	@SequenceGenerator(name="deposito_generator", sequenceName = "deposito_seq", allocationSize=1)
 	private Long idDeposito;
 	
 	@Column (name = "nombre_deposito")
 	@NotNull
 	private String nombreDeposito;
 	
-	@Column (name = "estadoDeposito")
+	@Column (name = "estado_deposito")
 	@NotNull
 	private String estado;
 

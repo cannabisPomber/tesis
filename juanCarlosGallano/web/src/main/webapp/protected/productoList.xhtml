@@ -24,7 +24,7 @@
 			</p:column>
 			
 			<p:column headerText="Tipo Producto">
-				<h:outputText value="#{producto.tipoProducto.nombreTipoProducto}" />
+				<h:outputText value="#{producto.tipoProducto.nombreTipoProducto} #{producto.unidadMedida.dimension} #{producto.unidadMedida.unidad}" />
 			</p:column>
 			
 			<p:column headerText="Estado">
@@ -37,7 +37,7 @@
 					<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
 				</f:facet>
 				
-				<p:button outcome="/editarProducto" icon="ui-icon-pencil" id="editProducto">
+				<p:button outcome="editarProducto" icon="ui-icon-pencil" id="editProducto">
 						<f:param name="idProducto" value="#{producto.idProducto}"></f:param>
 				</p:button>
 			</p:column>

@@ -9,8 +9,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 
 @Entity (name = "grupo")
@@ -24,7 +26,8 @@ public class Grupo implements Serializable{
 
 	@Id
 	@Column(name="id_grupo")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "grupo_generator")
+	@SequenceGenerator(name="grupo_generator", sequenceName = "grupo_seq", allocationSize=1)
 	private Long idGrupo;
 	
 	@Column(name="nombre_grupo")
@@ -38,6 +41,9 @@ public class Grupo implements Serializable{
 	@Column(name="estado")
 	@NotNull
 	private String estado;
+	
+	@ManyToMany(mappedBy="listGrupos")
+	private List<Rol> listRol;
 	
 	public Long getIdGrupo() {
 		return idGrupo;
@@ -69,6 +75,16 @@ public class Grupo implements Serializable{
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+	
+	
+
+	public List<Rol> getListRol() {
+		return listRol;
+	}
+
+	public void setListRol(List<Rol> listRol) {
+		this.listRol = listRol;
 	}
 
 	@Override

@@ -24,7 +24,8 @@ public class ClienteBean {
 		this.clienteEdicion = clienteEdicion;
 	}
 	public List<Cliente> getClientes() {
-		return clienteEjb.findAll();
+		clientes = clienteEjb.findAll();
+		return clientes;
 	}
 	public void setClientes(List<Cliente> clientes) {
 		this.clientes = clientes;
