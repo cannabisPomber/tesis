@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{crearPedidoBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditPedido">
+		<p:panel id="panelEdicion">
+		<p:panelGrid columns="2" id="panelEditPedido">
+		
+			<p:panel header="Cargar Detalle Pedido" id="panelCargarPedido">
+			
+				<p:panelGrid columns="2" id="panelPedido">
+					<p:outputLabel value="Seleccionar Producto" for="productoPedido"/>
+					<p:selectOneMenu required= "true" requiredMessage="Producto debe ser seleccionado" id="productoPedido" 
+						value="#{crearPedidoBean.idProducto}" style="width:125px" disabled="#{crearPedidoBean.disabledVista}" >
+		            	<f:selectItem itemLabel="Seleccione Producto"  />
+		            	<f:selectItems value="#{crearPedidoBean.listProducto}" var="producto"
+		            		itemLabel="#{producto.nombreProducto} #{producto.marca.nombreMarca} #{producto.tipoProducto.nombreTipoProducto} #{producto.unidadMedida.dimension} #{producto.unidadMedida.unidad}" itemValue="#{producto.idProducto}"/>
+		        	</p:selectOneMenu>
+		        	
+		        	<p:outputLabel value="Seleccionar Cantidad" for="cantidadPedido"/>
+		        	<p:inputNumber required= "true" value="#{crearPedidoBean.cantidad}" id="cantidadPedido" decimalPlaces="0" disabled="#{crearPedidoBean.disabledVista}"/>
+				</p:panelGrid>
+				
+				<p:commandButton id="guardarDetallePEdido" label="Guardar Detalle" title="Guardar Detalle" style="margin-top:25px;margin-left:25px"
+					action="#{crearPedidoBean.guardarDetallePedido()}" update="panelEditPedido" disabled="#{crearPedidoBean.disabledVista}"/>
+					
+			</p:panel>
+			
+			<p:panel header="Lista Detalle Pedido" id="panelDetallePedido">
+				<p:dataTable id="tablaPedido" var="detallePedido" value="#{crearPedidoBean.listDetallePedido}" emptyMessage="No se registran elementos cargados"
+						style="margin-top:10px">
+					<p:column headerText="Producto">
+						<h:outputText value="#{detallePedido.producto.nombreProducto} #{detallePedido.producto.marca.nombreMarca} #{detallePedido.producto.tipoProducto.nombreTipoProducto} #{detallePedido.producto.unidadMedida.dimension} #{detallePedido.producto.unidadMedida.unidad}" />
+					</p:column>
+					
+					<p:column headerText="Cantidad">
+						<h:outputText value="#{detallePedido.cantidad}" />
+					</p:column>
+					
+					<p:column>
+						<p:commandButton action="#{crearPedidoBean.eliminarDetallePedido(detallePedido)}"
+							update="templateForm:formEditPedido:panelDetallePedido" icon="ui-icon-trash" disabled="#{crearPedidoBean.disabledVista}">
+						</p:commandButton>
+					</p:column>
+			</p:dataTable>
+			</p:panel>
+		</p:panelGrid>
+		
+			<p:commandButton id="guardarPedido" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
+				action="#{crearPedidoBean.guardarPedido()}" update="templateForm:formEditPedido:panelEditPedido" rendered="#{!crearPedidoBean.disabledVista}"/>
+				
+			<p:commandButton id="anularPedido" label="Anular Pedido" title="Anular" style="margin-top:25px;margin-left:25px"
+				action="#{crearPedidoBean.anularPedido()}" update="templateForm:formEditPedido:panelEditPedido" rendered="#{crearPedidoBean.disabledVista}"/>
+			<p:button id="salirPedido" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				outcome="/protected/pedidoList.xhtml?faces-redirect=true"/>
+		</p:panel>
+		
+		
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{mostrarEmpresaBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEmpresa">
+	
+		<p:panel id="panelEmpresa" style="">
+		
+			<p:panelGrid columns="2" id="panelDatosEmpresa">
+				
+				<p:outputLabel value="R.U.C:"  required="true"/>
+				<p:inputText id="ruc" value="#{mostrarEmpresaBean.empresa.ruc}" ></p:inputText>
+			
+				<p:outputLabel value="Nombre o Razon Social:" required="true" />
+				<p:inputText id="nombreEmpresa" value="#{mostrarEmpresaBean.empresa.nombreEmpresa}" ></p:inputText>
+				
+				<p:outputLabel value="Local:" required="true" />
+				<p:inputText id="local" value="#{mostrarEmpresaBean.empresa.local}" ></p:inputText>
+				
+				<p:outputLabel value="Dirección:" required="true" />
+				<p:inputText id="direccion" value="#{mostrarEmpresaBean.empresa.direccion}" ></p:inputText>
+				
+				<p:outputLabel value="Telefono:" required="true" />
+				<p:inputText id="telefonoEmpresa" value="#{mostrarEmpresaBean.empresa.telefono}" ></p:inputText>
+				
+				<p:outputLabel value="Timbrado:" required="true" />
+				<p:inputText id="timbrado" value="#{mostrarEmpresaBean.empresa.timbrado}" ></p:inputText>
+				
+				<p:outputLabel value="Válido desde:" required="true" />
+				<p:calendar id="validoDesde" value="#{mostrarEmpresaBean.empresa.inicioTimbrado}" >
+				</p:calendar>
+			
+				<p:outputLabel value="Válido hasta:" />
+				<p:calendar id="validoHasta" value="#{mostrarEmpresaBean.empresa.vencimientoTimbrado}" required="true">
+				</p:calendar>
+				
+			</p:panelGrid>
+			<p:commandButton id="guardarEmpresa" actionListener="#{mostrarEmpresaBean.guardarEmpresa()}" value="Guardar Datos Empresa" icon=" ui-icon-disk" style= "margin-top:20px" update="@form" ajax="false">
+			</p:commandButton>
+			<p:button id="salirCliente" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+					outcome="/protected/index.xhtml?faces-redirect=true"/>
+		</p:panel>
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formVentaContado">
+	<p:panel id="panelVenta" header="Venta Contado Productos">
+	
+	<p:panel id="headerVenta">
+	
+	</p:panel>
+	
+	<p:panelGrid columns="4" id="panelGridVenta">
+		
+		
+		<p:outputLabel value="Nro. Factura:" />
+        <p:outputLabel>000-000-001</p:outputLabel>
+        
+		<p:outputLabel value="Fecha:" />
+        <p:outputLabel>28/09/2017</p:outputLabel>        
+        
+        <p:outputLabel value="Cliente" for="precioCompra"/>
+        <p:inputNumber id="precioCompra" value="#{ventaContadoBean.cantidad}"  decimalPlaces="0" required="true"></p:inputNumber>
+        
+        <p:outputLabel value="Cantidad" for="precioCompra"/>
+        <p:inputNumber id="precioCompra" value="#{ventaContadoBean.cantidad}"  decimalPlaces="0" required="true"></p:inputNumber>
+        
+        
+        <p:outputLabel value="Produ" for="precioCompra"/>
+		<p:selectOneMenu required= "true" requiredMessage="Producto debe ser seleccionado" id="productoVenta" value="#{ventaContadoBean.producto}" style="width:125px" >
+            	<f:selectItem itemLabel="Seleccione Estado"  />
+            	<f:selectItems itemLabel="#{prod.nombreProducto} #{prod.marca.nombreMarca} #{prod.tipoProducto.nombreTipoProducto} #{prod.unidadMedida.unidad} #{prod.unidadMedida.dimension}" var="prod" itemValue="prod" value="#{ventaContadoBean.listProducto}"/>
+        	</p:selectOneMenu>
+	</p:panelGrid>
+	</p:panel>	
+		
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

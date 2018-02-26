@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{editarProductoProveedorBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditProductoProveedor">
+		<p:panel id="panelEdicion">
+		<p:panelGrid columns="2" id="panelEditProductoProveedor">
+			
+			<p:outputLabel value="Producto" for="productoProveedor"/>
+			<p:selectOneMenu required= "true" requiredMessage="Producto debe ser seleccionado" id="productoProveedor" value="#{editarProductoProveedorBean.idProducto}" style="width:125px" >
+            	<f:selectItem itemLabel="Seleccione Producto"  />
+            	<f:selectItems value="#{editarProductoProveedorBean.listProducto}" var="gru" itemValue="#{gru.idProducto}" itemLabel="#{gru.nombreProducto} #{gru.marca.nombreMarca} #{gru.tipoProducto.nombreTipoProducto} #{gru.unidadMedida.dimension} #{gru.unidadMedida.unidad}" />
+        	</p:selectOneMenu>
+        	<p:outputLabel value="Proveedor" for="proveedor"/>
+			<p:selectOneMenu required= "true" requiredMessage="Proveedor debe ser seleccionado" id="proveedor" value="#{editarProductoProveedorBean.idProveedor}" style="width:125px" >
+            	<f:selectItem itemLabel="Seleccione Proveedor"  />
+            	<f:selectItems value="#{editarProductoProveedorBean.listProveedor}" var="gru" itemValue="#{gru.idProveedor}" itemLabel="#{gru.nombreEmpresa}" />
+        	</p:selectOneMenu>
+        	<p:outputLabel value="Precio Compra" for="precioCompra"/>
+        	<p:inputNumber id="precioCompra" value="#{editarProductoProveedorBean.productoProveedorEdicion.precioCompra}" decimalPlaces="0" required="true"></p:inputNumber>
+			<p:outputLabel value="Estado" for="estadoProductoProveedor"/>
+			<p:selectOneMenu required= "true" requiredMessage="Estado debe ser seleccionado" id="estadoProductoProveedor" value="#{editarProductoProveedorBean.productoProveedorEdicion.estado}" style="width:125px" >
+            	<f:selectItem itemLabel="Seleccione Estado"  />
+            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
+            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+        	</p:selectOneMenu>
+		</p:panelGrid>
+		
+			<p:commandButton id="guardarProductoProveedor" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
+				action="#{editarProductoProveedorBean.guardarProductoProveedor()}" update="templateForm:formEditProductoProveedor:panelEditProductoProveedor"/>
+			<p:button id="salirGrupo" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				outcome="/protected/productoProveedorList.xhtml?faces-redirect=true"/>
+		</p:panel>
+		
+		
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

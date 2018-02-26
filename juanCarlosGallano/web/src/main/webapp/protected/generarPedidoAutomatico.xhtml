@@ -1,0 +1,64 @@
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{generarPedidoAutomaticoBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditProductoProveedor">
+	
+		<p:panel id="panelPedidoAutomatico">
+			<p:focus for="inputCodBarra"/>
+			<p:panelGrid columns="2" id="panelGridPedidoAutomatico">
+			
+				<p:outputLabel value="Cargar Codigo de Barra de Producto a Reponer" />
+				<p:inputText id="inputCodBarra" value="#{generarPedidoAutomaticoBean.codigoBarraProducto}" ></p:inputText>
+			</p:panelGrid>
+		
+		<p:commandButton id="buscarProducto" actionListener="#{generarPedidoAutomaticoBean.buscarProducto()}" value="Buscar Producto" style= "margin-top:20px">
+		<p:ajax update="templateForm:formEditProductoProveedor:panelPedidoAutomatico"></p:ajax>
+		</p:commandButton>
+		
+		<p:panel id="panelProducto" rendered="#{generarPedidoAutomaticoBean.mostrarProveedor}" header="Producto Seleccionado">
+			<p:panelGrid columns="2" id="panelProductoPedidoAutomatico">
+				<p:outputLabel value="Nombre Producto" />
+				<p:inputText disabled="true" value="#{generarPedidoAutomaticoBean.producto.nombreProducto}"/>
+				
+				<p:outputLabel value="Marca Producto" />
+				<p:inputText disabled="true" value="#{generarPedidoAutomaticoBean.producto.marca.nombreMarca}"/>
+				
+				<p:outputLabel value="Tipo Producto" />
+				<p:inputText disabled="true" value="#{generarPedidoAutomaticoBean.producto.tipoProducto.nombreTipoProducto}"/>
+				
+				<p:outputLabel value="Unidad de Medida" />
+				<p:inputText disabled="true" value="#{generarPedidoAutomaticoBean.producto.unidadMedida.dimension} #{generarPedidoAutomaticoBean.producto.unidadMedida.unidad}"/>
+				
+				<p:outputLabel value="Cantidad A Reponer" />
+				<p:inputNumber disabled="true" value="#{generarPedidoAutomaticoBean.reposicion}"/>
+			
+			</p:panelGrid>
+		</p:panel>
+		
+		<p:panel id="panelProveedor" rendered="#{generarPedidoAutomaticoBean.mostrarProveedor}" header="Proveedor Con menor Precio">
+			<p:panelGrid columns="2" id="panelProveedorPedidoAutomatico">
+				<p:outputLabel value="Nombre Proveedor" />
+				<p:inputText disabled="true" value="#{generarPedidoAutomaticoBean.proveedorProducto.proveedor.nombreEmpresa}"/>
+				
+				<p:outputLabel value="Precio de Compra" />
+				<p:inputNumber disabled="true" value="#{generarPedidoAutomaticoBean.proveedorProducto.precioCompra}"/>
+			
+			</p:panelGrid>
+		</p:panel>
+		</p:panel>
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<!-- 
+	<f:metadata>
+		<f:event listener="#{usuarioBean.initUsuario()}" type="preRenderView"></f:event>
+	</f:metadata>  -->
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formProductoProveedorList">
+		<p:panel id="panelProductoProveedorList">
+		<p:outputLabel value="Listado de Producto por Proveedor" />
+		<p:dataTable id="productoProveedorTable" value="#{productoProveedorBean.productoProveedorList}" emptyMessage="No se registran elementos cargados"
+			style="margin-top:10px" var="productoProveedor">
+			<p:column headerText="Producto">
+				<h:outputText value="#{productoProveedor.producto.nombreProducto} #{productoProveedor.producto.marca.nombreMarca} #{productoProveedor.producto.unidadMedida.dimension} #{productoProveedor.producto.unidadMedida.unidad}" />
+			</p:column>
+			
+			<p:column headerText="Proveedor">
+				<h:outputText value="#{productoProveedor.proveedor.nombreEmpresa}" />
+			</p:column>
+			
+			<p:column headerText="Estado">
+				<h:outputText value="#{productoProveedor.estado}" />
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						<p:button outcome="editarProductoProveedor" title="Nuevo Producto Proveedor" value="Nuevo"/>
+						<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
+					</f:facet>
+					
+					<p:button outcome="editarProductoProveedor" icon="ui-icon-pencil" id="editProductoProveedor">
+						<f:param name="idProductoProveedor" value="#{productoProveedor.idProductoProveedor}"></f:param>
+					</p:button>
+
+					
+					
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

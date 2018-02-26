@@ -1,0 +1,76 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" >
+  <head>
+    <style>
+       #map {
+        height: 400px;
+        width: 100%;
+       }
+    </style>
+  </head>
+  <body>
+    <h3>My Google Maps Demo</h3>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+    	var originalMapCenter = new google.maps.LatLng(-25.2999708, -57.6375885);
+        var uluru = {lat: -25.2999708, lng: -57.6375885};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 14,
+          center: originalMapCenter,
+          zoomControl: true,
+          scaleControl: true
+          
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map,
+          draggable: true,
+          title: 'Buscar Direccion:'
+        });
+
+
+
+        var infowindow = new google.maps.InfoWindow();
+         google.maps.event.addListener(marker, 'click', function(){
+        	 openInfoWindow(marker);
+             })
+          
+          $(document).ready(function(){
+				initmap();
+              });
+          
+      }
+      function placeMarkerAndPanTo(latLng, map) {
+    	  var marker = new google.maps.Marker({
+    		    position: location,
+    		    map: map
+    		  });
+    		  var infowindow = new google.maps.InfoWindow({
+    		    content: 'Latitude: ' + location.lat() + 'Longitude: ' + location.lng()
+    		  });
+    		  infowindow.open(map,marker);
+      }
+
+      function openInfoWindow(marker) {
+		var markerLatLng = marker.getPosition();
+
+		infowindow.setContent ([
+			'&lt;b&gt;La posicion del marcador es:&lt;/b&gt;&lt;br/&gt;',
+	        markerLatLng.lat(),
+	        ', ',
+	        markerLatLng.lng(),
+	        '&lt;br/&gt;&lt;br/&gt;Arr&amp;aacute;strame y haz click para actualizar la posici&amp;oacute;n.'
+	    ].join(''));
+		infowindow.open(map, marker);
+          }
+
+    </script>
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp4nE1vThZ0FdRKKzUBXFMJqALl587DKI&amp;callback=initMap">
+    </script>
+  </body>
+</html>

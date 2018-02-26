@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{editarRolBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditRol">
+		<p:panel id="panelEdicion">
+		<p:panelGrid columns="2" id="panelEditRol">
+			
+			<p:outputLabel value="Nombre Rol" for="grupo"/>
+			<p:inputText id="grupo" required= "true" value="#{editarRolBean.rolEdicion.nombreRol}"
+				requiredMessage="Nombre de Rol no puede estar vacio"></p:inputText>
+			<p:outputLabel value="Código" for="codigo"/>
+			<p:inputText  id="codigo" value="#{editarRolBean.rolEdicion.codRol}"	
+				required="true" requiredMessage="Descripcion de grupo es requerida" maxlength="4" size="4"/>
+			<p:outputLabel value="Estado " for="estadoRol"/>
+			<p:selectOneMenu required= "true" id="estadoRol" value="#{editarRolBean.rolEdicion.estado}" style="width:125px" 
+				requiredMessage="Debe seleccionar un estado de grupo" >
+            	<f:selectItem itemLabel="Seleccione Estado"  />
+            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
+            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+        	</p:selectOneMenu>
+			
+		</p:panelGrid>
+		
+			<p:commandButton id="guardarRol" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
+				action="#{editarRolBean.guardarRol()}" update="templateForm:formEditRol:panelEditRol"/>
+			<p:button id="salirRol" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				outcome="/protected/rolList.xhtml?faces-redirect=true"/>
+		</p:panel>
+		
+		
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

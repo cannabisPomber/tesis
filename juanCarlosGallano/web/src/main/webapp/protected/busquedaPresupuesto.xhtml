@@ -1,0 +1,113 @@
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+	<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:p="http://primefaces.org/ui">
+	<f:metadata>
+			<f:event listener="#{busquedaPresupuestoBean.init()}" type="preRenderView"></f:event>
+		</f:metadata>
+	<ui:composition template="template.xhtml">
+		<ui:define name="contenido">
+	<h:form id="formBusquedaPresupuesto">
+	
+		<p:panel id="panelListadoPedidos" header="Listado de Pedidos Activos" >
+			<p:panelGrid id="panelMostrarDetallePedido" columns="2">
+			<p:dataTable id="checkboxPedido" var="pedido" value="#{busquedaPresupuestoBean.listPedidosActivos}" selection="#{busquedaPresupuestoBean.listPedidosActivosSelection}" rowKey="#{pedido.idPedido}" style="margin-bottom:0">
+		        <f:facet name="header">
+		            Seleccionar Pedidos a Presupuestar
+		        </f:facet>
+		        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+		        <p:column headerText="Fecha Pedido">
+		            <h:outputText value="#{pedido.fecha}" />
+		        </p:column>
+		        <p:column headerText="Usuario">
+		            <h:outputText value="#{pedido.usuario}" />
+		        </p:column>
+		        <p:column headerText="Estado">
+		            <h:outputText value="#{pedido.estado}" />
+		        </p:column>
+		        
+		        <f:facet name="footer">
+		            <p:commandButton id="verPedido" process="checkboxPedido" update="templateForm:formBusquedaPresupuesto:panelProductoPedidos" icon="ui-icon-search" value="Ver Detalle Pedido" actionListener="#{busquedaPresupuestoBean.mostrarProductos()}"  />
+		        </f:facet>
+		    </p:dataTable>
+		    <p:panel id="panelProductoPedidos" header="Listado de Productos" >
+		    		<p:dataTable id="productoDataTable" var="producto" value="#{busquedaPresupuestoBean.listCantidadProductos}"  emptyMessage="No se registran elementos cargados">
+		    			<p:column headerText="Nombre Producto">
+							<h:outputText value="#{producto.get(2)}" />
+						</p:column>
+						
+						<p:column headerText="Cantidad">
+							<h:outputText value="#{producto.get(1)}" />
+						</p:column>
+						
+						<p:column>
+							<p:commandButton icon="ui-icon-search" id="editProducto" value="Buscar Proveedor" action="#{busquedaPresupuestoBean.seleccionarProveedor(producto.get(0), producto.get(1))}"
+								update="templateForm:formBusquedaPresupuesto:panelSeleccionarProveedor"/>
+						</p:column>
+		    		</p:dataTable>
+		    </p:panel>
+		    </p:panelGrid>
+		    
+		    <p:panel id="panelSeleccionarProveedor" header="Seleccionar Proveedor" style="margin-top:20px" >
+		    			
+		    			
+		    			<p:dataTable id="dataTableEditProveedor" var="proveedorProducto" value="#{busquedaPresupuestoBean.listProductoProveedores}" editable="true" style="margin-bottom:20px">
+					       <f:facet name="header">
+					           Listado de Proveedores por producto Seleccionado.
+					       </f:facet>
+					       
+					       <p:column headerText="Proveedor">
+					       		<h:outputText value="#{proveedorProducto.proveedor.nombreEmpresa}" />
+					       </p:column>
+					       <p:column headerText="Precio de Compra">
+					       		<h:outputText value="#{proveedorProducto.precioCompra}" />
+					       </p:column>
+					       <p:column headerText="Cantidad de Producto">
+					       		<p:cellEditor>
+					               <f:facet name="output"><h:outputText value="#{busquedaPresupuestoBean.cantidadOrdenCompra}" /></f:facet>
+					               <f:facet name="input"><p:inputText value="#{busquedaPresupuestoBean.cantidadOrdenCompra}" style="width:100%" label="Cantidad"/></f:facet>
+					           </p:cellEditor>
+					       </p:column>
+					       <p:column headerText="Costo">
+					       		<h:outputText value="#{busquedaPresupuestoBean.costoProducto(proveedorProducto.precioCompra)}" />
+					       </p:column>
+					       <p:column style="width:10%" headerText="Editar Cantidad">
+					           <p:rowEditor update="dataTableEditProveedor"/>
+					       </p:column>
+					       <p:column>
+							<p:commandButton icon="ui-icon-clipboard" id="crearOrdenCompra" value="Crear Orden de Compra" action="#{busquedaPresupuestoBean.cargarOrdenCompra(proveedorProducto.proveedor.idProveedor,proveedorProducto.producto.idProducto , busquedaPresupuestoBean.cantidadOrdenCompra ,proveedorProducto.precioCompra, usuarioBean.usuarioLogueado())}"
+								update="templateForm:formBusquedaPresupuesto:panelOrdenCompra"/>
+							</p:column>
+					     </p:dataTable>
+		    		</p:panel>
+		    		
+		    	<p:panel id="panelOrdenCompra" header="Lista Ordenes de Compra" style="margin-top:20px">
+		    		<p:tabView value="#{busquedaPresupuestoBean.listOrdenCompraGenerado}" var="OcGenerado" >
+		    			<f:ajax event="tabClose" listener="#{busquedaPresupuestoBean.eliminarTab()}"/>
+		    			<p:tab title="#{OcGenerado.proveedor.nombreEmpresa}" closable="true">
+		    				<p:dataTable id="dataTableDetalleOc" value="#{busquedaPresupuestoBean.listDetOc}" var="detOc">
+		    					<p:column headerText="Producto">
+		    						<p:outputLabel value="#{detOc.producto.nombreProducto} #{detOc.producto.tipoProducto.nombreTipoProducto} #{detOc.producto.unidadMedida.dimension} #{detOc.producto.unidadMedida.unidad}"></p:outputLabel>
+		    					</p:column>
+		    					
+		    					<p:column headerText="Cantidad">
+		    						<p:outputLabel value="#{detOc.cantidad}"></p:outputLabel>
+		    					</p:column>
+		    				</p:dataTable>
+		    			</p:tab>
+		    		</p:tabView>
+		    		<p:commandButton id="generarOrdenCompra" ajax="false" value="Generar Orden de Compra"  action="#{busquedaPresupuestoBean.guardarOrdenCompra()}" style="margin-top:15px" update="templateForm:formBusquedaPresupuesto"/>
+		    		<p:commandButton id="limpiarBusquedaOrdenCompra" ajax="false" value="Limpiar" icon="ui-icon-trash" action="#{busquedaPresupuestoBean.init()}" style="margin-top:15px" update="templateForm:formBusquedaPresupuesto"/>
+		    	</p:panel>
+			
+		</p:panel>
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

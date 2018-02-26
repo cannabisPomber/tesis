@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+	<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:p="http://primefaces.org/ui">
+	<f:metadata>
+			<f:event listener="#{recibirPedidoBean.init()}" type="preRenderView"></f:event>
+		</f:metadata>
+	<ui:composition template="template.xhtml">
+		<ui:define name="contenido">
+	<h:form id="formRecibirPedido">
+		<p:panel id="panelConfirmarRecepcionPedido" header="Listado de Ordenes de Compra a Recibir">
+			
+			<p:dataTable id="checkboxPedido" var="ordenCompra" value="#{recibirPedidoBean.listOrdenCompraActivos}" rowKey="#{ordenCompra.idOrdenCompra}" style="margin-bottom:0">
+		        <f:facet name="header">
+		            Seleccionar Orden de Compra a Confirmar
+		        </f:facet>
+		        <p:column headerText="Proveedor" style="width:15%;text-align: center">
+		            <h:outputText value="#{ordenCompra.proveedor.nombreEmpresa}" />
+		        </p:column>
+		        <p:column headerText="Fecha Pedido" style="width:10%;text-align: center">
+		            <h:outputText value="#{ordenCompra.fechaPedido}" />
+		        </p:column>
+		        <p:column headerText="Usuario Pedido" style="width:10%;text-align: center">
+		            <h:outputText value="#{ordenCompra.usuarioPedido.usuario}" />
+		        </p:column>
+		        <p:column headerText="Estado" style="width:10%;text-align: center">
+		            <h:outputText value="#{ordenCompra.estado}" />
+		        </p:column>
+		        
+		         <p:column style="width:10%;text-align: center">
+		             <p:commandButton id="recepcionarPedido" update="templateForm:formRecibirPedido:panelDetalleOrdenCompra templateForm:confirmarRecepcionProductoDialog" 
+		             	 icon="ui-icon-search" title="Detalle Orden de Compra" action="#{recibirPedidoBean.buscarDetalleOrdenCompra()}">
+		                <f:setPropertyActionListener value="#{ordenCompra.idOrdenCompra}" target="#{recibirPedidoBean.idOrdenCompraSelected}" />
+		           </p:commandButton>
+		        </p:column>
+		    </p:dataTable>
+			
+		</p:panel>
+		<p:panel id="panelDetalleOrdenCompra" header="Listado de Productos de Orden de Compra" >
+			<p:dataTable id="datatableDetalleOC" var="detalle" value="#{recibirPedidoBean.listDetOrdenCompra}"  style="margin-top:3%">
+		        <f:facet name="header">
+		            Seleccionar Orden de Compra a Confirmar
+		        </f:facet>
+		        <p:column headerText="Producto" style="width:15%;text-align: center">
+		            <h:outputText value="#{detalle.producto.nombreProducto} #{detalle.producto.marca.nombreMarca} #{detalle.producto.tipoProducto.nombreTipoProducto} #{detalle.producto.unidadMedida.dimension} #{detalle.producto.unidadMedida.unidad}" />
+		        </p:column>
+		        <p:column headerText="Cantidad" style="width:10%;text-align: center">
+		            <h:outputText value="#{detalle.cantidad}" />
+		        </p:column>
+		        
+		        <p:column headerText="Cantidad recibida" style="width:10%;text-align: center">
+		            <p:inputNumber value="#{detalle.cantidadRecibida}" id="cantidadRecibidaDetalle"  maxValue="#{detalle.cantidad}" />
+		        </p:column>
+		        
+		        <p:column headerText="Fecha Vencimiento" style="width:10%;text-align: center" >
+		        	<p:calendar  value="#{recibirPedidoBean.fechaVencimientoProducto}" id="vencimientoDetalle" pattern="dd/MM/yyyy"></p:calendar>
+		        </p:column>
+		        
+		    </p:dataTable>
+		    
+		    <p:commandButton id="recepcionarProducto" label="Recepcionar Producto" value="Recepcionar Producto" style="margin-top:20px; margin-left:25px" actionListener="#{recibirPedidoBean.recepcionarProductos()}"
+		    	onclick="PF('recepcionDialog').show()" ></p:commandButton>
+		
+		</p:panel>
+		
+	
+			
+	</h:form>
+	<p:dialog id="confirmarRecepcionProductoDialog" widgetVar="recepcionDialog">
+		<p:panel id="panelRecepcionDialog" header="Seleccionar Destino" >
+			<p:panelGrid columns="2">
+				<p:outputLabel value="Proveedor"/>
+				<p:outputLabel value="#{recibirPedidoBean.ordenCompraSeleccionado.proveedor.nombreEmpresa}"/>
+				
+				<p:outputLabel value="Estado"/>
+				<p:outputLabel value="#{recibirPedidoBean.ordenCompraSeleccionado.estado}"/>
+				<p:outputLabel value="Numero de Factura Proveedor"/>
+				<p:inputText value="#{recibirPedidoBean.nroFactura}"/>
+				
+				<p:outputLabel value="Seleccionar Deposito Destino"/>
+				<p:selectOneMenu requiredMessage="Deposito debe ser seleccionado" 
+					id="selectDeposito" value="#{recibirPedidoBean.idDepositoSeleccionado}" 
+					style="width:125px" >
+	            	<f:selectItem itemLabel="Seleccione Deposito"  />
+	            	<f:selectItems value="#{recibirPedidoBean.listDeposito}" var="dep" itemValue="#{dep.idDeposito}" itemLabel="#{dep.nombreDeposito}" />
+	        	</p:selectOneMenu>
+			
+			</p:panelGrid>
+			
+			<p:commandButton value="Cargar Stock" actionListener="#{recibirPedidoBean.cerrarRecepcion()}" update="templateForm:formRecibirPedido:panelConfirmarRecepcionPedido" onclick="PF('recepcionDialog').hide()" />
+			<p:commandButton value="Cancelar" action="#{recibirPedidoBean.limpiar()}" onclick="PF('recepcionDialog').hide()"/>
+		</p:panel>
+	</p:dialog>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

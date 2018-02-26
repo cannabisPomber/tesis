@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<!-- 
+	<f:metadata>
+		<f:event listener="#{usuarioBean.initUsuario()}" type="preRenderView"></f:event>
+	</f:metadata>  -->
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formTipoDocumentoList">
+		<p:panel>
+		<p:outputLabel value="Listado de TipoDocumentos" />
+		<p:dataTable id="tablaTipoDocumento" var="tipoDocumento" value="#{tipoDocumentoBean.tipoDocumentoList}" emptyMessage="No se registran elementos cargados"
+			style="margin-top:10px">
+			<p:column headerText="Codigo Tipo Documento">
+				<h:outputText value="#{tipoDocumento.tipoDocumento}" />
+			</p:column>
+			
+			<p:column headerText="Descripción Tipo Documento">
+				<h:outputText value="#{tipoDocumento.descripcion}" />
+			</p:column>
+			
+			<p:column headerText="Estado">
+				<h:outputText value="#{tipoDocumento.estado}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<p:button outcome="editarTipoDocumento" title="Nueva TipoDocumento" value="Nuevo"/>
+					<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
+				</f:facet>
+				
+				<p:button outcome="editarTipoDocumento" icon="ui-icon-pencil" id="editTipoDocumento">
+					<f:param name="idTipoDocumento" value="#{tipoDocumento.id}"></f:param>
+				</p:button>
+
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	<p:dialog id="verGrupoDialog">
+		<p:panelGrid columns="2">
+			<p:outputLabel value="Nombre Usuario"/>
+			<p:outputLabel value="#{usuarioBean.userVista.usuario}"/>
+		</p:panelGrid>
+		<p:commandButton  onclick="PF('verUsuarioDialog').hide();"/>
+	</p:dialog>
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

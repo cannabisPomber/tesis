@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/protected/template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formAccesoDenegado">
+		<p:panel id="panelAccesoDenegado">
+			<p:panelGrid id="panelImagenErrorAccesoDenegado" >
+			
+			</p:panelGrid>
+			
+			<p:panelGrid id="panelImageErrorAccesoDenegado" >
+				<p:graphicImage url="/resources/images/Googleerror.png" style="margin-bottom:10px; background-position: center" />
+			</p:panelGrid>
+				<p:outputLabel id="AccesoDenegadoLabel" value="Acceso Denegado no posee Permisos para visualizar!" style="margin-left:30%"/>
+			<p:panelGrid id="panelMessageError">
+			</p:panelGrid>
+		</p:panel>
+	</h:form>
+	</ui:define>
+</ui:composition>
+</html>
