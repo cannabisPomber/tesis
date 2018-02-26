@@ -53,4 +53,10 @@ public class DepositoEJB extends GenericDaoImpl<Deposito, Serializable>{
 	    	depositos = query.getResultList();
 	    	return depositos;
 	   }
+	   
+	   public List<Deposito> findAllActivo() {
+	    	TypedQuery<Deposito> query = em.createQuery("select u from deposito u where u.estado = 'Activo'", Deposito.class);
+	    	depositos = query.getResultList();
+	    	return depositos;
+	   }
 }

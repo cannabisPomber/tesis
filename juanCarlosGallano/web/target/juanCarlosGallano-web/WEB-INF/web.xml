@@ -38,5 +38,9 @@
  <welcome-file-list>
   <welcome-file>login.xhtml</welcome-file>
  </welcome-file-list>
+ <error-page>
+    <error-code>401</error-code>
+    <location>/errorAccesoDenegado.xhtml</location>
+</error-page>
 
 </web-app>

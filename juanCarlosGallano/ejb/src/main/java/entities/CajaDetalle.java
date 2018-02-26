@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 @Entity (name = "caja_detalle")
 @NamedQuery(name="CajaDetalle.findAll", query="SELECT p FROM caja_detalle p")
 public class CajaDetalle implements Serializable{
@@ -22,27 +25,31 @@ public class CajaDetalle implements Serializable{
 	@Column (name = "id_caja_detalle")
 	private Long idCajaDetalle;
 	
-	@Column (name = "observacion", nullable = false)
+	@Column (name = "observacion", nullable = true)
 	private String observacion;
 	
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "id_caja", nullable = false)
 	private Caja caja;
 	
-	@Column (name = "monto_ingreso", nullable = false)
+	@Column (name = "monto_ingreso", nullable = true)
 	private Long montoIngreso;
 	
-	@Column (name = "monto_egreso", nullable = false)
+	@Column (name = "monto_egreso", nullable = true)
 	private Long montoEgreso;
 	
-	@Column (name = "nro_factura_proveedor", nullable = false)
+	@Column (name = "nro_factura_proveedor", nullable = true)
 	private String nroFacturaProveedor;
 	
-	@Column (name = "monto_perdida", nullable = false)
+	@Column (name = "monto_perdida", nullable = true)
 	private Long montoPerdida;
 	
-	@Column (name = "monto_retirado", nullable = false)
+	@Column (name = "monto_retirado", nullable = true)
 	private Long montoRetirado;
+	
+	@Column (name = "fecha_hora", nullable = false)
+	@Temporal (TemporalType.TIMESTAMP)
+	private Date fechaHora;
 
 	public Long getIdCajaDetalle() {
 		return idCajaDetalle;
@@ -106,6 +113,15 @@ public class CajaDetalle implements Serializable{
 
 	public void setMontoRetirado(Long montoRetirado) {
 		this.montoRetirado = montoRetirado;
+	}
+	
+
+	public Date getFechaHora() {
+		return fechaHora;
+	}
+
+	public void setFechaHora(Date fechaHora) {
+		this.fechaHora = fechaHora;
 	}
 
 	@Override

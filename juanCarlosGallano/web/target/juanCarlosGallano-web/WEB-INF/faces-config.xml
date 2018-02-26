@@ -14,108 +14,103 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
--->
-<!-- This file is not required if you don't need any extra configuration. -->
+
+ This file is not required if you don't need any extra configuration. -->
 <faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="
-        http://java.sun.com/xml/ns/javaee
-        http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
-
-   <!-- This descriptor activates the JSF 2.0 Servlet -->
-
-   <!-- Write your navigation rules here. You are encouraged to use CDI for 
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="         http://java.sun.com/xml/ns/javaee         http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+ <!-- This descriptor activates the JSF 2.0 Servlet 
+ Write your navigation rules here. You are encouraged to use CDI for 
       creating @Named managed beans. -->
-      
-      <navigation-rule>
-      		<from-view-id>*</from-view-id>
-      		<navigation-case>
-      			<from-outcome>grupos</from-outcome>
-      			<to-view-id>/protected/gruposList.xhtml</to-view-id>
-      		</navigation-case>
-      		<navigation-case>
-      			<from-outcome>usuarios</from-outcome>
-      			<to-view-id>/protected/usuarioList.xhtml</to-view-id>
-      		</navigation-case>
-      		<navigation-case>
-      			<from-outcome>editarUsuario</from-outcome>
-      			<to-view-id>/protected/editarUsuario.xhtml</to-view-id>
-      		</navigation-case>
-      		
-      		<navigation-case>
-      			<from-outcome>editarProveedor</from-outcome>
-      			<to-view-id>/protected/editarProveedor.xhtml</to-view-id>
-      		</navigation-case>
-      		<navigation-case>
-      			<from-outcome>editarFormaPago</from-outcome>
-      			<to-view-id>/protected/editarFormaPago.xhtml</to-view-id>
-      		</navigation-case>
-      		
-      		<navigation-case>
-      			<from-outcome>editarMoneda</from-outcome>
-      			<to-view-id>/protected/editarMoneda.xhtml</to-view-id>
-      		</navigation-case>
-      		
-      		<navigation-case>
-      			<from-outcome>depositos</from-outcome>
-      			<to-view-id>/protected/depositoList.xhtml</to-view-id>
-      		</navigation-case>
-      		<navigation-case>
-      			<from-outcome>editarDeposito</from-outcome>
-      			<to-view-id>/protected/editarDeposito.xhtml</to-view-id>
-      		</navigation-case>
-      		<navigation-case>
-      			<from-outcome>editarGrupo</from-outcome>
-      			<to-view-id>/protected/editarGrupo.xhtml</to-view-id>
-      		</navigation-case>
-      		<navigation-case>
-      			<from-outcome>marcas</from-outcome>
-      			<to-view-id>/protected/marcaList.xhtml</to-view-id>
-      		</navigation-case>
-      		<navigation-case>
-      			<from-outcome>editarMarca</from-outcome>
-      			<to-view-id>/protected/editarMarca.xhtml</to-view-id>
-      		</navigation-case>
-      		
-      		<navigation-case>
-      			<from-outcome>editarTipoVenta</from-outcome>
-      			<to-view-id>/protected/editarTipoVenta.xhtml</to-view-id>
-      		</navigation-case>
-      		
-      		<navigation-case>
-      			<from-outcome>anularPedido</from-outcome>
-      			<to-view-id>/protected/anularPedido.xhtml</to-view-id>
-      		</navigation-case>
-      		
-      		<navigation-case>
-      			<from-outcome>crearPedido</from-outcome>
-      			<to-view-id>/protected/crearPedido.xhtml</to-view-id>
-      		</navigation-case>
-      		
-      		<navigation-case>
-      			<from-outcome>tipoVentaList</from-outcome>
-      			<to-view-id>/protected/tipoVentaList.xhtml</to-view-id>
-      		</navigation-case>
-      		
-      		<navigation-case>
-      			<from-outcome>unidadMedidaList</from-outcome>
-      			<to-view-id>/protected/unidadMedidaList.xhtml</to-view-id>
-      		</navigation-case>
-      		
-      		<navigation-case>
-      			<from-outcome>index</from-outcome>
-      			<to-view-id>/protected/index.xhtml</to-view-id>
-      		</navigation-case>
-      		
-      		<navigation-case>
-      			<from-outcome>login</from-outcome>
-      			<to-view-id>/login.xhtml</to-view-id>
-      		</navigation-case>
-      		
-      		<navigation-case>
-      			<from-outcome>map</from-outcome>
-      			<to-view-id>/protected/map.xhtml</to-view-id>
-      		</navigation-case>
-      </navigation-rule>
-
+ <navigation-rule>
+  <from-view-id>*</from-view-id>
+  <navigation-case>
+   <from-outcome>grupos</from-outcome>
+   <to-view-id>/protected/gruposList.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>usuarios</from-outcome>
+   <to-view-id>/protected/usuarioList.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>editarUsuario</from-outcome>
+   <to-view-id>/protected/editarUsuario.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>editarProveedor</from-outcome>
+   <to-view-id>/protected/editarProveedor.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>editarFormaPago</from-outcome>
+   <to-view-id>/protected/editarFormaPago.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>editarMoneda</from-outcome>
+   <to-view-id>/protected/editarMoneda.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>depositos</from-outcome>
+   <to-view-id>/protected/depositoList.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>editarDeposito</from-outcome>
+   <to-view-id>/protected/editarDeposito.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>editarGrupo</from-outcome>
+   <to-view-id>/protected/editarGrupo.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>marcas</from-outcome>
+   <to-view-id>/protected/marcaList.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>editarMarca</from-outcome>
+   <to-view-id>/protected/editarMarca.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>editarRol</from-outcome>
+   <to-view-id>/protected/editarRol.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>editarTipoVenta</from-outcome>
+   <to-view-id>/protected/editarTipoVenta.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>editarProductoProveedor</from-outcome>
+   <to-view-id>/protected/editarProductoProveedor.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>productoProveedor</from-outcome>
+   <to-view-id>/protected/productoProveedorList.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>anularPedido</from-outcome>
+   <to-view-id>/protected/anularPedido.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>crearPedido</from-outcome>
+   <to-view-id>/protected/crearPedido.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>tipoVentaList</from-outcome>
+   <to-view-id>/protected/tipoVentaList.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>unidadMedidaList</from-outcome>
+   <to-view-id>/protected/unidadMedidaList.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>index</from-outcome>
+   <to-view-id>/protected/index.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>login</from-outcome>
+   <to-view-id>/login.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>map</from-outcome>
+   <to-view-id>/protected/map.html</to-view-id>
+  </navigation-case>
+ </navigation-rule>
 </faces-config>

@@ -42,28 +42,42 @@
    <PROCESS-ITEM-OUTPUT ID="editarMarca::#protected#editarMarca.xhtml"
     NAME="output10" PATH="/protected/editarMarca.xhtml"
     TARGET="rules:#protected#editarMarca.xhtml" TITLE="editarMarca" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="editarRol::#protected#editarRol.xhtml"
+    NAME="output11" PATH="/protected/editarRol.xhtml"
+    TARGET="rules:#protected#editarRol.xhtml" TITLE="editarRol" model-entity="JSFProcessItemOutput"/>
    <PROCESS-ITEM-OUTPUT
-    ID="editarTipoVenta::#protected#editarTipoVenta.xhtml"
-    NAME="output11" PATH="/protected/editarTipoVenta.xhtml"
-    TARGET="rules:#protected#editarTipoVenta.xhtml"
-    TITLE="editarTipoVenta" model-entity="JSFProcessItemOutput"/>
+    ID="editarProductoProveedor::#protected#editarProductoProveedor.xhtml"
+    NAME="output12" PATH="/protected/editarProductoProveedor.xhtml"
+    TARGET="rules:#protected#editarProductoProveedor.xhtml"
+    TITLE="editarProductoProveedor" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="productoProveedor::#protected#productoProveedorList.xhtml"
+    NAME="output13" PATH="/protected/productoProveedorList.xhtml"
+    TARGET="rules:#protected#productoProveedorList.xhtml"
+    TITLE="productoProveedor" model-entity="JSFProcessItemOutput"/>
    <PROCESS-ITEM-OUTPUT ID="anularPedido::#protected#anularPedido.xhtml"
-    NAME="output12" PATH="/protected/anularPedido.xhtml"
+    NAME="output14" PATH="/protected/anularPedido.xhtml"
     TARGET="rules:#protected#anularPedido.xhtml" TITLE="anularPedido" model-entity="JSFProcessItemOutput"/>
    <PROCESS-ITEM-OUTPUT ID="crearPedido::#protected#crearPedido.xhtml"
-    NAME="output13" PATH="/protected/crearPedido.xhtml"
+    NAME="output15" PATH="/protected/crearPedido.xhtml"
     TARGET="rules:#protected#crearPedido.xhtml" TITLE="crearPedido" model-entity="JSFProcessItemOutput"/>
    <PROCESS-ITEM-OUTPUT
-    ID="tipoVentaList::#protected#tipoVentaList.xhtml" NAME="output14"
+    ID="tipoVentaList::#protected#tipoVentaList.xhtml" NAME="output16"
     PATH="/protected/tipoVentaList.xhtml"
     TARGET="rules:#protected#tipoVentaList.xhtml" TITLE="tipoVentaList" model-entity="JSFProcessItemOutput"/>
    <PROCESS-ITEM-OUTPUT
     ID="unidadMedidaList::#protected#unidadMedidaList.xhtml"
-    NAME="output15" PATH="/protected/unidadMedidaList.xhtml"
+    NAME="output17" PATH="/protected/unidadMedidaList.xhtml"
     TARGET="rules:#protected#unidadMedidaList.xhtml"
     TITLE="unidadMedidaList" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="login::#login.xhtml" NAME="output16"
+   <PROCESS-ITEM-OUTPUT ID="index::#protected#index.xhtml"
+    NAME="output18" PATH="/protected/index.xhtml"
+    TARGET="rules:#protected#index.xhtml" TITLE="index" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="login::#login.xhtml" NAME="output19"
     PATH="/login.xhtml" TARGET="rules:#login.xhtml" TITLE="login" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="map::#protected#map.html" NAME="output20"
+    PATH="/protected/map.html" TARGET="rules:#protected#map.html"
+    TITLE="map" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#login.xhtml" PATH="/login.xhtml"
@@ -100,8 +114,14 @@
   PATH="/protected/crearPedido.xhtml" SHAPE="304,529,0,0" model-entity="JSFProcessGroup"/>
  <PROCESS-ITEM NAME="rules:#protected#anularPedido.xhtml"
   PATH="/protected/anularPedido.xhtml" SHAPE="304,593,0,0" model-entity="JSFProcessGroup"/>
- <PROCESS-ITEM NAME="rules:#protected#map.xhtml"
-  PATH="/protected/map.xhtml" SHAPE="304,657,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#map.html"
+  PATH="/protected/map.html" SHAPE="304,657,0,0" model-entity="JSFProcessGroup"/>
  <PROCESS-ITEM NAME="rules:#protected#unidadMedidaList.xhtml"
   PATH="/protected/unidadMedidaList.xhtml" SHAPE="304,657,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#editarProductoProveedor.xhtml"
+  PATH="/protected/editarProductoProveedor.xhtml" SHAPE="304,721,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#productoProveedorList.xhtml"
+  PATH="/protected/productoProveedorList.xhtml" SHAPE="304,785,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#protected#editarRol.xhtml"
+  PATH="/protected/editarRol.xhtml" SHAPE="304,785,0,0" model-entity="JSFProcessGroup"/>
 </PROCESS>

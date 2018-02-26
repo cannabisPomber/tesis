@@ -60,6 +60,10 @@ public class Producto implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "id_unidad_medida", nullable = false)
 	private UnidadMedida unidadMedida;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_producto_unitario", nullable = true)
+	private Producto producto;
 
 	public Long getIdProducto() {
 		return idProducto;
@@ -152,6 +156,14 @@ public class Producto implements Serializable {
 
 	public void setIvaProducto(Float ivaProducto) {
 		this.ivaProducto = ivaProducto;
+	}
+	
+	public Producto getProducto() {
+		return producto;
+	}
+
+	public void setProducto(Producto producto) {
+		this.producto = producto;
 	}
 
 	@Override

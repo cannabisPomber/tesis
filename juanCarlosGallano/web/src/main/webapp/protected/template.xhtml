@@ -101,7 +101,7 @@
 		        	<p:menuitem value="Grupos"   outcome="/protected/gruposList.xhtml?faces-redirect=true" ajax="false" icon="ui-icon-close"/>
 		        </p:submenu>
 		        
-		        <p:submenu label="Caja" rendered="#{usuarioBean.grupoUsuario eq 'Caja'} " >
+		        <p:submenu label="Caja" rendered="#{usuarioBean.grupoUsuario  eq 'Caja'}">
 		        	<p:menuitem value="Abrir Caja" outcome="/protected/abrirCaja.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
 		        	<p:menuitem value="Cerrar Caja"  outcome="/protected/cerrarCaja.xhtml?faces-redirect=true"  ajax="false" icon="ui-icon-close"/>
 		        	<p:menuitem value="Agregar Dinero Caja"  ajax="false" icon="ui-icon-close"/>

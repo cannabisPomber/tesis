@@ -92,6 +92,14 @@ public class OrdenCompra implements Serializable {
 		return proveedor;
 	}
 
+	public String getNroFacturaProveedor() {
+		return nroFacturaProveedor;
+	}
+
+	public void setNroFacturaProveedor(String nroFacturaProveedor) {
+		this.nroFacturaProveedor = nroFacturaProveedor;
+	}
+
 	public List<DetalleOrdenCompra> getListaDetalleOrdenCompra() {
 		return listaDetalleOrdenCompra;
 	}

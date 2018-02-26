@@ -63,6 +63,19 @@ public class CajaEJB extends GenericDaoImpl<Caja, Serializable>{
  			   return null;
  		   }
 	}
+	
+	//Retorna Caja Abierta del dia
+	public Caja cajaAbiertaSinUser(){
+		try {
+ 		   Query query = em.createQuery("select u from caja u where u.fechaFin is null");
+ 		   
+ 		   
+ 		   return (Caja) query.getSingleResult();
+ 		   }
+ 		   catch (Exception ex){
+ 			   return null;
+ 		   }
+	}
 
 }
 
