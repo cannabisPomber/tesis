@@ -25,19 +25,14 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<p:button outcome="/protected/editarUsuario.xhtml" title="Nuevo Usuario" value="Nuevo Usuario"/>
+					<p:button outcome="editarUsuario" title="Nuevo Usuario" value="Nuevo Usuario"/>
 					<p:button outcome="index" title="Salir" value="Salir"/>
 				</f:facet>
 				
 
-				<p:button outcome="/protected/editarUsuario" icon="ui-icon-pencil" id="editUsuario">
+				<p:button outcome="editarUsuario" icon="ui-icon-pencil" id="editUsuario">
 					<f:param name="idUsuario" value="#{us.idUsuario}"></f:param>
 				</p:button>
-				
-
-				<p:commandButton action="#{usuarioBean.eliminarUsuario(us)}"
-					update="templateForm:formUsuarioList:tablaUsuarios" icon="ui-icon-trash">	
-				</p:commandButton>
 
 				
 			</p:column>

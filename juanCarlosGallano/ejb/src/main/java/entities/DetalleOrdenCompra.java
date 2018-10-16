@@ -37,7 +37,7 @@ public class DetalleOrdenCompra implements Serializable{
 	private OrdenCompra ordenCompra;
 	
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "id_producto", nullable = false,unique = false)
+	@JoinColumn(name = "id_producto", nullable = false)
 	private Producto producto;
 	
 	@Column (name = "cantidad" ,  nullable = true)

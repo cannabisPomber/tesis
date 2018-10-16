@@ -38,10 +38,23 @@ public class Caja implements Serializable {
 	
 	@Column (name = "monto_caja", nullable = false)
 	private Long montoCaja;
+	@Column (name = "monto_inicial", nullable = true)
+	private Long montoInicial;
+	
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
+	@JoinColumn(name = "id_puesto_venta", nullable = true)
+	private PuestoVenta puestoVenta;
 	
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "id_usuario", nullable = false)
 	private Usuario usuario;
+	
+	@Column (name = "excedente_caja", nullable = true)
+	private Long excedente;
+	
+	@Column (name = "escasez_caja", nullable = true)
+	private Long escasez;
+	
 
 	public Long getIdCaja() {
 		return idCaja;
@@ -82,6 +95,39 @@ public class Caja implements Serializable {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	
+	public Long getExcedente() {
+		return excedente;
+	}
+
+	public void setExcedente(Long excedente) {
+		this.excedente = excedente;
+	}
+
+	public Long getEscasez() {
+		return escasez;
+	}
+
+	public void setEscasez(Long escasez) {
+		this.escasez = escasez;
+	}
+
+	public Long getMontoInicial() {
+		return montoInicial;
+	}
+
+	public void setMontoInicial(Long montoInicial) {
+		this.montoInicial = montoInicial;
+	}
+
+	public PuestoVenta getPuestoVenta() {
+		return puestoVenta;
+	}
+
+	public void setPuestoVenta(PuestoVenta puestoVenta) {
+		this.puestoVenta = puestoVenta;
 	}
 
 	@Override

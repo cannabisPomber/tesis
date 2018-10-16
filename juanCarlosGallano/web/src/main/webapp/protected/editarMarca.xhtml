@@ -16,12 +16,12 @@
 		<p:panelGrid columns="2" id="panelEditMarca">
 			
 			<p:outputLabel value="Nombre Marca" for="marca"/>
-			<p:inputText id="marca" required="true" requiredMessage="Nombre de marca Requerido" value="#{editarMarcaBean.marcaEdicion.nombreMarca}"></p:inputText>
+			<p:inputText id="marca" required="true" requiredMessage="Nombre de marca Requerido" value="#{editarMarcaBean.marcaEdicion.nombreMarca}" onblur="value=value.toUpperCase()"></p:inputText>
 			<p:outputLabel value="Estado" for="estadoMarca"/>
 			<p:selectOneMenu required= "true" requiredMessage="Estado debe ser seleccionado" id="estadoMarca" value="#{editarMarcaBean.marcaEdicion.estadoMarca}" style="width:125px" >
             	<f:selectItem itemLabel="Seleccione Estado"  />
-            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
-            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+            	<f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+            	<f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
         	</p:selectOneMenu>
 			
 		</p:panelGrid>

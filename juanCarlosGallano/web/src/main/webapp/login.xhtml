@@ -20,7 +20,7 @@
 		<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
 		<p:dialog header="Login de Usuario" widgetVar="dlgLogin" resizable="false" id="dlgLogin">
 		<h:outputText value="Username" style="margin-right:10px" />
-		<h:inputText id="username" value="#{usuarioBean.user.usuario}" required="true"></h:inputText>
+		<h:inputText id="username" value="#{usuarioBean.user.usuario}" required="true" onblur="value=value.toUpperCase()"></h:inputText>
 		<h:message for="username"></h:message>
 		<br></br><br></br>
 		

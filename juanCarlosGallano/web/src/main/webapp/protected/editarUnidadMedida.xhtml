@@ -16,7 +16,7 @@
 		<p:panelGrid columns="2" id="panelEditUnidadMedida">
 			
 			<p:outputLabel value="Dimension" for="dimension"/>
-			<p:inputNumber id="dimension" required="true" requiredMessage="Dimension es  Requerido" value="#{editarUnidadMedidaBean.unidadMedidaEdicion.dimension}"/>
+			<p:inputNumber id="dimension" required="true" requiredMessage="Dimension es  Requerido" value="#{editarUnidadMedidaBean.unidadMedidaEdicion.dimension}" onblur="value=value.toUpperCase()"/>
 			
 			<p:outputLabel value="Unidad de Medida" for="unidadMedida"/>
 			<p:selectOneMenu required= "true" requiredMessage="Unidad de Medida debe ser seleccionado" id="unidadMedida" value="#{editarUnidadMedidaBean.unidadMedidaEdicion.unidad}" style="width:125px" >
@@ -30,8 +30,8 @@
 			<p:outputLabel value="Estado" for="estadoUnidadMedida"/>
 			<p:selectOneMenu required= "true" requiredMessage="Estado debe ser seleccionado" id="estadoUnidadMedida" value="#{editarUnidadMedidaBean.unidadMedidaEdicion.estado}" style="width:125px" >
             	<f:selectItem itemLabel="Seleccione Estado"  />
-            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
-            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+            	<f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+            	<f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
         	</p:selectOneMenu>
 			
 		</p:panelGrid>

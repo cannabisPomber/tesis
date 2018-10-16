@@ -79,12 +79,20 @@ public class EditarProductoProveedorBean {
 			productoProveedorEdicion.setProducto(productoEJB.findIdProducto(idProducto));
 			productoProveedorEdicion.setProveedor(proveedorEJB.findProveedorId(idProveedor));
 			productoProveedorEdicion = productoProveedorEJB.create(productoProveedorEdicion);
+			
+			//limpiar campos
+			idProducto = null;
+			idProveedor = null;
+			productoProveedorEdicion = new ProductoProveedor();
 			 FacesContext.getCurrentInstance().addMessage("ProductoProveedor Creado", new FacesMessage("Nuevo ProductoProveedor Creado."));
 			 productoProveedorEdicion = new ProductoProveedor();
 		} else {
 			productoProveedorEdicion.setProducto(productoEJB.findIdProducto(idProducto));
 			productoProveedorEdicion.setProveedor(proveedorEJB.findProveedorId(idProveedor));
 			productoProveedorEdicion = productoProveedorEJB.update(productoProveedorEdicion);
+			idProducto = null;
+			idProveedor = null;
+			productoProveedorEdicion = new ProductoProveedor();
 			FacesContext.getCurrentInstance().addMessage("ProductoProveedor Modificado", new FacesMessage("ProductoProveedor Modificado."));
 		}
 	}

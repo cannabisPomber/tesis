@@ -45,7 +45,7 @@ public class ProductoProveedorEJB extends GenericDaoImpl<ProductoProveedor, Seri
 	   
 	   public List<ProductoProveedor> findAllActivo() {
 		   Query query = em.createQuery("select u from producto_proveedor u where u.estado = :estado");
-		   query.setParameter("estado", "Activo");
+		   query.setParameter("estado", "ACTIVO");
 	    	return query.getResultList();
 	   }
 	   
@@ -68,7 +68,7 @@ public class ProductoProveedorEJB extends GenericDaoImpl<ProductoProveedor, Seri
 	   //Busca lista de proveedores por producto  
 	   public List<ProductoProveedor> findProveedor (Long idProducto){
 		   try {
-		   Query query = em.createQuery("select u from producto_proveedor u where u.producto.idProducto = :idProducto and u.estado = 'Activo'");
+		   Query query = em.createQuery("select u from producto_proveedor u where u.producto.idProducto = :idProducto and u.estado = 'ACTIVO'");
 		   query.setParameter("idProducto", idProducto);
 		   
 		   

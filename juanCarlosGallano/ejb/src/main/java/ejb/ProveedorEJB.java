@@ -58,7 +58,7 @@ public class ProveedorEJB extends GenericDaoImpl<Proveedor, Serializable>{
    }
 	
 	public List<Proveedor> findAllActivo() {
-    	TypedQuery<Proveedor> query = em.createQuery("select u from proveedor u where u.estado = 'Activo'", Proveedor.class);
+    	TypedQuery<Proveedor> query = em.createQuery("select u from proveedor u where u.estado = 'ACTIVO'", Proveedor.class);
     	proveedorList = query.getResultList();
     	return proveedorList;
    }

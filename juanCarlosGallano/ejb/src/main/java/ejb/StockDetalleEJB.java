@@ -49,6 +49,23 @@ public class StockDetalleEJB extends GenericDaoImpl<StockDetalle, Serializable>{
     		   }
     }
 	
+	public StockDetalle findStockAntiguoVencimiento(Long idProducto){
+		try {
+			   Query query = em.createQuery("select u from stock_detalle u where u.producto.idProducto = :idProducto and u.estado !='CERRADO' order by u.fechaVencimiento ASC");
+			   query.setParameter("idProducto", idProducto);
+			   
+			   List<StockDetalle> listStockDetalle = query.getResultList();
+			   //Retornando el primero
+			   return listStockDetalle.get(0);
+			   
+			   }
+			   catch (Exception ex){
+				   return null;
+			   }
+		
+		
+	}
+	
 	/*public StockDetalle findProductoStockDetalle (Long idProducto){
 		try {
 		   Query query = em.createQuery("select u from stock_detalle u where u.idStockDetalle = :idStockDetalle");

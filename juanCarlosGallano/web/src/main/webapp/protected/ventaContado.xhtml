@@ -7,42 +7,379 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
+<f:metadata>
+	<f:event listener="#{ventaContadoBean.init()}" type="preRenderView"></f:event>
+</f:metadata>
+
 <ui:composition template="template.xhtml">
 	<ui:define name="contenido">
-	<h:form id="formVentaContado">
-	<p:panel id="panelVenta" header="Venta Contado Productos">
-	
-	<p:panel id="headerVenta">
-	
-	</p:panel>
-	
-	<p:panelGrid columns="4" id="panelGridVenta">
+	<script type="text/javascript">
+	function generateReport() {
+			  var e = document.getElementById("templateForm:formVentaContado:exportPDF");
+			  var strPage = e.options[e.selectedIndex].value;
+			  window.open(strPage);
+			  return false; //This make you stay on this page;
+			  //return true; //Set the action tag in the form to the page you like to go to!
+			 }
+	 </script>
+		<h:form id="formVentaContado" target="_blank">
+			<p:focus id="focusID" for="#{ventaContadoBean.componentFocus}"></p:focus>
+
+			<p:panel id="datosSucursal" header="Datos Sucursal">
+				<p:panelGrid columns="4" id="panelGridDatosSucursal" >
+
+					<p:outputLabel value="Local:" style="font-weight: bold;"/>
+					<p:outputLabel value="#{ventaContadoBean.sucursalSelect.local}" ></p:outputLabel>
+
+					<p:outputLabel value="Empresa :"  style="font-weight: bold;"/>
+					<p:outputLabel
+						value="#{ventaContadoBean.sucursalSelect.nombreEmpresa}"></p:outputLabel>
+
+
+					<p:outputLabel value="Direccion :"  style="font-weight: bold;"/>
+					<p:outputLabel value="#{ventaContadoBean.sucursalSelect.direccion}"></p:outputLabel>
+
+					<p:outputLabel value="Timbrado :"  style="font-weight: bold;"/>
+					<p:outputLabel value="#{ventaContadoBean.sucursalSelect.timbrado}"></p:outputLabel>
+
+					<p:outputLabel value="RUC :" style="font-weight: bold;"/>
+					<p:outputLabel value="#{ventaContadoBean.sucursalSelect.ruc}"></p:outputLabel>
+
+					<p:outputLabel value="Telefono :" style="font-weight: bold;"/>
+					<p:outputLabel value="#{ventaContadoBean.sucursalSelect.telefono}"></p:outputLabel>
+
+
+
+
+				</p:panelGrid>
+			</p:panel>
+			<p:panel id="panelVenta" header="Venta Contado">
+
+				<p:panel id="headerVenta">
+
+				</p:panel>
+
+				<p:panelGrid columns="4" id="panelGridVenta">
+
+
+					<p:outputLabel value="Nro. Factura:" style="font-weight: bold;"/>
+					<p:inputText id="siguienteNroFactura" value="#{ventaContadoBean.numeroFactura}" onkeypress="if (event.keyCode == 13) { return false; }"></p:inputText>
+
+					<p:outputLabel value="Fecha:" style="font-weight: bold;"/>
+					<p:calendar value="#{ventaContadoBean.fechaVenta}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</p:calendar>
+				</p:panelGrid>
+
+
+
+			</p:panel>
+			<p:panel id="panelCargaProducto" header="Producto">
+				<p:panelGrid columns="8" id="panelGridCargaProducto">
+
+					<p:outputLabel value="Codigo de Barra" for="codBarra" style="font-weight: bold;"/>
+					<p:inputText id="codBarra" value="#{ventaContadoBean.codigoBarra}" 
+					onkeypress="return enter(event,'templateForm:formVentaContado:cantidadVenta_input');">
+						<p:ajax event="change"
+							listener="#{ventaContadoBean.cargarProducto()}" />
+					</p:inputText>
+					<p:outputLabel value="Precio Unitario" for="precioUnitario" style="font-weight: bold;"/>
+					<p:outputLabel id="precioUnitario" value="#{ventaContadoBean.precioUnitario}" >
+					</p:outputLabel>
+					<p:outputLabel value="Cantidad" for="cantidadVenta" style="font-weight: bold;"/>
+					<p:inputNumber id="cantidadVenta"
+						value="#{ventaContadoBean.cantidad}" decimalPlaces="0"
+						onkeypress="return enterCantidad(event,'templateForm:formVentaContado:codBarra');">
+						<p:ajax event="change" listener="#{ventaContadoBean.cargarListaVentaContado()}"></p:ajax>	
+					</p:inputNumber>
+
+					<p:outputLabel value="IVA" style="font-weight: bold;"/>
+					<p:outputLabel id="iva"
+						value="#{ventaContadoBean.ivaProducto}" decimalPlaces="0" ></p:outputLabel>
+
+
+				</p:panelGrid>
+				<p:separator />
+				<p:panel id="panelListadoVenta" header="Lista Productos Contado">
+					<p:dataTable id="tablaVentaContado" var="detFactura"
+						value="#{ventaContadoBean.listDetalleFactura}"
+						emptyMessage="No se registran elementos cargados"
+						style="margin-top:10px">
+
+						<p:column headerText="Codigo Barra">
+							<h:outputText value="#{detFactura.codigoBarra}" />
+						</p:column>
+
+						<p:column headerText="Producto">
+							<h:outputText
+								value="#{detFactura.producto.nombreProducto} #{detFactura.producto.marca.nombreMarca}  #{detFactura.producto.unidadMedida.dimension} #{detFactura.producto.unidadMedida.unidad} " />
+						</p:column>
+
+
+						<p:column headerText="Cantidad">
+							<h:outputText value="#{detFactura.cantidad}" style="width:80%"/>
+						</p:column>
+						
+						<p:column headerText="Precio Unitario">
+							<h:outputText value="#{detFactura.precioUnitario}" style="width:80%"/>
+						</p:column>
+
+						<p:column headerText="Importe">
+							<h:outputText value="#{ventaContadoBean.redondear((detFactura.precioUnitario*detFactura.cantidad)/(1+(detFactura.producto.ivaProducto/100)))}" />
+						</p:column>
+
+						<p:column headerText="Iva">
+							<h:outputText value="#{ventaContadoBean.redondearIva((detFactura.precioUnitario*detFactura.cantidad)-(detFactura.precioUnitario*detFactura.cantidad)/(1+(detFactura.producto.ivaProducto/100)))} " />
+						</p:column>
+						<p:column>
+
+							<p:commandButton icon="ui-icon-pencil"
+								id="editarDetalleVentaContado" actionListener="#{ventaContadoBean.editarDetalleFactura(detFactura)}" update="templateForm:formVentaContado:panelListadoVenta templateForm:formVentaContado:panelCargaProducto templateForm:formVentaContado:panelMontoTotalVenta" >
+							</p:commandButton>
+
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+				<p:separator />
+				<p:panel id="panelMontoTotalVenta">
+					<p:panelGrid columns="2">
+						<p:panelGrid columns="2">
+							
+							<p:outputLabel value="Total Gravadas 10%: " style="font-weight: bold;"/>
+							<p:outputLabel value="#{ventaContadoBean.importeTotalSinIva10}"></p:outputLabel>
+							<p:outputLabel value="Total Gravadas 5%: " style="font-weight: bold;"/>
+							<p:outputLabel value="#{ventaContadoBean.importeTotalSinIva5}"></p:outputLabel>
+							<p:outputLabel value="Total IVA10: " style="font-weight: bold;"/>
+							<p:outputLabel value="#{ventaContadoBean.importeTotalIVA10}"></p:outputLabel>
+							<p:outputLabel value="Total Exentas: " style="font-weight: bold;"/>
+							<p:outputLabel value="#{ventaContadoBean.importeTotalExentas}"></p:outputLabel>
+							
+							<p:outputLabel value="Importe Total: " style="font-weight: bold;"/>
+							<p:outputLabel value="#{ventaContadoBean.importeTotalIVAImporte}"></p:outputLabel>
+							
+						</p:panelGrid>
+
+					</p:panelGrid>
+				</p:panel>
+				<p:panel>
+					<p:panelGrid columns="3">
+						<p:commandButton value="Cargar Cliente" onclick="PF('buscarClienteDialog').show()" ></p:commandButton>
+						<p:commandButton value="Limpiar" action="#{ventaContadoBean.limpiar()}" update="@form"></p:commandButton>
+					</p:panelGrid>
+
+				</p:panel>
+			</p:panel>
+		</h:form>
 		
 		
-		<p:outputLabel value="Nro. Factura:" />
-        <p:outputLabel>000-000-001</p:outputLabel>
-        
-		<p:outputLabel value="Fecha:" />
-        <p:outputLabel>28/09/2017</p:outputLabel>        
-        
-        <p:outputLabel value="Cliente" for="precioCompra"/>
-        <p:inputNumber id="precioCompra" value="#{ventaContadoBean.cantidad}"  decimalPlaces="0" required="true"></p:inputNumber>
-        
-        <p:outputLabel value="Cantidad" for="precioCompra"/>
-        <p:inputNumber id="precioCompra" value="#{ventaContadoBean.cantidad}"  decimalPlaces="0" required="true"></p:inputNumber>
-        
-        
-        <p:outputLabel value="Produ" for="precioCompra"/>
-		<p:selectOneMenu required= "true" requiredMessage="Producto debe ser seleccionado" id="productoVenta" value="#{ventaContadoBean.producto}" style="width:125px" >
-            	<f:selectItem itemLabel="Seleccione Estado"  />
-            	<f:selectItems itemLabel="#{prod.nombreProducto} #{prod.marca.nombreMarca} #{prod.tipoProducto.nombreTipoProducto} #{prod.unidadMedida.unidad} #{prod.unidadMedida.dimension}" var="prod" itemValue="prod" value="#{ventaContadoBean.listProducto}"/>
-        	</p:selectOneMenu>
-	</p:panelGrid>
-	</p:panel>	
-		
-	</h:form>
+	<p:dialog id="panelBuscarCliente" widgetVar="buscarClienteDialog" width="800">
+		<p:panel id="panelGuardarCliente" header="Búsqueda Cliente" width="80%">
+			<p:panelGrid columns="2">
+				<p:outputLabel value="RUC"/>
+				<p:inputText id="rucCliente" value="#{ventaContadoBean.rucCliente}" onkeypress="return enter(event,'templateForm:razonSocial');" >
+						<p:ajax event="change"
+							listener="#{ventaContadoBean.cargarCliente()}" />
+				</p:inputText>
+				
+				<p:outputLabel value="Nombre o Razon Social" id="nombreCliente"/>
+				<p:inputText id="razonSocial" value="#{ventaContadoBean.razonSocial}" onkeypress="return enter(event,'templateForm:rucCliente');" onblur="value=value.toUpperCase()">
+				<p:ajax event="change"
+							listener="#{ventaContadoBean.cargarCliente()}" >
+							</p:ajax>
+				</p:inputText>
+			</p:panelGrid>
+			<p:panel id="panelSeleccionarCliente">
+				<p:dataTable id="datatableClientes" var="cliente" value="#{ventaContadoBean.listRucPersonas}" rowKey="#{cliente.idRucPersonas}" 
+					selection="#{ventaContadoBean.listSelectCliente}" paginator="true" rows="5" >
+					
+					<f:facet name="header">
+		            	Seleccionar Cliente
+		        	</f:facet>
+		        	<p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+		        	<p:column headerText="Cliente" style="width:15%;text-align: center">
+		            	<h:outputText value="#{cliente.persona}" />
+		        	</p:column>
+		        	<p:column headerText="Ruc" style="width:15%;text-align: center">
+		            	<h:outputText value="#{cliente.ruc}" />
+		        	</p:column>
+				</p:dataTable>
+			</p:panel>
+			<p:commandButton id="pagoVenta" value="Procesar Pago" actionListener="#{ventaContadoBean.pagoVentaContado()}" rendered="#{ventaContadoBean.tipoVentaParam eq 'contado'}"></p:commandButton>
+			<p:commandButton id="crearRemision" value="Cargar Remision" actionListener="#{ventaContadoBean.cargarVentaConsignacion()}" rendered="#{ventaContadoBean.tipoVentaParam eq 'consignacion'}"></p:commandButton>
+			<p:commandButton id="cargarCredito" value="Cargar Venta Credito" actionListener="#{ventaContadoBean.cargarVentaCredito()}" rendered="#{ventaContadoBean.tipoVentaParam eq 'credito'}"></p:commandButton>
+			<p:commandButton id="limpiarCliente" value="Limpiar" actionListener="#{ventaContadoBean.limpiarCliente()}"></p:commandButton>
+			
+		</p:panel>
+	</p:dialog>
+	
+	<p:dialog id="panelVentaCredito" widgetVar="VentaCreditoDialog" width="800">
+		<p:panel id="panelCrearVentaCredito" header="Venta Credito" width="80%">
+			<p:panelGrid columns="2">
+				<p:outputLabel value="Ciclo Vencimiento" id="cicloVencimiento"/>
+				<p:selectOneMenu id="selectCicloVencimiento" value="#{ventaContadoBean.cicloFacturacion}" style="width:125px">
+		            <f:selectItem itemLabel="Seleccionar" itemValue="" />
+		            <f:selectItem itemLabel="Fecha 5" itemValue="5" />
+		            <f:selectItem itemLabel="Fecha 15" itemValue="15" />
+		            <f:selectItem itemLabel="Fecha 21" itemValue="21" />
+		            <p:ajax event="change"
+							update="@this" />
+		        </p:selectOneMenu>
+				
+				<p:outputLabel value="Cuotas" />
+				<p:inputNumber id="cuotasCredito" value="#{ventaContadoBean.cuotas}" maxValue="24">
+						<p:ajax event="change"
+							update="@this" />
+					</p:inputNumber>
+				
+				<p:outputLabel value="Interés" id="interesCredito"/>
+				<p:inputNumber value="#{ventaContadoBean.interes}" maxValue="50"
+				onkeypress="return enter(event,'templateForm:panelDetalleCuotas');">
+						<p:ajax event="change"
+							listener="#{ventaContadoBean.cargarCuotasCredito()}" /></p:inputNumber>
+				
+			</p:panelGrid>
+			<p:panel id="panelDetalleCuotas">
+				<p:dataTable id="datatableCuotas" var="cuota" value="#{ventaContadoBean.listDetalleCuotas}" rowKey="#{cuota.idDetalleCuota}" 
+					paginator="true">
+		        	
+		        	<p:column headerText="Fecha Vencimiento" style="width:15%;text-align: center">
+		            	<h:outputText value="#{cuota.fechaVencimiento}" >
+		            		<f:convertDateTime pattern="dd/MM/yyyy"/>
+		            	</h:outputText>
+		        	</p:column>
+		        	<p:column headerText="Monto Cuota" style="width:15%;text-align: center">
+		            	<h:outputText value="#{cuota.montoPago}" />
+		        	</p:column>
+		        	<p:column headerText="Interes %" style="width:15%;text-align: center">
+		            	<h:outputText value="#{cuota.interes}" />
+		        	</p:column>
+				</p:dataTable>
+			</p:panel>
+			
+			<p:commandButton id="crearCredito" value="Guardar" action="#{ventaContadoBean.crearVentaCredito()}"></p:commandButton>
+			<p:commandButton id="limpiarCredito" value="Limpiar" actionListener="#{ventaContadoBean.limpiarCredito()}"></p:commandButton>
+			
+		</p:panel>
+	</p:dialog>
+	
+	<p:dialog id="panelVentaConsignacion" widgetVar="VentaConsignacionDialog" width="800">
+		<p:panel id="panelCrearVentaConsignacion" header="Datos Venta Consignacion" width="80%">
+			<p:panelGrid columns="2">
+			
+				<p:outputLabel value="Dias Consignacion" id="diasConsignacion"/>
+				<p:selectOneMenu id="selectDiasConsignacion" value="#{ventaContadoBean.diasConsignacion}" style="width:125px">
+		            <f:selectItem itemLabel="Seleccionar" itemValue="" />
+		            <f:selectItem itemLabel="Dias 15" itemValue="15" />
+		            <f:selectItem itemLabel="Dias 30" itemValue="30" />
+		            <f:selectItem itemLabel="Dias 45" itemValue="45" />
+		            <f:selectItem itemLabel="Dias 60" itemValue="60" />
+		            <p:ajax event="change"
+							update="templateForm:fechaVencimientoConsignacion" listener="#{ventaContadoBean.cargarFechaConsignacion()}" />
+		        </p:selectOneMenu>
+		        
+		        <p:outputLabel value="Cliente"/>
+		        <p:inputText id="clienteConsignacion" value="#{ventaContadoBean.remision.clienteNombre}" disabled="true"></p:inputText>
+		        
+		        <p:outputLabel value="Ruc" />
+		         <p:inputText id="rucConsignacion" value="#{ventaContadoBean.remision.ruc}" disabled="true"></p:inputText>
+		        <p:outputLabel value="Fecha Remision" />
+		        <p:inputText id="fechaRemisionConsignacion" value="#{ventaContadoBean.remision.fechaRemision}" disabled="true">
+		        	<f:convertDateTime pattern="dd/MM/yyyy hh:MM:ss"/>
+		        </p:inputText>
+		        <p:outputLabel value="Fecha Vencimiento Consignacion" />
+		        <p:inputText id="fechaVencimientoConsignacion" value="#{ventaContadoBean.fechaVencimientoConsignacion}" disabled="true">
+		        	<f:convertDateTime pattern="dd/MM/yyyy hh:MM:ss"/>
+		        </p:inputText>
+			</p:panelGrid>
+			
+			<p:panel id="panelDetalleConsignacion">
+				<p:dataTable id="datatableConsignacion" var="remi" value="#{ventaContadoBean.listDetalleRemision}" rowKey="#{remi.idRemisionDetalle}" 
+					paginator="true">
+					
+					<p:column headerText="Producto" style="width:15%;text-align: center">
+		            	<h:outputText value="#{remi.producto.nombreProducto} #{remi.producto.marca.nombreMarca} #{remi.producto.tipoProducto.nombreTipoProducto} #{remi.producto.unidadMedida.unidad} #{remi.producto.unidadMedida.dimension}" >
+		            	</h:outputText>
+		        	</p:column>
+		        	
+		        	<p:column headerText="Cantidad" style="width:15%;text-align: center">
+		            	<h:outputText value="#{remi.cantidad}" >
+		            	</h:outputText>
+		        	</p:column>
+		        	
+				</p:dataTable>
+			</p:panel>
+			
+			<p:commandButton id="crearConsignacion" value="Cargar Consignacion" action="#{ventaContadoBean.crearVentaConsignacion()}"></p:commandButton>
+			<p:commandButton id="limpiarConsignacion" value="Limpiar" actionListener="#{ventaContadoBean.limpiarConsignacion()}"></p:commandButton>
+			
+		</p:panel>
+	</p:dialog>
+	<p:dialog id="facturarVentaContado2" widgetVar="facturarVentaContado2Dialog" width="800px">
+			<p:panel header="Seleccionar Metodo de Pago" id="panelProcesarVenta">
+				<p:panelGrid columns="2">
+				<p:outputLabel value="Seleccionar Metodo de Pago:"></p:outputLabel>
+				<p:selectOneMenu  
+					id="selectTipoPago" value="#{ventaContadoBean.idFormaPagoSeleccionado}" 
+					style="width:250px" label="Seleccionar Tipo Pago">
+						
+						<p:ajax event="change" update="panelPagoTarjeta"></p:ajax>
+						<f:selectItem itemLabel="Seleccion Tipo Pago" itemValue="" />
+	            		<f:selectItems value="#{ventaContadoBean.listFormaPago}" var="tipoPago" itemLabel="#{tipoPago.nombreFormaPago}" itemValue="#{tipoPago.idFormaPago}"></f:selectItems>
+	            	</p:selectOneMenu>	
+	            <p:outputLabel value="Pago Tarjeta:"></p:outputLabel>
+	            <p:panel id="panelPagoTarjeta" header="Datos para Pago Tarjeta">
+	            	<p:panelGrid columns="2">
+	            	<p:outputLabel value="Seleccionar Tarjeta:"/>
+	            	<p:selectOneMenu  
+					id="selectTarjeta" value="#{ventaContadoBean.idMarcaTarjeta}" 
+					style="width:250px" label="Seleccionar Tipo Pago">
+						<p:ajax event="change" update="panelPagoTarjeta"></p:ajax> 
+						<f:selectItem itemLabel="Seleccion Tarjeta" itemValue="" />
+	            		<f:selectItems value="#{ventaContadoBean.listMarcaTarjetas}" var="tarjeta" itemLabel="#{tarjeta.marca}" itemValue="#{tarjeta.idTarjeta}"></f:selectItems>
+	            	</p:selectOneMenu>	
+					<p:outputLabel value="Numero de Tarjeta:"/>
+					<p:inputText value="#{ventaContadoBean.numeroTarjeta}" onkeypress="if (event.keyCode == 13) { return false; }"></p:inputText>    
+					
+					<p:outputLabel value="Numero de Voucher:"/>
+					<p:inputText value="#{ventaContadoBean.numeroVoucher}" onkeypress="if (event.keyCode == 13) { return false; }"></p:inputText> 
+	            	</p:panelGrid>
+	            </p:panel>
+	            <p:outputLabel value="Pago Recibido"/>
+				<p:inputNumber id="totalRecibido" value="#{ventaContadoBean.pagoRecibido}"
+				onkeypress="return enter(event,'templateForm:totalRecibido_input');" >
+					<p:ajax event="change"
+							listener="#{ventaContadoBean.cargarVuelto()}" />
+				</p:inputNumber>
+				
+				<p:outputLabel value="Vuelto"/>
+				<p:inputNumber id="vuelto" value="#{ventaContadoBean.vuelto}" disabled="true"></p:inputNumber>
+				
+				</p:panelGrid>
+				<p:panel id="panelPago" style="margin-top: 30px: width:60%">
+					<p:dataTable id="tablePagos" var="pago" value="#{ventaContadoBean.listDetPagoContado}" rowKey="#{pago.idDetallePagoContado}">
+						<p:column headerText="Tipo de Pago" style="width:15%;text-align: center">
+							<h:outputText value="#{pago.tipoPago}" />
+						</p:column>
+					
+						<p:column headerText="Monto" style="width:15%;text-align: center">
+							<h:outputText value="#{pago.monto}" />
+						</p:column>
+						
+						<p:column headerText="Vuelto" style="width:15%;text-align: center">
+							<h:outputText value="#{pago.vuelto}" />
+						</p:column>
+					
+					</p:dataTable>
+				
+					<p:commandButton value="Procesar" actionListener="#{ventaContadoBean.agregarPago()}" oncomplete="PF('facturarVentaConsignacionDialog').hide()" >
+					</p:commandButton>
+					
+					<p:commandButton value="Cancelar" actionListener="#{ventaContadoBean.limpiar()}" onclick="PF('facturarVentaConsignacionDialog').hide()"/>
+				</p:panel>
+			</p:panel>
+		</p:dialog>
 	</ui:define>
 
 
-</ui:composition>	
+</ui:composition>
 </html>

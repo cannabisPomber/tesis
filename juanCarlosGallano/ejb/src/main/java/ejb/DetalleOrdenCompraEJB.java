@@ -55,4 +55,19 @@ public class DetalleOrdenCompraEJB extends GenericDaoImpl<DetalleOrdenCompra, Se
     			   return null;
     		   }
     }
+    
+    public void deleteConstraintUniqueProducto(){
+    	
+    	//Borrar constraint unique de id producto que no se sabe por que  genera
+    	try {
+ 		   Query query = em.createNativeQuery("ALTER TABLE detalle_orden_compra DROP CONSTRAINT :parametro ");
+ 		   query.setParameter("parametro", "uk_fmhbywwawj5f33fu2fw5w41xc");
+ 		   
+ 		   
+ 		   }
+ 		   catch (Exception ex){
+ 			   System.out.println(" Error " + ex.getMessage());
+ 		   }
+    	
+    }
 }

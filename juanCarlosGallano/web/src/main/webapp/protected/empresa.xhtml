@@ -21,13 +21,13 @@
 				<p:inputText id="ruc" value="#{mostrarEmpresaBean.empresa.ruc}" ></p:inputText>
 			
 				<p:outputLabel value="Nombre o Razon Social:" required="true" />
-				<p:inputText id="nombreEmpresa" value="#{mostrarEmpresaBean.empresa.nombreEmpresa}" ></p:inputText>
+				<p:inputText id="nombreEmpresa" value="#{mostrarEmpresaBean.empresa.nombreEmpresa}"  onblur="value=value.toUpperCase()"></p:inputText>
 				
 				<p:outputLabel value="Local:" required="true" />
-				<p:inputText id="local" value="#{mostrarEmpresaBean.empresa.local}" ></p:inputText>
+				<p:inputText id="local" value="#{mostrarEmpresaBean.empresa.local}"  onblur="value=value.toUpperCase()"></p:inputText>
 				
 				<p:outputLabel value="Dirección:" required="true" />
-				<p:inputText id="direccion" value="#{mostrarEmpresaBean.empresa.direccion}" ></p:inputText>
+				<p:inputText id="direccion" value="#{mostrarEmpresaBean.empresa.direccion}"  onblur="value=value.toUpperCase()"></p:inputText>
 				
 				<p:outputLabel value="Telefono:" required="true" />
 				<p:inputText id="telefonoEmpresa" value="#{mostrarEmpresaBean.empresa.telefono}" ></p:inputText>
@@ -47,7 +47,7 @@
 			<p:commandButton id="guardarEmpresa" actionListener="#{mostrarEmpresaBean.guardarEmpresa()}" value="Guardar Datos Empresa" icon=" ui-icon-disk" style= "margin-top:20px" update="@form" ajax="false">
 			</p:commandButton>
 			<p:button id="salirCliente" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
-					outcome="/protected/index.xhtml?faces-redirect=true"/>
+					outcome="/protected/sucursalList.xhtml?faces-redirect=true"/>
 		</p:panel>
 	</h:form>
 	</ui:define>

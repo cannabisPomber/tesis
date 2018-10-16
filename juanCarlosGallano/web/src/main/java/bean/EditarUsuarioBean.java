@@ -13,8 +13,10 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import ejb.EmpresaEJB;
 import ejb.GrupoEJB;
 import ejb.UsuarioEJB;
+import entities.Empresa;
 import entities.Grupo;
 import entities.Usuario;
 
@@ -28,6 +30,9 @@ public class EditarUsuarioBean {
 	UsuarioEJB usuarioEjb;
 	
 	@EJB
+	EmpresaEJB empresaEjb;
+	
+	@EJB
 	GrupoEJB grupoEjb;
 	private Usuario usuarioEdit;
 	
@@ -35,24 +40,26 @@ public class EditarUsuarioBean {
 	// eleccion de grupo para usuario;
 	private List<Grupo> grupos;
 	
+	
+	
 	private Long idGrupo;
+	
+	//Sucursal
+	private Long idEmpresa;
+	private Empresa empresaEdit;
+	// eleccion de sucursal para usuario;
+	private List<Empresa> empresas;
 	
 	public EditarUsuarioBean(){
 		
 	}
 	//Metodo que inicializa la edicion de usuario
 	public void init() throws IOException{
-		//verificar que pertenezca al grupo Admin
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		HttpSession session = request.getSession();
-		String grupoUsuario = (String)session.getAttribute("grupo");
-		if (!grupoUsuario.equals("admin")){
-				//Si no pertenece al grupo envia al menu principal
-				FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
-		}
+		
 		if (!FacesContext.getCurrentInstance().isPostback()){
 		grupoEdit = new Grupo();
 		grupos = grupoEjb.findAll();
+		empresas = empresaEjb.findAll();
 		Map<String,String> params =
                 FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		try{
@@ -64,9 +71,11 @@ public class EditarUsuarioBean {
 			usuarioEdit = usuarioEjb.findIdUsuario(idUsuario);
 			grupoEdit = usuarioEjb.usuarioFindGrupo(usuarioEdit);
 			idGrupo = grupoEdit.getIdGrupo();
+			idEmpresa = usuarioEdit.getEmpresa().getIdEmpresa();
 			//grupoEdit = new Grupo();
 		} else {
 			usuarioEdit = new Usuario();
+			idGrupo = null;
 		}
 		}	
 	}
@@ -90,16 +99,26 @@ public class EditarUsuarioBean {
 		if(usuarioEdit.getIdUsuario() == null){
 //			usuarioEdit.setGrupo(grupoEdit);
 			Grupo grupo = grupoEjb.findGrupo(idGrupo);
+			empresaEdit = empresaEjb.findEmpresaId(idEmpresa);
 			usuarioEdit.setGrupo(grupo);
+			usuarioEdit.setEmpresa(empresaEdit);
 			usuarioEdit = usuarioEjb.create(usuarioEdit);
+			idGrupo = null;
+			idEmpresa = null;
+			usuarioEdit = new Usuario();
 			 FacesContext.getCurrentInstance().addMessage("Usuario Creado", new FacesMessage("Nuevo Usuario Creado."));
 			 usuarioEdit = new Usuario();
 		} else {
 			// Modificar usuario
 //			usuarioEdit.setGrupo(grupoEdit);
 			Grupo grupo = grupoEjb.findGrupo(idGrupo);
-			usuarioEdit.setGrupo(grupo);			
+			empresaEdit = empresaEjb.findEmpresaId(idEmpresa);
+			usuarioEdit.setGrupo(grupo);	
+			usuarioEdit.setEmpresa(empresaEdit);
 			usuarioEdit = usuarioEjb.update(usuarioEdit);
+			idGrupo = null;
+			idEmpresa = null;
+			usuarioEdit = new Usuario();
 			FacesContext.getCurrentInstance().addMessage("Usuario Modificado", new FacesMessage("Usuario Modificado."));
 		}
 	}
@@ -120,6 +139,24 @@ public class EditarUsuarioBean {
 	}
 	public void setIdGrupo(Long idGrupo) {
 		this.idGrupo = idGrupo;
+	}
+	public Long getIdEmpresa() {
+		return idEmpresa;
+	}
+	public void setIdEmpresa(Long idEmpresa) {
+		this.idEmpresa = idEmpresa;
+	}
+	public List<Empresa> getEmpresas() {
+		return empresas;
+	}
+	public void setEmpresas(List<Empresa> empresas) {
+		this.empresas = empresas;
+	}
+	public Empresa getEmpresaEdit() {
+		return empresaEdit;
+	}
+	public void setEmpresaEdit(Empresa empresaEdit) {
+		this.empresaEdit = empresaEdit;
 	}
 	
 	

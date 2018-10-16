@@ -29,18 +29,16 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<p:button outcome="editarGrupo" title="Nuevo Grupo" value="Nuevo Grupo"/>
+					<p:button outcome="editarGrupo" title="Nuevo Grupo" value="Nuevo Grupo">
+					</p:button>
 					<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
 				</f:facet>
 				
 
 				<p:button outcome="editarGrupo" icon="ui-icon-pencil" id="editGrupo">
-					<f:param name="idUsuario" value="#{grupo.idGrupo}"></f:param>
+					<f:param name="idGrupo" value="#{grupo.idGrupo}"></f:param>
 				</p:button>
 				
-				<p:commandButton action="#{grupoBean.eliminarGrupo(grupo)}"
-					update="templateForm:formGrupoList:tablaGrupo" icon="ui-icon-trash">	
-				</p:commandButton>
 			</p:column>
 		</p:dataTable>
 	</p:panel>

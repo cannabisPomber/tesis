@@ -4,9 +4,12 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
@@ -32,6 +35,11 @@ public class Deposito implements Serializable{
 	@Column (name = "estado_deposito")
 	@NotNull
 	private String estado;
+	
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "id_empresa", nullable = false)
+	private Empresa empresa;
+	
 
 	public Long getIdDeposito() {
 		return idDeposito;
@@ -61,6 +69,16 @@ public class Deposito implements Serializable{
 		this.idDeposito = idDeposito;
 	}
 	
+	
+	
+	public Empresa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

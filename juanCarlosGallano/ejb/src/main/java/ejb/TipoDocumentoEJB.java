@@ -29,7 +29,7 @@ public class TipoDocumentoEJB extends GenericDaoImpl<TipoDocumento, Serializable
     }
 	
 	public List<TipoDocumento> findAllActivo() {
-    	TypedQuery<TipoDocumento> query = em.createQuery("select c from tipo_documento c where c.estado = 'Activo'", TipoDocumento.class);
+    	TypedQuery<TipoDocumento> query = em.createQuery("select c from tipo_documento c where c.estado = 'ACTIVO'", TipoDocumento.class);
     	tipoDocumentos = query.getResultList();
     	return tipoDocumentos;
     }
@@ -38,6 +38,20 @@ public class TipoDocumentoEJB extends GenericDaoImpl<TipoDocumento, Serializable
     	try {
     		   Query query = em.createQuery("select u from tipo_documento u where u.id = :idTipoDocumento");
     		   query.setParameter("idTipoDocumento", idTipoDocumento);
+    		   
+    		   
+    		   return (TipoDocumento) query.getSingleResult();
+    		   }
+    		   catch (Exception ex){
+    			   System.out.println(" Error " + ex.getMessage());
+    			   return null;
+    		   }
+    }
+	
+	public TipoDocumento findTipoDocumentoRuc (String ruc){
+    	try {
+    		   Query query = em.createQuery("select u from tipo_documento u where u.tipoDocumento = :ruc");
+    		   query.setParameter("ruc", ruc);
     		   
     		   
     		   return (TipoDocumento) query.getSingleResult();

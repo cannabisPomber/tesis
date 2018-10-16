@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -50,6 +51,10 @@ public class CajaDetalle implements Serializable{
 	@Column (name = "fecha_hora", nullable = false)
 	@Temporal (TemporalType.TIMESTAMP)
 	private Date fechaHora;
+	
+	@OneToOne(fetch = FetchType.EAGER, optional = true)
+	@JoinColumn(name = "id_caja_arqueo", nullable = true)
+	private Caja cajaCerradaArqueo;
 
 	public Long getIdCajaDetalle() {
 		return idCajaDetalle;
@@ -118,6 +123,14 @@ public class CajaDetalle implements Serializable{
 
 	public Date getFechaHora() {
 		return fechaHora;
+	}
+
+	public Caja getCajaCerradaArqueo() {
+		return cajaCerradaArqueo;
+	}
+
+	public void setCajaCerradaArqueo(Caja cajaCerradaArqueo) {
+		this.cajaCerradaArqueo = cajaCerradaArqueo;
 	}
 
 	public void setFechaHora(Date fechaHora) {

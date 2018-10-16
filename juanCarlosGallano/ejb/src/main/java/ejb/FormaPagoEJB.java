@@ -53,5 +53,11 @@ public List<FormaPago> FormaPagos = new ArrayList<FormaPago>();
 	    	FormaPagos = query.getResultList();
 	    	return FormaPagos;
 	   }
+	   
+	   public List<FormaPago> findAllActivo() {
+	    	TypedQuery<FormaPago> query = em.createQuery("select u from forma_pago u where u.estadoFormaPago = 'ACTIVO'", FormaPago.class);
+	    	FormaPagos = query.getResultList();
+	    	return FormaPagos;
+	   }
 
 }

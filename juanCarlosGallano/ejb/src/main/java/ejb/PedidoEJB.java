@@ -35,7 +35,7 @@ public class PedidoEJB extends GenericDaoImpl<Pedido, Serializable>{
     }
 	
 	public List<Pedido> findAllActivo() {
-    	TypedQuery<Pedido> query = em.createQuery("select c from pedido c where c.estado = 'Activo'", Pedido.class);
+    	TypedQuery<Pedido> query = em.createQuery("select c from pedido c where c.estado = 'ACTIVO'", Pedido.class);
     	pedidos = query.getResultList();
     	return pedidos;
     }

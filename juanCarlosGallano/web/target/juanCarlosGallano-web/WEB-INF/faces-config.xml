@@ -36,6 +36,11 @@
    <from-outcome>editarUsuario</from-outcome>
    <to-view-id>/protected/editarUsuario.xhtml</to-view-id>
   </navigation-case>
+  
+   <navigation-case>
+   <from-outcome>editarGrupo</from-outcome>
+   <to-view-id>/protected/editarGrupo.xhtml</to-view-id>
+  </navigation-case>
   <navigation-case>
    <from-outcome>editarProveedor</from-outcome>
    <to-view-id>/protected/editarProveedor.xhtml</to-view-id>
@@ -45,8 +50,8 @@
    <to-view-id>/protected/editarFormaPago.xhtml</to-view-id>
   </navigation-case>
   <navigation-case>
-   <from-outcome>editarMoneda</from-outcome>
-   <to-view-id>/protected/editarMoneda.xhtml</to-view-id>
+   <from-outcome>confirmarOrdenCompra</from-outcome>
+   <to-view-id>/protected/ConfirmarOrdenCompra.xhtml</to-view-id>
   </navigation-case>
   <navigation-case>
    <from-outcome>depositos</from-outcome>
@@ -76,6 +81,11 @@
    <from-outcome>editarTipoVenta</from-outcome>
    <to-view-id>/protected/editarTipoVenta.xhtml</to-view-id>
   </navigation-case>
+  
+  <navigation-case>
+   <from-outcome>preferenciaProveedor</from-outcome>
+   <to-view-id>/protected/preferenciaProveedor.xhtml</to-view-id>
+  </navigation-case>
   <navigation-case>
    <from-outcome>editarProductoProveedor</from-outcome>
    <to-view-id>/protected/editarProductoProveedor.xhtml</to-view-id>
@@ -101,6 +111,26 @@
    <to-view-id>/protected/unidadMedidaList.xhtml</to-view-id>
   </navigation-case>
   <navigation-case>
+   <from-outcome>arqueoCaja</from-outcome>
+   <to-view-id>/protected/arqueoCaja.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>editarOrdenCompra</from-outcome>
+   <to-view-id>/protected/editarOrdenCompra.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>PuestoVentaList</from-outcome>
+   <to-view-id>/protected/puestoVentaList.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>editarPuestoVenta</from-outcome>
+   <to-view-id>/protected/editarPuestoVenta.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>cajaTesoria</from-outcome>
+   <to-view-id>/protected/cajaTesoreria.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
    <from-outcome>index</from-outcome>
    <to-view-id>/protected/index.xhtml</to-view-id>
   </navigation-case>
@@ -113,4 +143,10 @@
    <to-view-id>/protected/map.html</to-view-id>
   </navigation-case>
  </navigation-rule>
+ 
+  <managed-bean>
+        <managed-bean-name>reportGenerator</managed-bean-name>
+        <managed-bean-class>bean.generateReport</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 </faces-config>

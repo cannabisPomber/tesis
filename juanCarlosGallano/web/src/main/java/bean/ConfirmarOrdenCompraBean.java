@@ -42,11 +42,9 @@ public class ConfirmarOrdenCompraBean {
 	private Long costoDetalle;
 	
 	public void init(){
-		if (!FacesContext.getCurrentInstance().isPostback()){
-			listOrdenCompraActivos = new ArrayList<OrdenCompra>();
-			listOrdenCompraConfirmados = new ArrayList<OrdenCompra>();
-			//Cargando Listas de Orden de Compra Activos
-			listOrdenCompraActivos = ordenCompraEJB.findAllActivo();		}
+		listOrdenCompraActivos = new ArrayList<OrdenCompra>();
+		listOrdenCompraConfirmados = new ArrayList<OrdenCompra>();
+		listOrdenCompraActivos = ordenCompraEJB.findAllActivo();
 	}
 
 	public List<OrdenCompra> getListOrdenCompraActivos() {
@@ -105,7 +103,7 @@ public class ConfirmarOrdenCompraBean {
 			for (Iterator iterator = listOrdenCompraConfirmados.iterator(); iterator.hasNext();) {
 				OrdenCompra ordenCompra = (OrdenCompra) iterator.next();
 				//actualizando las ordenes de compra a estado Confirmado
-				ordenCompra.setEstado("Confirmado");
+				ordenCompra.setEstado("CONFIRMADO");
 				ordenCompra.setFechaAprobacion(new Date());
 				ordenCompra.setUsuarioAprobacion(usuarioEJB.findUserUsuario(user));
 				ordenCompraEJB.update(ordenCompra);
@@ -117,8 +115,6 @@ public class ConfirmarOrdenCompraBean {
 	}
 	public void buscarDetalleOrdenCompra(){
 		//CArgando Detalle de Orden deCompra en lista
-		
-		System.out.println("Orden de Compra seleccionado :" + idOrdenCompraSelected);
 		listDetOrdenCompra = detOrdenCompraEJB.DetalleOrdenCompra(ordenCompraEJB.findOrdenCompraId(idOrdenCompraSelected).getIdOrdenCompra());
 	}
 	public Long costoProducto(Long precioCompra, Long cantidad){
@@ -127,5 +123,21 @@ public class ConfirmarOrdenCompraBean {
 	}
 	public void limpiar(){
 		listOrdenCompraActivos = new ArrayList<OrdenCompra>();
+	}
+	
+	public void anularOrdenCompra(){
+		//Anular Orden de Compra en Confirmar Orden de compra
+		if(listOrdenCompraConfirmados.size() == 0){
+			FacesContext.getCurrentInstance().addMessage("Confirmado Correctamente Orden de Compra Seleccionados", new FacesMessage("No Se ha seleccionado Orden de Compra"));
+		} else {
+			for (Iterator iterator = listOrdenCompraConfirmados.iterator(); iterator.hasNext();) {
+				OrdenCompra ordenCompraAnular = (OrdenCompra) iterator.next();
+				ordenCompraAnular.setEstado("ANULADO");
+				ordenCompraAnular = ordenCompraEJB.update(ordenCompraAnular);
+			}
+			FacesContext.getCurrentInstance().addMessage("Anulado Orden de compra Seleccionados", new FacesMessage("Se han Anulado Ordenes de compra seleccionados"));
+		}
+			
+		
 	}
 }

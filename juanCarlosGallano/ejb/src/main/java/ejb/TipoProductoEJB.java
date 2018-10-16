@@ -52,4 +52,10 @@ public class TipoProductoEJB extends GenericDaoImpl<TipoProducto, Serializable> 
 	    	tipoProductos = query.getResultList();
 	    	return tipoProductos;
 	   }
+	   
+	   public List<TipoProducto> findAllActivo() {
+	    	TypedQuery<TipoProducto> query = em.createQuery("select u from tipo_producto u where u.estado = 'ACTIVO'", TipoProducto.class);
+	    	tipoProductos = query.getResultList();
+	    	return tipoProductos;
+	   }
 }

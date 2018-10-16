@@ -13,13 +13,13 @@
 	<ui:define name="contenido">
 	<h:form id="formEditPedido">
 		<p:panel id="panelEdicion">
-		<p:panelGrid columns="2" id="panelEditPedido">
+		<p:panelGrid columns="1" id="panelEditPedido">
 		
 			<p:panel header="Cargar Detalle Pedido" id="panelCargarPedido">
 			
 				<p:panelGrid columns="2" id="panelPedido">
 					<p:outputLabel value="Seleccionar Producto" for="productoPedido"/>
-					<p:selectOneMenu required= "true" requiredMessage="Producto debe ser seleccionado" id="productoPedido" 
+					<p:selectOneMenu  requiredMessage="Producto debe ser seleccionado" id="productoPedido" 
 						value="#{crearPedidoBean.idProducto}" style="width:125px" disabled="#{crearPedidoBean.disabledVista}" >
 		            	<f:selectItem itemLabel="Seleccione Producto"  />
 		            	<f:selectItems value="#{crearPedidoBean.listProducto}" var="producto"
@@ -27,10 +27,10 @@
 		        	</p:selectOneMenu>
 		        	
 		        	<p:outputLabel value="Seleccionar Cantidad" for="cantidadPedido"/>
-		        	<p:inputNumber required= "true" value="#{crearPedidoBean.cantidad}" id="cantidadPedido" decimalPlaces="0" disabled="#{crearPedidoBean.disabledVista}"/>
+		        	<p:inputNumber  value="#{crearPedidoBean.cantidad}" id="cantidadPedido" decimalPlaces="0" disabled="#{crearPedidoBean.disabledVista}" minValue="1" />
 				</p:panelGrid>
 				
-				<p:commandButton id="guardarDetallePEdido" label="Guardar Detalle" title="Guardar Detalle" style="margin-top:25px;margin-left:25px"
+				<p:commandButton id="guardarDetallePEdido" label="Seleccionar" title="Seleccionar" style="margin-top:25px;margin-left:25px"
 					action="#{crearPedidoBean.guardarDetallePedido()}" update="panelEditPedido" disabled="#{crearPedidoBean.disabledVista}"/>
 					
 			</p:panel>

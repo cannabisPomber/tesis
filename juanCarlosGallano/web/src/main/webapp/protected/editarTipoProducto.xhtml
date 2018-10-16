@@ -17,7 +17,7 @@
 			
 			<p:outputLabel value="Nombre TipoProducto" for="tipoProducto"/>
 			<p:inputText required="true" id="tipoProducto" 
-				value="#{editarTipoProductoBean.tipoProductoEdicion.nombreTipoProducto}"
+				value="#{editarTipoProductoBean.tipoProductoEdicion.nombreTipoProducto}" onblur="value=value.toUpperCase()"
 					requiredMessage="Nombre de producto no puede ser vacio"></p:inputText>
 			
 			<p:outputLabel value="Cantidad" for="cantidad"/>
@@ -28,8 +28,8 @@
 			<p:selectOneMenu required= "true" requiredMessage="Estado debe ser seleccionado" id="estadoTipoProducto" 
 				value="#{editarTipoProductoBean.tipoProductoEdicion.estado}" style="width:125px" >
             	<f:selectItem itemLabel="Seleccione Estado"  />
-            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
-            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+            	<f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+            	<f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
         	</p:selectOneMenu>
 		</p:panelGrid>
 		

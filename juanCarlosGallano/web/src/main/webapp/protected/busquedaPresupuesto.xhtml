@@ -32,6 +32,7 @@
 		        
 		        <f:facet name="footer">
 		            <p:commandButton id="verPedido" process="checkboxPedido" update="templateForm:formBusquedaPresupuesto:panelProductoPedidos" icon="ui-icon-search" value="Ver Detalle Pedido" actionListener="#{busquedaPresupuestoBean.mostrarProductos()}"  />
+		            <p:commandButton id="AnularPedido" update="templateForm:formBusquedaPresupuesto:panelListadoPedidos" icon="ui-icon-trash" value="Anular Pedido" actionListener="#{busquedaPresupuestoBean.anularPedido()}"  />
 		        </f:facet>
 		    </p:dataTable>
 		    <p:panel id="panelProductoPedidos" header="Listado de Productos" >
@@ -64,7 +65,8 @@
 					       		<h:outputText value="#{proveedorProducto.proveedor.nombreEmpresa}" />
 					       </p:column>
 					       <p:column headerText="Precio de Compra">
-					       		<h:outputText value="#{proveedorProducto.precioCompra}" />
+					       
+					       		<h:outputText value="#{proveedorProducto.precioCompra}"></h:outputText>
 					       </p:column>
 					       <p:column headerText="Cantidad de Producto">
 					       		<p:cellEditor>
@@ -87,21 +89,26 @@
 		    		
 		    	<p:panel id="panelOrdenCompra" header="Lista Ordenes de Compra" style="margin-top:20px">
 		    		<p:tabView value="#{busquedaPresupuestoBean.listOrdenCompraGenerado}" var="OcGenerado" >
-		    			<f:ajax event="tabClose" listener="#{busquedaPresupuestoBean.eliminarTab()}"/>
-		    			<p:tab title="#{OcGenerado.proveedor.nombreEmpresa}" closable="true">
-		    				<p:dataTable id="dataTableDetalleOc" value="#{busquedaPresupuestoBean.listDetOc}" var="detOc">
+		    			<p:ajax event="tabChange" listener="#{busquedaPresupuestoBean.onTabChange(OcGenerado)}" update="dataTableDetalleOc"/>
+		    			
+		    			<p:tab title="#{OcGenerado.proveedor.nombreEmpresa}" closable="false">
+		    				<p:dataTable id="dataTableDetalleOc" value="#{OcGenerado.listaDetalleOrdenCompra}" var="detOc">
 		    					<p:column headerText="Producto">
-		    						<p:outputLabel value="#{detOc.producto.nombreProducto} #{detOc.producto.tipoProducto.nombreTipoProducto} #{detOc.producto.unidadMedida.dimension} #{detOc.producto.unidadMedida.unidad}"></p:outputLabel>
+		    						<p:outputLabel value="#{detOc.producto.nombreProducto} #{detOc.producto.marca.nombreMarca} #{detOc.producto.tipoProducto.nombreTipoProducto} #{detOc.producto.unidadMedida.dimension} #{detOc.producto.unidadMedida.unidad}"></p:outputLabel>
 		    					</p:column>
 		    					
 		    					<p:column headerText="Cantidad">
 		    						<p:outputLabel value="#{detOc.cantidad}"></p:outputLabel>
 		    					</p:column>
+		    					
+		    					<p:column headerText="Costo">
+		    						<p:outputLabel value="#{detOc.cantidad*detOc.precioCompra}"></p:outputLabel>
+		    					</p:column>
 		    				</p:dataTable>
 		    			</p:tab>
 		    		</p:tabView>
-		    		<p:commandButton id="generarOrdenCompra" ajax="false" value="Generar Orden de Compra"  action="#{busquedaPresupuestoBean.guardarOrdenCompra()}" style="margin-top:15px" update="templateForm:formBusquedaPresupuesto"/>
-		    		<p:commandButton id="limpiarBusquedaOrdenCompra" ajax="false" value="Limpiar" icon="ui-icon-trash" action="#{busquedaPresupuestoBean.init()}" style="margin-top:15px" update="templateForm:formBusquedaPresupuesto"/>
+		    		<p:commandButton id="generarOrdenCompra" ajax="false" value="Generar Orden de Compra"  action="#{busquedaPresupuestoBean.guardarOrdenCompra()}" style="margin-top:15px" update="templateForm:formBusquedaPresupuesto"></p:commandButton>
+		    		<p:commandButton id="limpiarBusquedaOrdenCompra" ajax="false" value="Limpiar" icon="ui-icon-trash" action="#{busquedaPresupuestoBean.limpiar()}" style="margin-top:15px" update="templateForm:formBusquedaPresupuesto"></p:commandButton>
 		    	</p:panel>
 			
 		</p:panel>

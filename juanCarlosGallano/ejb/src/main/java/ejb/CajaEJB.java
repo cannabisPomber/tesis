@@ -35,6 +35,7 @@ public class CajaEJB extends GenericDaoImpl<Caja, Serializable>{
     	cajas = query.getResultList();
     	return cajas;
     }
+
 	
 	public Caja findCajaId (Long idCaja){
     		try {
@@ -50,10 +51,38 @@ public class CajaEJB extends GenericDaoImpl<Caja, Serializable>{
     		   }
     }
 	
+	public List<Caja> findCajaPuestoVenta (Long idPuestoVenta){
+		try {
+		   Query query = em.createQuery("select u from caja u where u.idPuestoVenta = :idPuestoVenta and u.fechaFin is null");
+		   query.setParameter("idPuestoVenta", idPuestoVenta);
+		   
+		   
+		   return (List<Caja>)query.getResultList();
+		   }
+		   catch (Exception ex){
+			   System.out.println(" Error " + ex.getMessage());
+			   return null;
+		   }
+	}
+	
 	public Caja cajaAbierta(Usuario user){
 		try {
  		   Query query = em.createQuery("select u from caja u where u.usuario.idUsuario = :idUser and u.fechaFin is null");
  		   query.setParameter("idUser", user.getIdUsuario());
+ 		   
+ 		   
+ 		   return (Caja) query.getSingleResult();
+ 		   }
+ 		   catch (Exception ex){
+ 			   System.out.println(" Error " + ex.getMessage());
+ 			   return null;
+ 		   }
+	}
+	
+	
+	public Caja cajaAbiertaTesoreria(){
+		try {
+ 		   Query query = em.createQuery("select u from caja u where u.puestoVenta.cajaTesoreria = TRUE and u.fechaFin is null");
  		   
  		   
  		   return (Caja) query.getSingleResult();
@@ -75,6 +104,19 @@ public class CajaEJB extends GenericDaoImpl<Caja, Serializable>{
  		   catch (Exception ex){
  			   return null;
  		   }
+	}
+	
+	public void cerrarCaja(Caja cajaCerrar){
+		    try {
+		        Query query = em.createNativeQuery("update caja  "
+		                + "set fecha_fin = ? "
+		                + "WHERE id_caja = ?;");
+		        query.setParameter(1, cajaCerrar.getFechaFin());
+		        query.setParameter(2, cajaCerrar.getIdCaja());
+		        int v = query.executeUpdate();
+		    } catch (javax.persistence.NoResultException ex) {
+		    	System.out.println("No se pudo Actualizar Correctamente Caja...");
+		    }
 	}
 
 }

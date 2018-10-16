@@ -17,14 +17,14 @@
 			
 			<p:outputLabel value="Nombre Forma de Pago" for="formaPago"/>
 			<p:inputText id="formaPago" required="true" requiredMessage="Nombre de Forma  de Pago Requerido" 
-				size="30" value="#{editarFormaPagoBean.formaPagoEdicion.nombreFormaPago}" maxlenght="60"/>
+				size="30" value="#{editarFormaPagoBean.formaPagoEdicion.nombreFormaPago}" maxlenght="60" onblur="value=value.toUpperCase()"/>
 			<p:outputLabel value="Descripción" for="descripcion"/>
-			<p:inputText id="descripcion"  value="#{editarFormaPagoBean.formaPagoEdicion.descripcion}" size="30" maxlenght="60"/>
+			<p:inputText id="descripcion"  value="#{editarFormaPagoBean.formaPagoEdicion.descripcion}" size="30" maxlenght="60" onblur="value=value.toUpperCase()"/>
 			<p:outputLabel value="Estado" for="estadoFormaPago"/>
 			<p:selectOneMenu required= "true" requiredMessage="Estado debe ser seleccionado" id="estadoFormaPago" value="#{editarFormaPagoBean.formaPagoEdicion.estadoFormaPago}" style="width:125px" >
             	<f:selectItem itemLabel="Seleccione Estado"  />
-            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
-            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+            	<f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+            	<f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
         	</p:selectOneMenu>
 		</p:panelGrid>
 		

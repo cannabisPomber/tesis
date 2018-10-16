@@ -23,41 +23,75 @@
 				<p:panelGrid columns="2">
 					<p:outputLabel value="Usuario Registrado" title="Usuario Registrado"/>
 					<p:outputLabel value="#{usuarioBean.usuarioLogueado()}" id="username"></p:outputLabel>
+					
+					<p:outputLabel value="Seleccionar Punto de Venta"/>
+					<p:selectOneMenu requiredMessage="Punto de Venta debe ser seleccionado" 
+						id="selectPuntoVenta" value="#{abrirCajaBean.idPuestoVenta}" 
+						style="width:125px" >
+		            	<f:selectItem itemLabel="Seleccione Deposito"  />
+		            	<f:selectItems value="#{abrirCajaBean.listPuestoVenta}" var="pv" itemValue="#{pv.idPuestoVenta}" itemLabel="#{pv.nombrePuestoVenta}" />
+		        	</p:selectOneMenu>
+		        	
+		        	<p:outputLabel value="Monto Inicial" title="Monto Inicial"/>
+					<p:inputNumber id= "montoInicial" value="#{abrirCajaBean.montoCaja}"></p:inputNumber>
+					
 					<h:outputLabel value="Fecha Sistema" />
 					<p:clock pattern="HH:mm:ss dd.MM.yyyy" style="margin:10px"/>
 				</p:panelGrid>
 				<br></br>
-				<p:commandButton label="Abrir Caja" title="Abrir Caja" id="abrirCajaButton" onclick="PF('cargarMontoInicial').show();" update="@form"/>
+				<p:commandButton label="Generar Apertura Caja" title="Generar Apertura Caja" actionListener="#{abrirCajaBean.generarCaja()}" disabled="#{abrirCajaBean.cajaExiste}"/>
 				
 			</p:panel>
 			
-			<p:panel id="cajaExiste" rendered="#{abrirCajaBean.cajaExiste}"> 
-				<p:panelGrid columns="2">
-					<p:outputLabel value="Usuario Registrado" title="Usuario Registrado"/>
-					<p:outputLabel value="#{usuarioBean.usuarioLogueado()}" id="usuarioExistente"/>
-					<h:outputLabel value="Fecha Apertura" />
-					<p:clock pattern="HH:mm:ss dd.MM.yyyy" style="margin:10px"/>
+			<p:panel id="CajaExistente" rendered="#{abrirCajaBean.cajaExiste}"> 
+				<p:panelGrid columns="2" style="width:50%">
+				
+					<p:outputLabel value="Usuario Caja"/>
+					<p:outputLabel id= "usuarioCaja" value="#{abrirCajaBean.cajaExistente.usuario.usuario}"></p:outputLabel>
+					
+					<p:outputLabel value="Fecha Inicio"/>
+					<p:outputLabel id= "fechaInicioCaja" value="#{abrirCajaBean.cajaExistente.fechaInicio}" ></p:outputLabel>
+					
+					<p:outputLabel value="Fecha Fin"/>
+					<p:outputLabel id= "fechaFinCaja" value="#{abrirCajaBean.cajaExistente.fechaFin}" ></p:outputLabel>
+					
+					<p:outputLabel value="Monto Disponible en  Caja"/>
+					<h:outputText id= "montoCaja" value="#{abrirCajaBean.cajaExistente.montoCaja}" >
+						<f:convertNumber type="currency" currencySymbol="Gs." />
+					</h:outputText>
+					
+					<p:outputLabel value="Puesto Venta"/>
+					<p:outputLabel id= "PuestoVentaCaja" value="#{abrirCajaBean.cajaExistente.puestoVenta.nombrePuestoVenta} #{abrirCajaBean.cajaExistente.puestoVenta.sucursal.nombreEmpresa}" ></p:outputLabel>
+					
 				</p:panelGrid>
 				
-				<p:commandButton label="Cerrar Caja" title="Cerrar Caja" id="cerrarCajaButton" action="#{abrirCajaBean.cerrarCaja()}" style="margin-top: 15px"/>
-				<p:commandButton label="Retirar Dinero Caja Caja" title="Retirar Dinero Caja" id="retirarCajaButton"  style="margin-top: 15px"/>
-				<p:commandButton label="Arqueo Caja" title="Arqueo Caja" id="arqueoCajaButton"  style="margin-top: 15px"/>
+				<p:button outcome="arqueoCaja" icon="ui-icon-trash" id="arqueoCaja" value="Arqueo Caja">
+						<f:param name="idCajaCerrada" value="#{abrirCajaBean.cajaExistente.idCaja}"></f:param>
+				</p:button>
 			</p:panel>
-			<p:dialog id= "cargarMontoInicial" widgetVar="cargarMontoInicial" header="Cargar Monto Inicial Caja">
-				<p:outputLabel title="Cargar Monto Inicial de Caja"> </p:outputLabel>
-				<br />
-				<p:panelGrid columns="2">
-					<p:outputLabel value="Monto Inicial" title="Monto Inicial"/>
-					<p:inputNumber id= "montoInicial" value="#{abrirCajaBean.montoCaja}"></p:inputNumber>
-				</p:panelGrid>
-				<br />
-				<p:panelGrid columns="2">
-					<p:commandButton label="Generar Apertura Caja" title="Generar Apertura Caja" action="#{abrirCajaBean.generarCaja()}"/>
-					<p:commandButton label="Cancelar" title="Cancelar" onclick="PF('cargarMontoInicial').hide();"/>
-				</p:panelGrid>
-			</p:dialog>
 		</p:panel>
 	</h:form>
+	<p:dialog header="Agregar Ingreso">
+		<p:panelGrid columns="2">
+			<p:outputLabel value="Monto Ingreso"></p:outputLabel>
+			<p:inputNumber ></p:inputNumber>
+			<p:outputLabel value="Observacion"></p:outputLabel>
+			<p:inputTextarea ></p:inputTextarea>
+		</p:panelGrid>
+		<p:commandButton title="Guardar"></p:commandButton>
+		<p:commandButton title="Cancelar"></p:commandButton>
+	</p:dialog>
+	
+	<p:dialog header="Agregar Egreso">
+		<p:panelGrid columns="2">
+			<p:outputLabel value="Monto Egreso"></p:outputLabel>
+			<p:inputNumber ></p:inputNumber>
+			<p:outputLabel value="Observacion"></p:outputLabel>
+			<p:inputTextarea ></p:inputTextarea>
+		</p:panelGrid>
+		<p:commandButton title="Guardar"></p:commandButton>
+		<p:commandButton title="Cancelar"></p:commandButton>
+	</p:dialog>
 	</ui:define>
 </ui:composition>
 </html>

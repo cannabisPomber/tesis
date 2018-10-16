@@ -86,22 +86,31 @@ public class CrearPedidoBean {
 	}
 	
 	public void guardarDetallePedido(){
-		//guardando cantidad de pedido y producto en detalle
-		detallePedidoEdicion.setProducto(productoEJB.findIdProducto(idProducto));
-		detallePedidoEdicion.setCantidad(cantidad);
-		listDetallePedido.add(detallePedidoEdicion);
-		
-		//Limipiando objeto detalle panel Edicion
-		detallePedidoEdicion = new DetallePedido();
-		cantidad = (long) 0;
-		RequestContext.getCurrentInstance().update("templateForm:formEditPedido:productoPedido");
+		if(cantidad >0){
+			//guardando cantidad de pedido y producto en detalle
+			detallePedidoEdicion.setProducto(productoEJB.findIdProducto(idProducto));
+			detallePedidoEdicion.setCantidad(cantidad);
+			listDetallePedido.add(detallePedidoEdicion);
+			
+			//Limipiando objeto detalle panel Edicion
+			detallePedidoEdicion = new DetallePedido();
+			idProducto = 0l;
+			cantidad = (long) 0;
+			RequestContext.getCurrentInstance().update("templateForm:formEditPedido:productoPedido");
+		} else {
+			detallePedidoEdicion = new DetallePedido();
+			idProducto = 0l;
+			cantidad = (long) 0;
+			RequestContext.getCurrentInstance().update("templateForm:formEditPedido:productoPedido");
+			FacesContext.getCurrentInstance().addMessage("Cantidad debe ser mayor a Cero.", new FacesMessage("Cantidad debe ser mayor a Cero."));
+		}
 		//RequestContext.getCurrentInstance().reset("templateForm:formEditPedido:panelCargarPedido");
 	}
 	public void guardarPedido(){
 		
 		// Debe persistir el usuario
 				pedidoEdicion.setFecha(new Date());
-				pedidoEdicion.setEstado("Activo");
+				pedidoEdicion.setEstado("ACTIVO");
 				HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 				HttpSession session = request.getSession();      
 				pedidoEdicion.setUsuario(usuarioEJB.findIdUsuario(Long.valueOf((String)session.getAttribute("idUsuario"))).getUsuario());
@@ -132,7 +141,7 @@ public class CrearPedidoBean {
 	public void anularPedido(){
 		//Anulando Cabecera de Pedido
 		//Estado Anulado de Pedido
-		pedidoEdicion.setEstado("Anulado");
+		pedidoEdicion.setEstado("ANULADO");
 		pedidoEJB.update(pedidoEdicion);
 		FacesContext.getCurrentInstance().addMessage("Pedido Modificado", new FacesMessage("Pedido Anulado."));
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -160,7 +169,6 @@ public class CrearPedidoBean {
 				pedidoEdicion = pedidoEJB.findPedidoId(idPedido);
 				//listDetallePedido = detallePedidoEJB.DetallePedido(idPedido);
 				listDetallePedido = detallePedidoEJB.DetallePedido(pedidoEdicion.getIdPedido());
-				System.out.println("CArgo detalle de Pedidos? :" + listDetallePedido.size());
 				disabledVista = true;
 			} else {
 				pedidoEdicion = new Pedido();

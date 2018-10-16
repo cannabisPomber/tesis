@@ -15,16 +15,14 @@
 	<h:form id="formClienteList">
 		<p:panel>
 		<p:outputLabel value="Listado de Clientes del sistema" />
-		<p:dataTable id="tablaCliente" var="cliente" value="#{clienteBean.clientes}" emptyMessage="No se registran elementos cargados"
+		<p:dataTable id="tablaCliente" var="cliente" value="#{clienteBean.getClientes()}" emptyMessage="No se registran elementos cargados"
 			style="margin-top:10px">
-			<p:column headerText="Cedula">
-				<h:outputText value="#{cliente.cedula}" />
+			
+			<p:column headerText="Nombre">
+				<h:outputText value="#{cliente.nombre}" />
 			</p:column>
-			<p:column headerText="Ruc">
-				<h:outputText value="#{cliente.ruc}" />
-			</p:column>
-			<p:column headerText="Direccion">
-				<h:outputText value="#{cliente.direccion}" />
+			<p:column headerText="Apellido">
+				<h:outputText value="#{cliente.apellido}" />
 			</p:column>
 			<p:column headerText="Email">
 				<h:outputText value="#{cliente.email}" />
@@ -42,7 +40,7 @@
 					<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
 				</f:facet>
 				
-				<p:button outcome="/editarCliente" icon="ui-icon-pencil" id="editCliente">
+				<p:button outcome="editarCliente" icon="ui-icon-pencil" id="editCliente">
 						<f:param name="idCliente" value="#{cliente.idCliente}"></f:param>
 					</p:button>
 			</p:column>

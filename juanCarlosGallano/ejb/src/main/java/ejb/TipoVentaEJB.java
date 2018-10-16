@@ -52,5 +52,11 @@ public class TipoVentaEJB extends GenericDaoImpl<TipoVenta, Serializable> {
 	    	tipoVentas = query.getResultList();
 	    	return tipoVentas;
 	   }
+	   
+	   public List<TipoVenta> findAllActivo() {
+	    	TypedQuery<TipoVenta> query = em.createQuery("select u from tipo_venta u where u.estado ='ACTIVO'", TipoVenta.class);
+	    	tipoVentas = query.getResultList();
+	    	return tipoVentas;
+	   }
 }
 

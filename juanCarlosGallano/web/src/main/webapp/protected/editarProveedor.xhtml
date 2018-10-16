@@ -11,40 +11,135 @@
 	</f:metadata>
 <ui:composition template="template.xhtml">
 	<ui:define name="contenido">
+	<script type="text/javascript">
+	var currentMarker = null;
+	 function handlePointClick(event) {
+	        if(currentMarker === null) {
+	            document.getElementById('templateForm:formEditProveedor:lat').value = event.latLng.lat();
+	            document.getElementById('templateForm:formEditProveedor:lng').value = event.latLng.lng();
+	 
+	            currentMarker = new google.maps.Marker({
+	                position:new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
+	            });
+	 
+	            PF('geoMap').addOverlay(currentMarker);
+	 
+	            PF('dlg').show();
+	        }   
+	    }
+	 
+	    function markerAddComplete() {
+	 
+	        currentMarker = null;
+	        PF('dlg').hide();
+	    }
+	 
+	    function cancel() {
+	        PF('dlg').hide();
+	        currentMarker.setMap(null);
+	        currentMarker = null;
+	 
+	        return false;
+	    }
+
+
+	
+	    function geocode() {
+
+	        var map=PF('geoMap').getMap();//PERFECT
+
+	        var address=document.getElementById('templateForm:formEditProveedor:address').value;//PERFECT
+	        var lat =  document.getElementById('templateForm:formEditProveedor:lat').value;
+	        var lng =	 document.getElementById('templateForm:formEditProveedor:lng').value;
+	        var myLatlng = new google.maps.LatLng(lat,lng);
+
+	        var marker = new google.maps.Marker({
+	            position: myLatlng
+	        });
+	        		
+			
+	        var geocoder = new google.maps.Geocoder();//PERFECT
+			marker.setMap(geocoder);
+			PF('geoMap').addOverlay(marker);
+	        geocoder.geocode({'address': address}, function(results, status) {
+
+	            if (status === 'OK') {
+	                map.setCenter(results[0].geometry.location);
+	            } else {
+	                alert('CUSTOMIZED ERROR MESSAGE');
+	            }
+	        });
+	    }
+    function getReverseGeocodingData(lat, lng) {
+        var latlng = new google.maps.LatLng(lat, lng);
+        // This is making the Geocode request
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+            if (status !== google.maps.GeocoderStatus.OK) {
+                alert(status);
+            }
+            // This is checking to see if the Geoeode Status is OK before proceeding
+            if (status == google.maps.GeocoderStatus.OK) {
+                console.log(results);
+                var address = (results[0].formatted_address);
+            }
+        });
+    }
+	</script>
 	<h:form id="formEditProveedor">
 		<p:panel id="panelEdicion">
 		<p:panelGrid columns="2" id="panelEditProvedor">
 			
 			<p:outputLabel value="Nombre Empresa" for="empresa"/>
-			<p:inputText required="true" id="empresa" value="#{editarProveedorBean.proveedorEdicion.nombreEmpresa}"
-				requiredMessage="Nombre Empresa debe ser seleccionado"/>
+			<p:inputText  id="empresa" value="#{editarProveedorBean.proveedorEdicion.nombreEmpresa}"
+				requiredMessage="Nombre Empresa debe ser seleccionado" onblur="value=value.toUpperCase()"/>
 			
 			<p:outputLabel value="Telefono Empresa" for="telefonoEmpresa"/>
-			<p:inputText required="true" id="telefonoEmpresa" value="#{editarProveedorBean.proveedorEdicion.telefonoEmpresa}"
-				validatorMessage="Telefono debe ser numerico" requiredMessage="Telefono Empresa debe ser seleccionado">
-				<f:validateRegex pattern="[0-9]*" />
+			<p:inputText  id="telefonoEmpresa" value="#{editarProveedorBean.proveedorEdicion.telefonoEmpresa}"
+				validatorMessage="Telefono debe ser numerico" requiredMessage="Telefono Empresa debe ser seleccionado" 
+				onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"  maxlength="10">
 			</p:inputText>
 			
-			<p:outputLabel required="true" value="Contacto" for="contacto"/>
-			<p:inputText id="contacto" value="#{editarProveedorBean.proveedorEdicion.contacto}"/>
+			<p:outputLabel  value="Contacto" for="contacto"/>
+			<p:inputText id="contacto" value="#{editarProveedorBean.proveedorEdicion.contacto}" onblur="value=value.toUpperCase()"/>
 			
 			<p:outputLabel value="Telefono Contacto" for="telContacto"/>
 			<p:inputText id="telContacto" value="#{editarProveedorBean.proveedorEdicion.telefonoContacto}"
-				validatorMessage="Telefono debe ser numerico">
-					<f:validateRegex pattern="[0-9]*" />
+				validatorMessage="Telefono debe ser numerico" onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"  maxlength="10">
 				</p:inputText>
-			
-			<p:outputLabel required="true" value="Ruc o Cedula" for="rucCedula"/>
-			<p:inputText id="rucCedula" required="true" value="#{editarProveedorBean.proveedorEdicion.rucCedula}"
-				requiredMessage="Ruc O Cedula debe ser seleccionado"/>
+				
+			<p:outputLabel value="Seleccionar Tipo Documento"/>
+			<p:selectOneMenu requiredMessage="Tipo Documento debe ser seleccionado" 
+				id="selectTipoDocumento" value="#{editarProveedorBean.idTipoDocumentoSeleccionado}" 
+				style="width:125px" >
+            	<f:selectItem itemLabel="Seleccione TipoDocumento"  />
+            	<f:selectItems value="#{editarProveedorBean.listTipoDocumento}" var="dep" itemValue="#{dep.id}" itemLabel="#{dep.descripcion}" />
+        	</p:selectOneMenu>
+        	<p:outputLabel value="Numero Documento" for="numdoc"/>
+			<p:inputText id="numdoc" value="#{editarProveedorBean.numeroDocumento}"
+				requiredMessage="Se requiere un datos de la persona" required="false" onblur="value=value.toUpperCase()"></p:inputText>
 			
 			<p:outputLabel required="true" value="Estado" for="estado"/>
 			<p:selectOneMenu  id="estado" required= "true" requiredMessage="Estado debe ser seleccionado" 
 			 value="#{editarProveedorBean.proveedorEdicion.estado}" style="width:125px" >
             	<f:selectItem itemLabel="Seleccione Estado"  />
-            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
-            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+            	<f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+            	<f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
         	</p:selectOneMenu>
+        	<p:outputLabel value="Direccion" />
+			<p:panel id="mapDireccion">
+				<h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+			        <p:outputLabel for="address" value="Ubicación:" />
+			        <p:inputText id="address"  value="#{editarProveedorBean.proveedorEdicion.direccionProveedor}"/>
+			        <p:commandButton value="Buscar" icon="ui-icon-search" onclick="geocode()" type="button" />
+			        <p:commandButton id="reverseGeo" widgetVar="reverseGeo" value="Reverse Geocode" icon="ui-icon-search" onclick="reverseGeocode()" type="button" rendered="false" />
+			    </h:panelGrid>
+			 
+			    <p:gmap id="geoGmap" widgetVar="geoMap" center="#{editarProveedorBean.lat}, #{editarProveedorBean.lng}" zoom="14" type="ROADMAP" styleClass="gmap"
+			    model="#{editarClienteBean.emptyModel}" onPointClick="handlePointClick(event);">
+			    	<p:ajax event="geocode" listener="#{editarClienteBean.onGeocode}" update="@this" />
+			    </p:gmap>
+			</p:panel>
 			
 		</p:panelGrid>
 		
@@ -53,7 +148,8 @@
 			<p:button id="salirProveedor" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
 				outcome="/protected/proveedorList.xhtml?faces-redirect=true"/>
 		</p:panel>
-		
+		<h:inputHidden id="lat" value="#{editarProveedorBean.lat}" />
+        <h:inputHidden id="lng" value="#{editarProveedorBean.lng}" />
 		
 	</h:form>
 	</ui:define>

@@ -36,11 +36,6 @@ public class EditarGrupoBean {
 		//verificar que pertenezca al grupo Admin
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		HttpSession session = request.getSession();
-		String grupoUsuario = (String)session.getAttribute("grupo");
-		if (!grupoUsuario.equals("admin")){
-				//Si no pertenece al grupo envia al menu principal
-				FacesContext.getCurrentInstance().getExternalContext().responseSendError(401, "You are not authorized.");
-		}
 		if (!FacesContext.getCurrentInstance().isPostback()){
 			Map<String,String> params =
 	                FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();

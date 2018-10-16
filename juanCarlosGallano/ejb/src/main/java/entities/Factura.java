@@ -42,9 +42,6 @@ public class Factura implements Serializable {
 	@Temporal (TemporalType.TIMESTAMP)
 	private Date fecha;
 	
-	@Column (name = "fecha_reserva", nullable = true)
-	@Temporal (TemporalType.TIMESTAMP)
-	private Date fechaReserva;
 	
 	@Column (name = "fecha_devolucion", nullable = true)
 	@Temporal (TemporalType.TIMESTAMP)
@@ -69,8 +66,12 @@ public class Factura implements Serializable {
 	@Column (name = "id_tipo_pago", nullable = false)
 	private Integer idTipoPago;
 	
-	@Column (name = "usuario", nullable = false)
-	private String usuario;
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "idUsuario", nullable = true)
+	private Usuario usuario;
+	
+	@Column (name = "estado", nullable = true)
+	private String estado;
 
 	public String getNroFactura() {
 		return nroFactura;
@@ -82,6 +83,14 @@ public class Factura implements Serializable {
 
 	public Cliente getCliente() {
 		return cliente;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 
 	public void setCliente(Cliente cliente) {
@@ -96,13 +105,6 @@ public class Factura implements Serializable {
 		this.fecha = fecha;
 	}
 
-	public Date getFechaReserva() {
-		return fechaReserva;
-	}
-
-	public void setFechaReserva(Date fechaReserva) {
-		this.fechaReserva = fechaReserva;
-	}
 
 	public Date getFechaDevolucion() {
 		return fechaDevolucion;
@@ -160,11 +162,13 @@ public class Factura implements Serializable {
 		this.idTipoPago = idTipoPago;
 	}
 
-	public String getUsuario() {
+	
+
+	public Usuario getUsuario() {
 		return usuario;
 	}
 
-	public void setUsuario(String usuario) {
+	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
 

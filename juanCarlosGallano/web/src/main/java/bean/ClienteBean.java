@@ -5,12 +5,14 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 
 import ejb.ClienteEJB;
 import entities.Cliente;
 
- 
+@ManagedBean(name ="clienteBean")
+@SessionScoped 
 public class ClienteBean {
 	@EJB
 	ClienteEJB clienteEjb;
@@ -24,8 +26,7 @@ public class ClienteBean {
 		this.clienteEdicion = clienteEdicion;
 	}
 	public List<Cliente> getClientes() {
-		clientes = clienteEjb.findAll();
-		return clientes;
+		return clienteEjb.findAll();
 	}
 	public void setClientes(List<Cliente> clientes) {
 		this.clientes = clientes;

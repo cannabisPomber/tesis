@@ -14,24 +14,28 @@
 	<h:form id="formRecibirPedido">
 		<p:panel id="panelConfirmarRecepcionPedido" header="Listado de Ordenes de Compra a Recibir">
 			
-			<p:dataTable id="checkboxPedido" var="ordenCompra" value="#{recibirPedidoBean.listOrdenCompraActivos}" rowKey="#{ordenCompra.idOrdenCompra}" style="margin-bottom:0">
+			<p:dataTable id="checkboxPedido" var="ordenCompra" value="#{recibirPedidoBean.listOrdenCompraConfirmado}" rowKey="#{ordenCompra.idOrdenCompra}" style="margin-bottom:0">
 		        <f:facet name="header">
 		            Seleccionar Orden de Compra a Confirmar
 		        </f:facet>
-		        <p:column headerText="Proveedor" style="width:15%;text-align: center">
+		        
+		        <p:column headerText="Id Orden de Compra" style="width:15%;text-align: center" rendered="#{ordenCompra.estado != 'RECEPCIONADO'}">
+		            <h:outputText value="#{ordenCompra.idOrdenCompra}" />
+		        </p:column>
+		        <p:column headerText="Proveedor" style="width:15%;text-align: center"  rendered="#{ordenCompra.estado != 'RECEPCIONADO'}">
 		            <h:outputText value="#{ordenCompra.proveedor.nombreEmpresa}" />
 		        </p:column>
-		        <p:column headerText="Fecha Pedido" style="width:10%;text-align: center">
+		        <p:column headerText="Fecha Pedido" style="width:10%;text-align: center"  rendered="#{ordenCompra.estado != 'RECEPCIONADO'}">
 		            <h:outputText value="#{ordenCompra.fechaPedido}" />
 		        </p:column>
-		        <p:column headerText="Usuario Pedido" style="width:10%;text-align: center">
+		        <p:column headerText="Usuario Pedido" style="width:10%;text-align: center"  rendered="#{ordenCompra.estado != 'RECEPCIONADO'}">
 		            <h:outputText value="#{ordenCompra.usuarioPedido.usuario}" />
 		        </p:column>
-		        <p:column headerText="Estado" style="width:10%;text-align: center">
+		        <p:column headerText="Estado" style="width:10%;text-align: center"  rendered="#{ordenCompra.estado != 'RECEPCIONADO'}">
 		            <h:outputText value="#{ordenCompra.estado}" />
 		        </p:column>
 		        
-		         <p:column style="width:10%;text-align: center">
+		         <p:column style="width:10%;text-align: center"  rendered="#{ordenCompra.estado != 'RECEPCIONADO'}">
 		             <p:commandButton id="recepcionarPedido" update="templateForm:formRecibirPedido:panelDetalleOrdenCompra templateForm:confirmarRecepcionProductoDialog" 
 		             	 icon="ui-icon-search" title="Detalle Orden de Compra" action="#{recibirPedidoBean.buscarDetalleOrdenCompra()}">
 		                <f:setPropertyActionListener value="#{ordenCompra.idOrdenCompra}" target="#{recibirPedidoBean.idOrdenCompraSelected}" />
@@ -41,12 +45,16 @@
 			
 		</p:panel>
 		<p:panel id="panelDetalleOrdenCompra" header="Listado de Productos de Orden de Compra" >
-			<p:dataTable id="datatableDetalleOC" var="detalle" value="#{recibirPedidoBean.listDetOrdenCompra}"  style="margin-top:3%">
+			<p:dataTable id="datatableDetalleOC" var="detalle" value="#{recibirPedidoBean.listDetOrdenCompra}"  style="margin-top:3%" emptyMessage="Ordenes de compra a recibir Vacios">
 		        <f:facet name="header">
 		            Seleccionar Orden de Compra a Confirmar
 		        </f:facet>
 		        <p:column headerText="Producto" style="width:15%;text-align: center">
 		            <h:outputText value="#{detalle.producto.nombreProducto} #{detalle.producto.marca.nombreMarca} #{detalle.producto.tipoProducto.nombreTipoProducto} #{detalle.producto.unidadMedida.dimension} #{detalle.producto.unidadMedida.unidad}" />
+		        </p:column>
+		        
+		         <p:column headerText="Precio" style="width:10%;text-align: center">
+		            <h:outputText value="#{detalle.precioCompra}" />
 		        </p:column>
 		        <p:column headerText="Cantidad" style="width:10%;text-align: center">
 		            <h:outputText value="#{detalle.cantidad}" />
@@ -57,13 +65,12 @@
 		        </p:column>
 		        
 		        <p:column headerText="Fecha Vencimiento" style="width:10%;text-align: center" >
-		        	<p:calendar  value="#{recibirPedidoBean.fechaVencimientoProducto}" id="vencimientoDetalle" pattern="dd/MM/yyyy"></p:calendar>
+		        	<p:calendar  value="#{detalle.vencimiento}" id="vencimientoDetalle" pattern="dd/MM/yyyy"></p:calendar>
 		        </p:column>
 		        
 		    </p:dataTable>
 		    
-		    <p:commandButton id="recepcionarProducto" label="Recepcionar Producto" value="Recepcionar Producto" style="margin-top:20px; margin-left:25px" actionListener="#{recibirPedidoBean.recepcionarProductos()}"
-		    	onclick="PF('recepcionDialog').show()" ></p:commandButton>
+		    <p:commandButton id="recepcionarProducto" label="Recepcionar Producto" value="Recepcionar Producto" style="margin-top:20px; margin-left:25px" actionListener="#{recibirPedidoBean.recepcionarProductos()}"></p:commandButton>
 		
 		</p:panel>
 		
@@ -76,11 +83,6 @@
 				<p:outputLabel value="Proveedor"/>
 				<p:outputLabel value="#{recibirPedidoBean.ordenCompraSeleccionado.proveedor.nombreEmpresa}"/>
 				
-				<p:outputLabel value="Estado"/>
-				<p:outputLabel value="#{recibirPedidoBean.ordenCompraSeleccionado.estado}"/>
-				<p:outputLabel value="Numero de Factura Proveedor"/>
-				<p:inputText value="#{recibirPedidoBean.nroFactura}"/>
-				
 				<p:outputLabel value="Seleccionar Deposito Destino"/>
 				<p:selectOneMenu requiredMessage="Deposito debe ser seleccionado" 
 					id="selectDeposito" value="#{recibirPedidoBean.idDepositoSeleccionado}" 
@@ -91,7 +93,7 @@
 			
 			</p:panelGrid>
 			
-			<p:commandButton value="Cargar Stock" actionListener="#{recibirPedidoBean.cerrarRecepcion()}" update="templateForm:formRecibirPedido:panelConfirmarRecepcionPedido" onclick="PF('recepcionDialog').hide()" />
+			<p:commandButton value="Cargar Stock" actionListener="#{recibirPedidoBean.cerrarRecepcion()}" update="@form" onclick="PF('recepcionDialog').hide()" />
 			<p:commandButton value="Cancelar" action="#{recibirPedidoBean.limpiar()}" onclick="PF('recepcionDialog').hide()"/>
 		</p:panel>
 	</p:dialog>

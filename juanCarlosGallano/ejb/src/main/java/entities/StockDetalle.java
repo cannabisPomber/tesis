@@ -33,7 +33,7 @@ public class StockDetalle implements Serializable{
 	@SequenceGenerator(name="stock_detalle_generator", sequenceName = "stock_detalle_seq", allocationSize=1)
 	private Long idStockDetalle;
 	
-	@Column(name = "hash_lote",length = 6 , nullable = false)
+	@Column(name = "hash_lote",length = 6 , nullable = true)
 	private String hashLote;
 	
 	@Column (name = "fecha_ingreso" , nullable = false)
@@ -54,8 +54,12 @@ public class StockDetalle implements Serializable{
 	private String estado;
 	
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "id_orden_compra", nullable = false)
+	@JoinColumn(name = "id_orden_compra", nullable = true)
 	private OrdenCompra idOrdenCompra;
+	
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "id_deposito", nullable = true)
+	private Deposito deposito;
 	
 	@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_producto")
@@ -131,6 +135,14 @@ public class StockDetalle implements Serializable{
 
 	public void setProducto(Producto producto) {
 		this.producto = producto;
+	}
+
+	public Deposito getDeposito() {
+		return deposito;
+	}
+
+	public void setDeposito(Deposito deposito) {
+		this.deposito = deposito;
 	}
 
 	@Override

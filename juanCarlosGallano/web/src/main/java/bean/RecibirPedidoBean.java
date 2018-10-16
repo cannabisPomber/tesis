@@ -1,5 +1,6 @@
 package bean;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -9,7 +10,9 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UpdateModelException;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -76,6 +79,9 @@ public class RecibirPedidoBean {
 	@EJB
 	StockDetalleEJB stockDetalleEJB;
 	
+	@Inject
+	UsuarioBean usuarioBean;
+	
 	HttpSession session;
 	
 	private OrdenCompra ordenCompraSeleccionado;
@@ -115,19 +121,41 @@ public class RecibirPedidoBean {
 	private String codigoBarraProducto;
 	private Long cantidadRecibida;
 	private Long  cantidadPedido;
+	private Long importeOrdenCompra;
+	private Long importeFactura;
 	
 	public void init(){
+		//Eliminar constraint unique de idProducto
+		try{
+			detOrdenCompraEJB.deleteConstraintUniqueProducto();
+		} catch (Exception ex){
+			System.out.println("Error al borrar Constraint: " + ex.getMessage());
+		}
 		if (!FacesContext.getCurrentInstance().isPostback()){
+			
+			
 			listOrdenCompraConfirmado = new ArrayList<OrdenCompra>();
 			listOrdenCompraSeleccionado = new ArrayList<OrdenCompra>();
 			listDetOc = new ArrayList<DetalleOrdenCompra>();
 			listDeposito = new ArrayList<Deposito>();
-			listDeposito = depositoEJB.findAllActivo();
+			try {
+				String usuarioLogueado = usuarioBean.usuarioLogueado();
+				listDeposito = depositoEJB.findAllDepositoEmpresa(usuarioEJB.findUserUsuario(usuarioLogueado).getEmpresa().getIdEmpresa());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
 			//Cargando Listas de Orden de Compra Activos
-			listOrdenCompraConfirmado = ordenCompraEJB.findAllConfirmadoPendiente();		
+			listOrdenCompraConfirmado = ordenCompraEJB.findAllConfirmadoPendiente();
+			//Modificar si su detalle ha sido recepcionado
+			verificarRecepcion();
 			deposito = new Deposito();
 			fechaVencimientoProducto = new Date();
-			}
+			importeOrdenCompra = (long) 0;
+			importeFactura = (long) 0;
+		}
 	}
 
 	public List<OrdenCompra> getListOrdenCompraActivos() {
@@ -225,23 +253,24 @@ public class RecibirPedidoBean {
 		this.codigoBarraProducto = codigoBarraProducto;
 	}
 
-	public void confirmarOrdenCompra(String user){
-		if(listOrdenCompraSeleccionado.size() == 0){
-			FacesContext.getCurrentInstance().addMessage("Confirmado Correctamente Orden de Compra Seleccionados", new FacesMessage("No Se ha seleccionado Orden de Compra"));
-		} else {
-			for (Iterator iterator = listOrdenCompraSeleccionado.iterator(); iterator.hasNext();) {
-				OrdenCompra ordenCompra = (OrdenCompra) iterator.next();
-				//actualizando las ordenes de compra a estado Confirmado
-				ordenCompra.setEstado("Confirmado");
-				ordenCompra.setFechaAprobacion(new Date());
-				ordenCompra.setUsuarioAprobacion(usuarioEJB.findUserUsuario(user));
-				ordenCompraEJB.update(ordenCompra);
-				limpiar();
-				
-			}
-			FacesContext.getCurrentInstance().addMessage("Confirmado Correctamente Orden de Compra Seleccionados", new FacesMessage("Orden de Compra Creado.Modificado"));
-		}
+	
+
+	public Long getImporteOrdenCompra() {
+		return importeOrdenCompra;
 	}
+
+	public void setImporteOrdenCompra(Long importeOrdenCompra) {
+		this.importeOrdenCompra = importeOrdenCompra;
+	}
+
+	public Long getImporteFactura() {
+		return importeFactura;
+	}
+
+	public void setImporteFactura(Long importeFactura) {
+		this.importeFactura = importeFactura;
+	}
+
 	public void buscarDetalleOrdenCompra(){
 		
 		//VERIFICAR SI EXISTE CAJA ABIERTA
@@ -286,6 +315,11 @@ public class RecibirPedidoBean {
 	public void limpiar(){
 		listOrdenCompraConfirmado = new ArrayList<OrdenCompra>();
 		listOrdenCompraSeleccionado = new ArrayList<OrdenCompra>();
+		listDetOrdenCompra = new ArrayList<DetalleOrdenCompra>();
+		listOrdenCompraConfirmado = ordenCompraEJB.findAllConfirmadoPendiente();
+		//Modificar si su detalle ha sido recepcionado
+		verificarRecepcion();
+		RequestContext.getCurrentInstance().update("templateForm:formRecibirPedido");
 	}
 	public List<OrdenCompra> getListOrdenCompraConfirmado() {
 		return listOrdenCompraConfirmado;
@@ -405,38 +439,55 @@ public class RecibirPedidoBean {
 	}
 	
 	public void recepcionarProductos(){
-		//Sirve para impactar en Stock y Caja por productos ingresados 
-		//Verificando los valores ingresados para recepcionar Productos
-		//Verificar cantidad ingresada y fecha de vencimiento
-		
-		//Sirve para mostrar si la orden de compra se entrega en su totalidad
-		Boolean ordenCompraCompleto = true;
-		Boolean permitirGuardado = true;
-		Date fechaSistema = new Date();
+		boolean permitirDialog = true;
+		//Verificar fecha de Vencimiento
 		for (Iterator iterator = listDetOrdenCompra.iterator(); iterator.hasNext();) {
-			DetalleOrdenCompra detOc = (DetalleOrdenCompra) iterator.next();
-			
-				if (!detOc.getCantidad().equals(detOc.getCantidadRecibida())){
-					//Cantidades distintas debe guardarse como pendiente orden de compra
-					ordenCompraCompleto = false;
-					detOc.setEstado("PENDIENTE");
-				} else {
-					detOc.setEstado("ENTREGADO");
-				}
-				//Si la fecha es mayor a la fecha del sistema
-				if (fechaVencimientoProducto.before(fechaSistema)){
-					//Mostrar Mensaje de Error
-					permitirGuardado = false;
-					FacesContext.getCurrentInstance().addMessage("Fecha de Vencimiento Invalida", new FacesMessage("Fecha de Vencimiento Invalida."));
-				}
+			DetalleOrdenCompra detalleOrdenCompraVencimiento = (DetalleOrdenCompra) iterator.next();
+			if(detalleOrdenCompraVencimiento.getVencimiento().before(new Date())){
+				permitirDialog= false;
+			}
 		}
-		//Si las fechas de vencimiento son mayores a la fechas actuales
-		if (permitirGuardado){
-			if (!ordenCompraCompleto){
-				ordenCompraSeleccionado.setEstado("Pendiente");
+		if(permitirDialog){
+			//abrir dialog
+			RequestContext.getCurrentInstance().execute("PF('recepcionDialog').show()");
+			//Sirve para impactar en Stock y Caja por productos ingresados 
+			//Verificando los valores ingresados para recepcionar Productos
+			//Verificar cantidad ingresada y fecha de vencimiento
+			
+			//Sirve para mostrar si la orden de compra se entrega en su totalidad
+			Boolean ordenCompraCompleto = true;
+			Boolean permitirGuardado = true;
+			Date fechaSistema = new Date();
+			for (Iterator iterator = listDetOrdenCompra.iterator(); iterator.hasNext();) {
+				DetalleOrdenCompra detOc = (DetalleOrdenCompra) iterator.next();
+					importeOrdenCompra = importeOrdenCompra +detOc.getCantidadRecibida()*detOc.getPrecioCompra();
+					
+					if (!detOc.getCantidad().equals(detOc.getCantidadRecibida())){
+						//Cantidades distintas debe guardarse como pendiente orden de compra
+						ordenCompraCompleto = false;
+						detOc.setEstado("PENDIENTE");
+					} else {
+						detOc.setEstado("RECEPCIONADO");
+					}
+					//Si la fecha es mayor a la fecha del sistema
+					if (detOc.getVencimiento().before(fechaSistema)){
+						//Mostrar Mensaje de Error
+						permitirGuardado = false;
+						FacesContext.getCurrentInstance().addMessage("Fecha de Vencimiento Invalida", new FacesMessage("Fecha de Vencimiento Invalida."));
+					}
+			}
+			//Si las fechas de vencimiento son mayores a la fechas actuales
+			if (permitirGuardado){
+				if (!ordenCompraCompleto){
+					ordenCompraSeleccionado.setEstado("PENDIENTE");
+					//ordenCompraSeleccionado= ordenCompraEJB.update(ordenCompraSeleccionado);
+				} else {
+					//Si el orden de compra se entrego al 100% guardar como cerrado
+					ordenCompraSeleccionado.setEstado("RECEPCIONADO");
+					//ordenCompraSeleccionado= ordenCompraEJB.update(ordenCompraSeleccionado);
+				}
 			} else {
-				//Si el orden de compra se entrego al 100% guardar como cerrado
-				ordenCompraSeleccionado.setEstado("Cerrado");
+				FacesContext.getCurrentInstance().addMessage("Fecha de Vencimiento Invalida", new FacesMessage("No se Permite Recepcionar. Modificar fechas de Vencimiento"));
 			}
 		} else {
 			FacesContext.getCurrentInstance().addMessage("Fecha de Vencimiento Invalida", new FacesMessage("No se Permite Recepcionar. Modificar fechas de Vencimiento"));
@@ -447,318 +498,120 @@ public class RecibirPedidoBean {
 	//Dependiendo del estado del Orden de Compra cierra o modifica de diferente forma
 	//Realiza impacto en stock
 	public void cerrarRecepcion(){
-		//Se almacenara monto de compra
+		
 		Long montoCompra = (long) 0;
 		listDetOc = listDetOrdenCompra;
+		List<DetalleOrdenCompra> listDetModificar = new ArrayList<DetalleOrdenCompra>();
 		//Si es de estado Cerrado debe terminar el flujo 
 		//Obtener usuario Logueado
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		session = request.getSession();
-		//Si es un tipo de Orden de Compra Cerrado o pendiente
-		if(ordenCompraSeleccionado.getEstado() == "Pendiente"|| ordenCompraSeleccionado.getEstado() == "Cerrado"){
-			//Si es que es Pendiente se debe crear otra orden de compra con productos sobrantes
-			if(ordenCompraSeleccionado.getEstado() == "Pendiente"){
-				//Cerrando Orden de Compra actual
-				ordenCompraSeleccionado.setEstado("Cerrado");
-				ordenCompraSeleccionado.setFechaRecepcion(new Date());
-				ordenCompraSeleccionado.setUsuarioRecepcion(usuarioEJB.findUserUsuario((String)session.getAttribute("usuario")));
-				ordenCompraSeleccionado = ordenCompraEJB.update(ordenCompraSeleccionado);
-				
-				//Crear nueva orden de compra para guardar como pendiente
-				OrdenCompra ordenCompraPendiente = new OrdenCompra();
-				ordenCompraPendiente = ordenCompraSeleccionado;
-				//ordenCompraPendiente.setIdOrdenCompra(null);
-				ordenCompraPendiente.setFechaRecepcion(null);
-				ordenCompraPendiente.setNroFacturaProveedor("");
-				ordenCompraPendiente.setUsuarioRecepcion(null);
-				ordenCompraPendiente.setEstado("Pendiente");
-				ordenCompraEJB.create(ordenCompraPendiente);
-				//Guardando Ordenes de Compra a mantener pendiente
+		
+		//Calculando Monto de Orden de Compra
+		
+		for (Iterator iterator = listDetOc.iterator(); iterator.hasNext();) {
+			DetalleOrdenCompra detalle = (DetalleOrdenCompra) iterator.next();
+			//CalcuLANDO monto a Debitar en caja
+			montoCompra = montoCompra + detalle.getPrecioCompra()*detalle.getCantidadRecibida();
 			
-				//Calculando monto de compra y lista de Detalle pendientes
-				List<DetalleOrdenCompra> listDetalleOrdenCompraPendientes = new ArrayList<DetalleOrdenCompra>();
-				for (Iterator iterator = listDetOc.iterator(); iterator.hasNext();) {
-					DetalleOrdenCompra detalle = (DetalleOrdenCompra) iterator.next();
-					montoCompra = detalle.getPrecioCompra()*detalle.getCantidadRecibida();
-					if (detalle.getEstado().equals("PENDIENTE")){
-						//Cargando Lista Detalle de Orden de Compra Pendiente
-						detalle.setOrdenCompra(ordenCompraPendiente);
-						detalle.setIdDetalleOrdenCompra(null);
-						listDetalleOrdenCompraPendientes.add(detalle);
-					}
-				}
+		}
+		
+		//Verificando que haya el importe necesario en caja
+		//REFRESH DE CAJA
+		cajaAbierta = cajaEJB.cajaAbiertaTesoreria();	
+		//RESTAR MONTO EN CAJA
+		if(cajaAbierta != null){
+			if(cajaAbierta.getMontoCaja() < montoCompra){
 				
-				//REFRESH DE CAJA
-				cajaAbierta = cajaEJB.findCajaId(cajaAbierta.getIdCaja());
-				//RESTAR MONTO EN CAJA
-				if(cajaAbierta.getMontoCaja() > montoCompra){
-					//Se puede restar monto de caja
-					for (Iterator iterator = listDetOc.iterator(); iterator.hasNext();) {
-						DetalleOrdenCompra detalle = (DetalleOrdenCompra) iterator.next();
-						//Guardando en Stock Los entregados en su totalidad
-						if(detalle.getEstado().equals("CERRADO")){
-							StockDetalle stockDetalle = new StockDetalle();
-							//Se carga datos de nuevo stock y lote
-							stockDetalle.setProducto(detalle.getProducto());
-							stockDetalle.setFechaIngreso(new Date());
-							//Cargar fecha vencimiento
-							stockDetalle.setFechaVencimiento(fechaVencimientoProducto);
-							//Cargando datos de cantidad recibida y restante
-							stockDetalle.setCantidadRecibida(detalle.getCantidad());
-							stockDetalle.setCantidadRestante(detalle.getCantidad());
-							stockDetalle.setEstado("activo");
-							stockDetalle.setIdOrdenCompra(detalle.getOrdenCompra());
-							String hash = "";
-							
-							
-							//Generando Hash Lote
-							RandomStringGenerator randomStringGenerator =
-							        new RandomStringGenerator.Builder()
-							                .withinRange('0', 'z')
-							                .filteredBy(CharacterPredicates.LETTERS, CharacterPredicates.DIGITS)
-							                .build();
-							hash = randomStringGenerator.generate(6);
-							System.out.println("HASH Generado    :" + hash.toUpperCase());
-							stockDetalle.setHashLote(hash.toUpperCase());
-							hash = null;
-							
-							
-							
-							//Persistir Stock Detalle
-							stockDetalleEJB.create(stockDetalle);
-						}
-					}
-					//GUARDANDO ORDEN DE COMPRA PENDIENTE
-					for (Iterator iterator = listDetalleOrdenCompraPendientes.iterator(); iterator.hasNext();) {
-						DetalleOrdenCompra detalle = (DetalleOrdenCompra) iterator.next();
-						detOrdenCompraEJB.update(detalle);
-					}
-					
-					//RESTAR EN CAJA DETALLE
-					cajaAbierta.setMontoCaja(cajaAbierta.getMontoCaja() - montoCompra);
-					cajaAbiertaDetalle = new CajaDetalle();
-					cajaAbiertaDetalle.setMontoEgreso(montoCompra);
-					cajaAbiertaDetalle.setNroFacturaProveedor(ordenCompraSeleccionado.getNroFacturaProveedor());
-					cajaAbiertaDetalle.setCaja(cajaAbierta);
-					cajaAbiertaDetalle.setFechaHora(new Date());
-					//REGISTRANDO EN CAJA
-					cajaEJB.update(cajaAbierta);
-					cajaDetalleEJB.create(cajaAbiertaDetalle);
-				} else {
-					//NO SE PUEDE REALIZAR VENTA POR QUE NO EXISTE MONTO EN CAJA
-					FacesContext.getCurrentInstance().addMessage("No existe monto suficiente en caja para compra", new FacesMessage("No existe monto suficiente"));
-				}
-			} else {
-				
-				
-				
-				
-				//modificando orden de compra
-				ordenCompraSeleccionado.setEstado("Cerrado");
-				ordenCompraSeleccionado.setFechaRecepcion(new Date());
-				System.out.println("Usuario logueado :" + (String)session.getAttribute("usuario"));
-				ordenCompraSeleccionado.setUsuarioRecepcion(usuarioEJB.findUserUsuario((String)session.getAttribute("usuario")));
-				ordenCompraSeleccionado = ordenCompraEJB.update(ordenCompraSeleccionado);
-				for (Iterator iterator = listDetOc.iterator(); iterator.hasNext();) {
-					DetalleOrdenCompra detalle = (DetalleOrdenCompra) iterator.next();
-					//CalcuLANDO monto a Debitar en caja
-					montoCompra = detalle.getPrecioCompra()*detalle.getCantidadRecibida();
-					//FacesContext.getCurrentInstance().addMessage("Registrado en Stock", new FacesMessage("Registrado en Stock ingreso de producto"));
-				}
-				//REFRESH DE CAJA
-				cajaAbierta = cajaEJB.findCajaId(cajaAbierta.getIdCaja());
-				//RESTAR MONTO EN CAJA
-				if(cajaAbierta.getMontoCaja() > montoCompra){
-					//Se puede restar monto de caja
-					try{
-					//Cargar en Stock detalle
-					for (Iterator iterator = listDetOc.iterator(); iterator.hasNext();) {
-						DetalleOrdenCompra detalle = (DetalleOrdenCompra) iterator.next();
-						StockDetalle stockDetalle = new StockDetalle();
-						//Se carga datos de nuevo stock y lote
-						stockDetalle.setProducto(detalle.getProducto());
-						stockDetalle.setFechaIngreso(new Date());
-						//Cargar fecha vencimiento
-						stockDetalle.setFechaVencimiento(fechaVencimientoProducto);
-						//Cargando datos de cantidad recibida y restante
-						stockDetalle.setCantidadRecibida(detalle.getCantidad());
-						stockDetalle.setCantidadRestante(detalle.getCantidad());
-						stockDetalle.setEstado("activo");
-						stockDetalle.setIdOrdenCompra(detalle.getOrdenCompra());
-						String hash = "";
-						
-						
-						//Generando Hash Lote
-						RandomStringGenerator randomStringGenerator =
-						        new RandomStringGenerator.Builder()
-						                .withinRange('0', 'z')
-						                .filteredBy(CharacterPredicates.LETTERS, CharacterPredicates.DIGITS)
-						                .build();
-						hash = randomStringGenerator.generate(6);
-						System.out.println("HASH Generado    :" + hash.toUpperCase());
-						stockDetalle.setHashLote(hash.toUpperCase());
-						hash = null;
-						
-						
-						
-						//Persistir Stock Detalle
-						stockDetalleEJB.create(stockDetalle);
-					}
-				
-				//RESTAR EN CAJA DETALLE
-				cajaAbierta.setMontoCaja(cajaAbierta.getMontoCaja() - montoCompra);
-				cajaAbiertaDetalle = new CajaDetalle();
-				cajaAbiertaDetalle.setMontoEgreso(montoCompra);
-				cajaAbiertaDetalle.setNroFacturaProveedor(ordenCompraSeleccionado.getNroFacturaProveedor());
-				cajaAbiertaDetalle.setCaja(cajaAbierta);
-				cajaAbiertaDetalle.setFechaHora(new Date());
-				//REGISTRANDO EN CAJA
-				cajaEJB.update(cajaAbierta);
-				cajaDetalleEJB.create(cajaAbiertaDetalle);
-				}catch (Exception ex){
-					FacesContext.getCurrentInstance().addMessage("Error al registrar en Stock", new FacesMessage("Error en Stock ingreso de producto"));
-				}
-			} else {
 				//NO SE PUEDE REALIZAR VENTA POR QUE NO EXISTE MONTO EN CAJA
-				FacesContext.getCurrentInstance().addMessage("No existe monto suficiente en caja para compra", new FacesMessage("No existe monto suficiente en Caja"));
-			}
-				
-			
-			//Persistir en Stock el detalle
-			//listDetOc = listDetOrdenCompra;
-			//Lista de detalle de Orden de compra que no se entregaron completamente
-			//List<DetalleOrdenCompra> listDetalleAModificar = new ArrayList<DetalleOrdenCompra>();
-			//List<DetalleOrdenCompra> listDetalleCerrar = new ArrayList<DetalleOrdenCompra>();
-			/*for (Iterator iterator = listDetOc.iterator(); iterator.hasNext();) {
-				DetalleOrdenCompra detalle = (DetalleOrdenCompra) iterator.next();
-				//Registro de detalle no entregado en su totalidadq
-				DetalleOrdenCompra detalleNoEntregado = new DetalleOrdenCompra();
-				try {
-					//Creando nuevo en Stock Detalle 
-					StockDetalle stockDetalle = new StockDetalle();
-					//Se carga datos de nuevo stock y lote
-					stockDetalle.setProducto(detalle.getProducto());
-					stockDetalle.setFechaIngreso(new Date());
-					//Cargar fecha vencimiento
-					stockDetalle.setFechaVencimiento(fechaVencimientoProducto);
-					//Cargando datos de cantidad recibida y restante
-					stockDetalle.setCantidadRecibida(detalle.getCantidad());
-					stockDetalle.setCantidadRestante(detalle.getCantidad());
-					stockDetalle.setEstado("activo");
-					stockDetalle.setIdOrdenCompra(detalle.getOrdenCompra());
-					String hash = "";
-					
-					
-					//Generando Hash Lote
-					RandomStringGenerator randomStringGenerator =
-					        new RandomStringGenerator.Builder()
-					                .withinRange('0', 'z')
-					                .filteredBy(CharacterPredicates.LETTERS, CharacterPredicates.DIGITS)
-					                .build();
-					hash = randomStringGenerator.generate(6);
-					System.out.println("HASH Generado    :" + hash.toUpperCase());
-					stockDetalle.setHashLote(hash.toUpperCase());
-					hash = null;
-					
-					
-					//Persistir Stock Detalle
-					stockDetalleEJB.create(stockDetalle);
-					
-					
-					//Restando cantidad de detalle Orden de Compra
-					//Si sobran productos
-					//Creando DEtalle de orden de compra a Cerrar si ingresan productos
-					DetalleOrdenCompra detalleOcACerrar = new DetalleOrdenCompra();
-					if ((detalle.getCantidad()-detalle.getCantidadRecibida()) > 0){
-						//Se copia el detalle a cerrar
-						detalleOcACerrar = detalle;
-						//modificando detalle a cerrar
-						detalleOcACerrar.setCantidad(detalle.getCantidadRecibida());
-						detalleOcACerrar.setCantidadRecibida(detalle.getCantidadRecibida());
+				FacesContext.getCurrentInstance().addMessage("No existe monto suficiente en caja", new FacesMessage("No existe monto suficiente"));
+				FacesContext.getCurrentInstance().addMessage("No se puede Recepcionar Producto", new FacesMessage("No existe monto suficiente"));
+				limpiar();
+			}else {
+				//Si existe monto en Caja Tesoreria
+				//Verificar si se entrego Completamente y hacer las acciones
+				if(ordenCompraSeleccionado.getEstado() == "PENDIENTE"|| ordenCompraSeleccionado.getEstado() == "RECEPCIONADO"){
+					//Si es que es Pendiente se debe crear otra orden de compra con productos sobrantes
+					if(ordenCompraSeleccionado.getEstado() == "PENDIENTE"){
+						//Si no se entrega en su totalidad
+						//Crear nueva orden de compra para guardar como pendiente
+						OrdenCompra ordenCompraPendiente = new OrdenCompra();
+						ordenCompraPendiente.setIdOrdenCompra(null);
+						ordenCompraPendiente.setFechaRecepcion(null);
+						ordenCompraPendiente.setNroFacturaProveedor("");
+						ordenCompraPendiente.setUsuarioRecepcion(null);
+						ordenCompraPendiente.setFechaAprobacion(ordenCompraSeleccionado.getFechaAprobacion());
+						ordenCompraPendiente.setProveedor(ordenCompraSeleccionado.getProveedor());
+						ordenCompraPendiente.setFechaPedido(ordenCompraSeleccionado.getFechaPedido());
+						ordenCompraPendiente.setUsuarioAprobacion(ordenCompraSeleccionado.getUsuarioAprobacion());
+						ordenCompraPendiente.setEstado("PENDIENTE");
+						ordenCompraEJB.create(ordenCompraPendiente);
+						//Guardando Ordenes de Compra a mantener pendiente
 						
-						listDetalleCerrar.add(detalleOcACerrar);
-					} else {
-						//Detalle de producto es Cero si se entrego en su totalidad
-						
-						listDetalleCerrar = null;
-						
-						detalleNoEntregado = detalle;
-						detalleNoEntregado.setCantidad((long) 0);
-						detalleNoEntregado.setIdDetalleOrdenCompra(null);
-						//agregando a lista de modificados
-						listDetalleAModificar.add(detalleNoEntregado);
-						//Borrando objeto
-						detalleNoEntregado = null;
-					}
-					
-					//Modificando detalle de Ordenes de Compra que no se entregaron en su totalidad
-					System.out.println("--------//------------//------------");
-					for (Iterator iterator2 = listDetalleCerrar.iterator(); iterator2.hasNext();) {
-						DetalleOrdenCompra DetalleAGuardar = (DetalleOrdenCompra) iterator2.next();
-						System.out.println("Detalle a Guardar ...." + DetalleAGuardar.getProducto().getMarca()+ " "+DetalleAGuardar.getProducto().getNombreProducto() + "Cantidad: "+ DetalleAGuardar.getCantidad() +"Cantidad Recibida: "+ DetalleAGuardar.getCantidadRecibida());
-						detOrdenCompraEJB.update(DetalleAGuardar);
-					}
-					
-					
-				} catch(Exception ex){
-					System.out.println("Error al cargar Stock detalle" + ex.getMessage() +ex.getStackTrace());
-				}
-				
-				
-				
-				
-				//Buscando deposito seleccionado
-				deposito = depositoEJB.findIdDeposito(idDepositoSeleccionado);
-				//Agregar Stock a deposito
-				if (deposito != null){
-					//busqueda de detalle de producto
-					DetalleDeposito detalleDepositoACargar = detalleDepositoEJB.findDeposito(detalle.getProducto().getIdProducto(), deposito.getIdDeposito());
-					try{
-						if (detalleDepositoACargar != null){
-							//Si existe detalle de deposito para ese producto
-							//Suma cantidad a registro
-							detalleDepositoACargar.setCantidadProducto(detalleDepositoACargar.getCantidadProducto()+detalle.getCantidad());
-							//update de detalle deposito
-							detalleDepositoACargar = detalleDepositoEJB.update(detalleDepositoACargar);
+						System.out.println("--------//------------//------------");
+						for (Iterator iterator2 = listDetOc.iterator(); iterator2.hasNext();) {
+							DetalleOrdenCompra detalleAModificar = (DetalleOrdenCompra) iterator2.next();
+							System.out.println("Detalle a Guardar ...." + detalleAModificar.getProducto().getMarca()+ " "+detalleAModificar.getProducto().getNombreProducto() + "Cantidad: "+ detalleAModificar.getCantidad() +"Cantidad Recibida: "+ detalleAModificar.getCantidadRecibida());
 							
-						}else {
-							//si no existe se crea uno nuevo
-							detalleDepositoACargar = new DetalleDeposito();
-							detalleDepositoACargar.setProducto(detalle.getProducto());
-							detalleDepositoACargar.setDeposito(deposito);
-							detalleDepositoACargar.setCantidadProducto(detalle.getCantidad());
+							if(detalleAModificar.getCantidad()-detalleAModificar.getCantidadRecibida()>0){
+								detalleAModificar.setIdDetalleOrdenCompra(ordenCompraPendiente.getIdOrdenCompra());
+								detalleAModificar.setCantidad(detalleAModificar.getCantidad()-detalleAModificar.getCantidadRecibida());
+								detalleAModificar.setCantidadRecibida(0l);
+								detalleAModificar.setEstado("PENDIENTE");
+								listDetModificar.add(detalleAModificar);
+							}
 							
-							//Create de deposito
-							detalleDepositoEJB.create(detalleDepositoACargar);
 						}
-					}catch(Exception ex){
-						System.out.println("Error al persistir Detalle deposito :" + ex.getMessage() + ex.getStackTrace());
-						FacesContext.getCurrentInstance().addMessage("Error guardado deposito", new FacesMessage("Error al persistir Detalle deposito :" + ex.getMessage()));
+						//persistiendo orden compra pendiente
+						for (Iterator iterator = listDetModificar.iterator(); iterator.hasNext();) {
+							DetalleOrdenCompra detOrdenCompraPendiente = (DetalleOrdenCompra) iterator.next();
+							detOrdenCompraEJB.update(detOrdenCompraPendiente);
+						}
+						//Cargando Stock 
+						ordenCompraEJB.editarOrdenCompraRecepcionado(ordenCompraSeleccionado.getIdOrdenCompra(), usuarioEJB.findUserUsuario((String)session.getAttribute("usuario")).getIdUsuario());
+						
+						for (Iterator iterator = listDetOc.iterator(); iterator.hasNext();) {
+							DetalleOrdenCompra detOc = (DetalleOrdenCompra) iterator.next();
+							detOc.setEstado("ENTREGADO");
+							detOrdenCompraEJB.update(detOc);
+						}
+						//Cargar en Stock Detalle y deposito
+						cargarStock(listDetOc);
+					}  
+					
+					
+					
+						
+					} else {
+						//Si se entrega Totalmente
+						//Cargar stock
+						//Modificando Cabecera de Orden de Compra
+						ordenCompraEJB.editarOrdenCompraRecepcionado(ordenCompraSeleccionado.getIdOrdenCompra(), usuarioEJB.findUserUsuario((String)session.getAttribute("usuario")).getIdUsuario());
+						
+						for (Iterator iterator = listDetOc.iterator(); iterator.hasNext();) {
+							DetalleOrdenCompra detOc = (DetalleOrdenCompra) iterator.next();
+							detOc.setEstado("ENTREGADO");
+							detOrdenCompraEJB.update(detOc);
+						}
+						//Cargar en Stock Detalle y deposito
+						cargarStock(listDetOc);
 					}
-					
-					FacesContext.getCurrentInstance().addMessage("Registrado en Stock", new FacesMessage("Registrado en Stock ingreso de producto"));
-					
-					
-					
-					//Persistir en Caja el importe de Compra
-				
-				
-				
-				} else {
-					//Si deposito es null mostrar mensaje y no permitir recepcion
-					FacesContext.getCurrentInstance().addMessage("Seleccion Deposito", new FacesMessage("Seleccionar Deposito a reponer para continuar"));
 				}
-				
-			}*/
+		} else {
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Abrir Caja en Tesoreria.", null);
+			facesContext.addMessage("Abrir Caja en Tesoreria.", facesMessage);
 		}
-			
-		}
+		
 	}
 	
 	
 	public Caja verificarCaja(){
 		//Busca si existe una caja abierte en la fecha actual
-		return cajaEJB.cajaAbiertaSinUser();
+		//return cajaEJB.cajaAbiertaSinUser();
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		session = request.getSession();
+		return cajaEJB.cajaAbierta(usuarioEJB.findUserUsuario((String)session.getAttribute("usuario")));
 	}
 
 	public Caja getCajaAbierta() {
@@ -780,5 +633,197 @@ public class RecibirPedidoBean {
 	
 	public Boolean debitarCaja(){
 		return false;
+	}
+	
+	public void verificarRecepcion(){
+		//leer cada orden de Compra y Verificar que haya sido recepcionado
+		Boolean recepcionado = false;
+		//int posicionOrdenCompraRecepcionado;
+		List<Integer> posicionOrdenCompraRecepcionado = new ArrayList<Integer>();
+		for (int i = 0; i < listOrdenCompraConfirmado.size(); i++) {
+			OrdenCompra ordenCompraVerificar = listOrdenCompraConfirmado.get(i);
+			//Verificar si el detalle ha sido recepcionado
+			List<DetalleOrdenCompra> listDetalles = new ArrayList<DetalleOrdenCompra>();
+			listDetalles = detOrdenCompraEJB.DetalleOrdenCompra(ordenCompraVerificar.getIdOrdenCompra());
+			for (int j = 0; j < listDetalles.size(); j++) {
+				DetalleOrdenCompra detalleOrdenCompraVerificar = listDetalles.get(j);
+			
+				if (detalleOrdenCompraVerificar.getEstado() != null){
+					if(detalleOrdenCompraVerificar.getEstado().equals("RECEPCIONADO")){
+						recepcionado = true;
+					}
+				}
+				
+			}
+			//Si fue recepcionado guardar posicion
+			if (recepcionado){
+				posicionOrdenCompraRecepcionado.add(i);
+			}
+			recepcionado= false;
+		}
+		
+		//Modificar Ordenes de Compra Recepcionados
+		for (int j = 0; j < listOrdenCompraConfirmado.size(); j++) {
+			OrdenCompra ordenCompraModificar = listOrdenCompraConfirmado.get(j);
+			for (Iterator iterator = posicionOrdenCompraRecepcionado.iterator(); iterator.hasNext();) {
+				Integer posicion = (Integer) iterator.next();
+				//Si la Orden de Compra ha sido Recepcionada
+				if(j == posicion){
+					//Modificar Orden Compa
+					ordenCompraModificar.setEstado("RECEPCIONADO");
+					listOrdenCompraConfirmado.set(j, ordenCompraModificar);
+				}
+			}
+		}
+	}
+	
+	public void cargarStock(List<DetalleOrdenCompra> listProductosCargar){
+		
+		//CArgar en Stock y detalle
+		//ademas de detalle deposito
+		for (Iterator iterator = listProductosCargar.iterator(); iterator.hasNext();) {
+			DetalleOrdenCompra detalle = (DetalleOrdenCompra) iterator.next();
+			if(idDepositoSeleccionado != null){
+				//Buscar o cargar stock
+				Stock stock = stockEJB.findStockCodigoBarra(detalle.getProducto().getCodigoBarra());
+				//Si no existe Stock crear uno nuevo
+				if(stock == null){
+					//Crea uno nuevo
+					stock = new Stock();
+					//stock.setCantidadStock(detalle.getCantidadRecibida());
+					//Si el producto posee producto unitario guardar unico
+					if(detalle.getProducto().getProductoUnitario() !=null){ 
+						//Cargar stock de unitario
+						stock = stockEJB.findStockCodigoBarra(detalle.getProducto().getProductoUnitario().getCodigoBarra());
+						//Si no hay ningun registro de stock
+						if (stock == null){
+							stock = new Stock();
+						}
+						Long totalUnitario = detalle.getCantidad()*(detalle.getProducto().getTipoProducto().getCantidad());
+						stock.setCantidadStock(totalUnitario); 
+						stock.setProducto(detalle.getProducto().getProductoUnitario());
+						stock.setCodigoBarra(detalle.getProducto().getProductoUnitario().getCodigoBarra());
+						stockEJB.create(stock);
+					} else {
+						//Sino posee es un producto unitario
+						stock.setCantidadStock(detalle.getCantidadRecibida());
+						stock.setProducto(detalle.getProducto());
+						stock.setCodigoBarra(detalle.getProducto().getCodigoBarra());
+						stockEJB.create(stock);
+						stock = new Stock();
+					}
+				} else {
+					
+					//Si no es un registro nuevo
+					//Si posee producto unitario
+					if(detalle.getProducto().getProductoUnitario() !=null){ 
+						//Cargar stock de unitario
+						stock = stockEJB.findStockCodigoBarra(detalle.getProducto().getProductoUnitario().getCodigoBarra());
+						//Modificando campo que guarda la cantidad unica
+						stock.setCantidadStock(stock.getCantidadStock()+ (detalle.getCantidadRecibida()*detalle.getProducto().getTipoProducto().getCantidad()));
+						stock.setProducto(detalle.getProducto());
+						stock.setCodigoBarra(detalle.getProducto().getCodigoBarra());
+						stockEJB.update(stock);
+						stock = new Stock();
+					} else {
+						//si es producto unitario
+						stock.setCantidadStock(stock.getCantidadStock() + detalle.getCantidadRecibida());
+						stock.setProducto(detalle.getProducto());
+						stock.setCodigoBarra(detalle.getProducto().getCodigoBarra());
+						stockEJB.update(stock);
+						stock = new Stock();
+					}
+					
+					
+				}
+				StockDetalle stockDetalle = new StockDetalle();
+				stockDetalle.setFechaIngreso(new Date());
+				//Cargar fecha vencimiento
+				stockDetalle.setFechaVencimiento(detalle.getVencimiento());
+				if(detalle.getProducto().getProductoUnitario() !=null){ 
+					//Cargando datos de cantidad recibida y restante
+					//Se carga datos de nuevo stock y lote
+					stockDetalle.setProducto(detalle.getProducto().getProductoUnitario());
+					stockDetalle.setCantidadRecibida(detalle.getCantidad()*detalle.getProducto().getTipoProducto().getCantidad());
+					stockDetalle.setCantidadRestante(detalle.getCantidad()*detalle.getProducto().getTipoProducto().getCantidad());
+					
+				} else {
+					//Si es unitario
+					//Cargando datos de cantidad recibida y restante
+					stockDetalle.setProducto(detalle.getProducto());
+					stockDetalle.setCantidadRecibida(detalle.getCantidad());
+					stockDetalle.setCantidadRestante(detalle.getCantidad());
+				}
+				
+				stockDetalle.setEstado("ACTIVO");
+				stockDetalle.setDeposito(depositoEJB.findIdDeposito(idDepositoSeleccionado));
+				stockDetalle.setIdOrdenCompra(detalle.getOrdenCompra());
+				String hash = "";
+				
+				
+				//Generando Hash Lote
+				RandomStringGenerator randomStringGenerator =
+				        new RandomStringGenerator.Builder()
+				                .withinRange('0', 'z')
+				                .filteredBy(CharacterPredicates.LETTERS, CharacterPredicates.DIGITS)
+				                .build();
+				hash = randomStringGenerator.generate(6);
+				stockDetalle.setHashLote(hash.toUpperCase());
+				hash = null;
+				
+				
+				
+				//Persistir Stock Detalle
+				stockDetalleEJB.create(stockDetalle);
+				DetalleDeposito detalleDeposito = new DetalleDeposito();
+				if(detalle.getProducto().getProductoUnitario() != null){
+					detalleDeposito = detalleDepositoEJB.findDeposito(detalle.getProducto().getProductoUnitario().getIdProducto(), idDepositoSeleccionado);
+					if(detalleDeposito == null){
+						//Crear nuevo registro
+						detalleDeposito = new DetalleDeposito();
+						detalleDeposito.setCantidadProducto(detalle.getCantidadRecibida()*detalle.getProducto().getTipoProducto().getCantidad());
+						detalleDeposito.setProducto(detalle.getProducto().getProductoUnitario());
+						detalleDeposito.setDeposito(depositoEJB.findIdDeposito(idDepositoSeleccionado));
+						detalleDepositoEJB.create(detalleDeposito);
+					} else {
+						//Modificar detalle deposito
+						detalleDeposito.setCantidadProducto(detalleDeposito.getCantidadProducto()+ detalle.getCantidadRecibida()*detalle.getProducto().getTipoProducto().getCantidad());
+						detalleDeposito.setProducto(detalle.getProducto());
+						detalleDeposito.setDeposito(depositoEJB.findIdDeposito(idDepositoSeleccionado));
+						detalleDeposito = detalleDepositoEJB.update(detalleDeposito);
+					}
+				} else {
+					//si es unitario
+					//Buscar deposito por id Producto
+					detalleDeposito = detalleDepositoEJB.findDeposito(detalle.getProducto().getIdProducto(), idDepositoSeleccionado);
+					if(detalleDeposito == null){
+						//Crear nuevo registro
+						detalleDeposito = new DetalleDeposito();
+						detalleDeposito.setCantidadProducto(detalle.getCantidadRecibida());
+						detalleDeposito.setProducto(detalle.getProducto());
+						detalleDeposito.setDeposito(depositoEJB.findIdDeposito(idDepositoSeleccionado));
+						detalleDepositoEJB.create(detalleDeposito);
+					} else {
+						//Modificar detalle deposito
+						detalleDeposito.setCantidadProducto(detalleDeposito.getCantidadProducto()+ detalle.getCantidadRecibida());
+						detalleDeposito.setProducto(detalle.getProducto());
+						detalleDeposito.setDeposito(depositoEJB.findIdDeposito(idDepositoSeleccionado));
+						detalleDeposito = detalleDepositoEJB.update(detalleDeposito);
+					}
+				}
+				
+				ordenCompraSeleccionado =  ordenCompraEJB.findOrdenCompraId(ordenCompraSeleccionado.getIdOrdenCompra());
+				ordenCompraSeleccionado.setFechaRecepcion(new Date());
+				ordenCompraSeleccionado.setUsuarioRecepcion(usuarioEJB.findUserUsuario((String)session.getAttribute("usuario")));
+				ordenCompraSeleccionado.setEstado("RECEPCIONADO");
+				ordenCompraEJB.update(ordenCompraSeleccionado);
+				FacesContext.getCurrentInstance().addMessage("Recepcionado Exitosamente", new FacesMessage("Recepcionado Exitosamente"));
+				
+			} else {
+				FacesContext.getCurrentInstance().addMessage("No se ha seleccionado Deposito.", new FacesMessage("No se ha seleccionado Deposito."));
+			}
+			limpiar();
+		}	
+		
 	}
 }

@@ -34,24 +34,35 @@
       <class>entities.Cliente</class>
       <class>entities.Deposito</class>
       <class>entities.DescuentoDetalle</class>
+      <class>entities.DetalleDeposito</class>
       <class>entities.DetalleFactura</class>
       <class>entities.DetalleOrdenCompra</class>
+      <class>entities.DetallePagoContado</class>
       <class>entities.DetallePedido</class>
       <class>entities.Empresa</class>
       <class>entities.Factura</class>
       <class>entities.FormaPago</class>
       <class>entities.Grupo</class>
+      <class>entities.Lote</class>
       <class>entities.Marca</class>
       <class>entities.Moneda</class>
       <class>entities.OrdenCompra</class>
       <class>entities.Pais</class>
       <class>entities.Pedido</class>
       <class>entities.Persona</class>
+      <class>entities.PreferenciaProveedor</class>
       <class>entities.Presupuesto</class>
       <class>entities.Producto</class>
       <class>entities.ProductoProveedor</class>
       <class>entities.Proveedor</class>
+      <class>entities.PuestoVenta</class>
+      <class>entities.Rol</class>
+      <class>entities.RucEmpresas</class>
+      <class>entities.RucPersonas</class>
+      <class>entities.Stock</class>
+      <class>entities.StockDetalle</class>
       <class>entities.TipoDocumento</class>
+      <class>entities.TipoDocumentoClienteProveedor</class>
       <class>entities.TipoPaletizacion</class>
       <class>entities.TipoProducto</class>
       <class>entities.TipoVenta</class>

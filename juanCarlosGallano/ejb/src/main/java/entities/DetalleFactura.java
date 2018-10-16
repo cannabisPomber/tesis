@@ -37,13 +37,13 @@ public class DetalleFactura implements Serializable {
 	
 	// Se obtiene de la suma de cantidad * precio + (cantidad*precio)*montoIVA
 	@Column (name = "importe" , nullable = false)
-	private Double importe;
+	private Long importe;
 	
 	@Column (name = "precio_unitario" , nullable = false)
-	private Double precioUnitario;
+	private Long precioUnitario;
 	
 	@Column (name = "cantidad" , nullable = false)
-	private Double cantidad;
+	private Long cantidad;
 
 	public Long getIdDetalleFactura() {
 		return idDetalleFactura;
@@ -78,27 +78,27 @@ public class DetalleFactura implements Serializable {
 	}
 
 
-	public Double getImporte() {
+	public Long getImporte() {
 		return importe;
 	}
 
-	public void setImporte(Double importe) {
+	public void setImporte(Long importe) {
 		this.importe = importe;
 	}
 
-	public Double getPrecioUnitario() {
+	public Long getPrecioUnitario() {
 		return precioUnitario;
 	}
 
-	public void setPrecioUnitario(Double precioUnitario) {
+	public void setPrecioUnitario(Long precioUnitario) {
 		this.precioUnitario = precioUnitario;
 	}
 
-	public Double getCantidad() {
+	public Long getCantidad() {
 		return cantidad;
 	}
 
-	public void setCantidad(Double cantidad) {
+	public void setCantidad(Long cantidad) {
 		this.cantidad = cantidad;
 	}
 

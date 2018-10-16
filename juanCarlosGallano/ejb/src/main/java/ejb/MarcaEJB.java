@@ -30,7 +30,7 @@ public class MarcaEJB extends GenericDaoImpl<Marca, Serializable>{
     }
 	
 	public List<Marca> findAllActivo() {
-    	TypedQuery<Marca> query = em.createQuery("select c from marca c where c.estado = 'Activo'", Marca.class);
+    	TypedQuery<Marca> query = em.createQuery("select c from marca c where c.estadoMarca = 'ACTIVO'", Marca.class);
     	marcas = query.getResultList();
     	return marcas;
     }

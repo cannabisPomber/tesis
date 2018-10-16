@@ -78,7 +78,7 @@ public class ClienteEJB extends GenericDaoImpl<Cliente, Serializable>{
    }
 
 	public List<Cliente> findAllActivo() {
-    	TypedQuery<Cliente> query = em.createQuery("select u from cliente u where u.estado = 'Activo'", Cliente.class);
+    	TypedQuery<Cliente> query = em.createQuery("select u from cliente u where u.estado = 'ACTIVO'", Cliente.class);
     	clientes = query.getResultList();
     	return clientes;
    }

@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 
 @Entity (name = "stock")
 @NamedQuery(name="Stock.findAll", query="SELECT p FROM stock p")
@@ -34,12 +35,15 @@ public class Stock implements Serializable{
 	@Column(name = "codigo_barrra")
 	private String codigoBarra;
 	
-	
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "id_producto", nullable = true)
 	private Producto producto;
+	
 	@Column(name = "cantidad_stock")
 	private Long cantidadStock;
 	
-	
+	@Transient
+	private Long cantidadExistente;
 
 	public Long getIdStock() {
 		return idStock;
@@ -73,6 +77,14 @@ public class Stock implements Serializable{
 		this.cantidadStock = cantidadStock;
 	}
 
+
+	public Long getCantidadExistente() {
+		return cantidadExistente;
+	}
+
+	public void setCantidadExistente(Long cantidadExistente) {
+		this.cantidadExistente = cantidadExistente;
+	}
 
 	@Override
 	public int hashCode() {

@@ -45,10 +45,13 @@ public class EditarProductoBean {
 	private Long idMarca;
 	private Long idTipoProducto;
 	private Long idTipoUnidadMedida;
+	private Long idProductoUnitario;
 	private List<TipoProducto> tiposProductos;
 	private List<UnidadMedida> unidadMedidaList;
 	private List<Proveedor> proveedores;
 	private List<Proveedor> proveedorProducto;
+	//Lista de productos activos
+	private List<Producto> listProductos;
 	
 	public Long getIdProducto() {
 		return idProducto;
@@ -66,10 +69,11 @@ public class EditarProductoBean {
 	
 	public void init(){
 		if (!FacesContext.getCurrentInstance().isPostback()){
-			marcas = marcaEjb.findAll();
-			tiposProductos = tipoProductoEjb.findAll();
+			marcas = marcaEjb.findAllActivo();
+			tiposProductos = tipoProductoEjb.findAllActivo();
 			unidadMedidaList = unidadMedidaEjb.findAllActivo();
 			proveedores = proveedorEjb.findAll();
+			listProductos = productoEjb.findAllActivo();
 			Map<String,String> params =
 	                FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 			try{
@@ -81,6 +85,12 @@ public class EditarProductoBean {
 				productoEdicion = productoEjb.findIdProducto(idProducto);
 				idMarca = productoEdicion.getMarca().getIdMarca();
 				idTipoProducto = productoEdicion.getTipoProducto().getIdTipoProducto();
+				idTipoUnidadMedida = productoEdicion.getUnidadMedida().getId();
+				if(productoEdicion.getProductoUnitario()!= null){
+					idProductoUnitario = productoEdicion.getProductoUnitario().getIdProducto();
+				} else {
+					idProductoUnitario = (long) 0;
+				}
 			} else {
 				productoEdicion = new Producto();
 			}
@@ -88,25 +98,41 @@ public class EditarProductoBean {
 	}
 	
 	public void guardarProducto(){
+		//Verificar duplicado de codigo de barra
+		if(!verificarCodigoBarra()){
 		// Debe persistir el usuario
-		if(productoEdicion.getIdProducto() == null){
-			System.out.println(" unidad de medida: " + idTipoUnidadMedida);
-			productoEdicion.setUnidadMedida(unidadMedidaEjb.findIdUnidadMedida(idTipoUnidadMedida));
-			productoEdicion.setMarca(marcaEjb.findMarcaId(idMarca));
-			productoEdicion.setTipoProducto(tipoProductoEjb.findIdTipoProducto(idTipoProducto));
-			productoEdicion = productoEjb.create(productoEdicion);
-			 FacesContext.getCurrentInstance().addMessage("Producto Creado", new FacesMessage("Nuevo Producto Creado."));
-			 productoEdicion = new Producto();
-			 
-			 // Crear cabecera de producto y detalle
-		} else {
-			// Modificar Producto
-			productoEdicion.setUnidadMedida(unidadMedidaEjb.findIdUnidadMedida(idTipoUnidadMedida));
-			productoEdicion.setMarca(marcaEjb.findMarcaId(idMarca));
-			productoEdicion.setTipoProducto(tipoProductoEjb.findIdTipoProducto(idTipoProducto));
-			productoEdicion = productoEjb.update(productoEdicion);
-			FacesContext.getCurrentInstance().addMessage("Producto Modificado", new FacesMessage("Producto Modificado."));
-			// Crear cabecera de producto y detalle
+			if(productoEdicion.getIdProducto() == null){
+				productoEdicion.setUnidadMedida(unidadMedidaEjb.findIdUnidadMedida(idTipoUnidadMedida));
+				productoEdicion.setMarca(marcaEjb.findMarcaId(idMarca));
+				if(idProductoUnitario != null){
+					productoEdicion.setProductoUnitario(productoEjb.findIdProducto(idProductoUnitario));
+				}
+				productoEdicion.setTipoProducto(tipoProductoEjb.findIdTipoProducto(idTipoProducto));
+				productoEdicion = productoEjb.create(productoEdicion);
+				idTipoUnidadMedida = null;
+				idTipoProducto = null;
+				idProductoUnitario = null;
+				idMarca=null;
+				 FacesContext.getCurrentInstance().addMessage("Producto Creado", new FacesMessage("Nuevo Producto Creado."));
+				 productoEdicion = new Producto();
+				 
+				 // Crear cabecera de producto y detalle
+			} else {
+				// Modificar Producto
+				productoEdicion.setUnidadMedida(unidadMedidaEjb.findIdUnidadMedida(idTipoUnidadMedida));
+				productoEdicion.setMarca(marcaEjb.findMarcaId(idMarca));
+				productoEdicion.setTipoProducto(tipoProductoEjb.findIdTipoProducto(idTipoProducto));
+				if(idProductoUnitario != null){
+					productoEdicion.setProductoUnitario(productoEjb.findIdProducto(idProductoUnitario));
+				}
+				productoEdicion = productoEjb.update(productoEdicion);
+				idTipoUnidadMedida = null;
+				idTipoProducto = null;
+				idProductoUnitario = null;
+				idMarca=null;
+				FacesContext.getCurrentInstance().addMessage("Producto Modificado", new FacesMessage("Producto Modificado."));
+				// Crear cabecera de producto y detalle
+			}
 		}
 	}
 	public List<Marca> getMarcas() {
@@ -157,6 +183,33 @@ public class EditarProductoBean {
 	public void setUnidadMedidaList(List<UnidadMedida> unidadMedidaList) {
 		this.unidadMedidaList = unidadMedidaList;
 	}
+	public List<Producto> getListProductos() {
+		return listProductos;
+	}
+	public void setListProductos(List<Producto> listProductos) {
+		this.listProductos = listProductos;
+	}
+	public Long getIdProductoUnitario() {
+		return idProductoUnitario;
+	}
+	public void setIdProductoUnitario(Long idProductoUnitario) {
+		this.idProductoUnitario = idProductoUnitario;
+	}
 	
+	
+	public boolean verificarCodigoBarra(){
+		boolean duplicadoCodigoBarra = false;
+		//metodo para consultar si codigo de barra es duplicado.
+		Producto verificarProducto = productoEjb.findProductoCodigoBarra(productoEdicion.getCodigoBarra());
+		if (verificarProducto != null){
+			duplicadoCodigoBarra= true;
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, "Codigo Barra Duplicado. Verificar.", null);
+			facesContext.addMessage("Codigo Barra Duplicado. Verificar.", facesMessage);
+			return duplicadoCodigoBarra;
+		} else {
+			return duplicadoCodigoBarra;
+		}
+	}
 	
 }

@@ -37,18 +37,23 @@
 		             <p:commandButton id="verDetalle" update="templateForm:formConfirmarOrdenCompra:detallePedidoDialog" oncomplete="PF('detallePedidoDialog').show()"
 		             	 icon="ui-icon-search" title="Vista Detalle Pedido" action="#{confirmarOrdenCompraBean.buscarDetalleOrdenCompra()}">
 		                <f:setPropertyActionListener value="#{ordenCompra.idOrdenCompra}" target="#{confirmarOrdenCompraBean.idOrdenCompraSelected}" />
+		           	</p:commandButton>
+		        </p:column>
+		        
+		        <p:column style="width:20%;text-align: center" headerText="Detalle Pedido" rendered="false">
+		             <p:commandButton id="enviarCorreoProveedor" 
+		             	 icon="ui-icon-mail" title="Vista Detalle Pedido" value="Enviar Correo Proveedor"  >
 		           </p:commandButton>
 		        </p:column>
 		        
-		        <p:column style="width:20%;text-align: center" headerText="Detalle Pedido">
-		             <p:commandButton id="enviarCorreoProveedor" 
-		             	 icon="ui-icon-mail" title="Vista Detalle Pedido" value="Enviar Correo Proveedor" >
-		           </p:commandButton>
-		        </p:column>
 		        
 		        <f:facet name="footer">
 		            <p:commandButton ajax="false" id="verPedido" process="checkboxPedido" update="@form"
-		            	 icon="ui-icon-check" value="Confirmar Pedidos Seleccionados" action="#{confirmarOrdenCompraBean.confirmarOrdenCompra(usuarioBean.usuarioLogueado())}"  />
+		            	 icon="ui-icon-check" value="Confirmar Orden de Compra Seleccionados" action="#{confirmarOrdenCompraBean.confirmarOrdenCompra(usuarioBean.usuarioLogueado())}"  />
+		            	 
+		           	<p:commandButton ajax="false" id="anula0OrdenCompra" update="@form"
+		            	 icon="ui-icon-trash" value="Anular Orden de Compra Seleccionado" action="#{confirmarOrdenCompraBean.anularOrdenCompra()}"  />
+		            	 
 		        </f:facet>
 		    </p:dataTable>
 			

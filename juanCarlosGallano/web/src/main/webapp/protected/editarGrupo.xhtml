@@ -17,19 +17,17 @@
 			
 			<p:outputLabel value="Nombre Grupo" for="grupo"/>
 			<p:inputText id="grupo" required= "true" value="#{editarGrupoBean.grupoEdicion.nombreGrupo}"
-				requiredMessage="Nombre de Grupo no puede estar vacio"></p:inputText>
+				requiredMessage="Nombre de Grupo no puede estar vacio" onblur="value=value.toUpperCase()"></p:inputText>
 			<p:outputLabel value="Descripcion" for="descripcion"/>
 			<p:inputText  id="descripcion" value="#{editarGrupoBean.grupoEdicion.descripcionGrupo}"	
-				required="true" requiredMessage="Descripcion de grupo es requerida"/>
+				required="true" requiredMessage="Descripcion de grupo es requerida" onblur="value=value.toUpperCase()"/>
 			<p:outputLabel value="Estado " for="estadoGrupo"/>
 			<p:selectOneMenu required= "true" id="estadoGrupo" value="#{editarGrupoBean.grupoEdicion.estado}" style="width:125px"
 				requiredMessage="Debe seleccionar un estado de grupo" >
-            	<f:selectItem itemLabel="Seleccione Estado"  />
-            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
-            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+            	<f:selectItem itemLabel="Seleccione Estado"/>
+            	<f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO"/>
+            	<f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO"/>
         	</p:selectOneMenu>
-                
-			
 		</p:panelGrid>
 		
 			<p:commandButton id="guardarGrupo" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"

@@ -16,15 +16,15 @@
 		<p:panelGrid columns="2" id="panelEditTipoDocumento">
 			
 			<p:outputLabel value="Codigo TipoDocumento" for="tipoDocumentoCodigo"/>
-			<p:inputText id="tipoDocumentoCodigo" required="true" requiredMessage="Nombre de Tipo Documento Requerido" value="#{editarTipoDocumentoBean.tipoDocumentoEdicion.tipoDocumento}"></p:inputText>
+			<p:inputText id="tipoDocumentoCodigo" required="true" requiredMessage="Nombre de Tipo Documento Requerido" value="#{editarTipoDocumentoBean.tipoDocumentoEdicion.tipoDocumento}" onblur="value=value.toUpperCase()"></p:inputText>
 			
 			<p:outputLabel value="Descripcion TipoDocumento" for="tipoDocumentoDescripcion"/>
-			<p:inputText id="tipoDocumentoDescripcion" required="true" requiredMessage="Nombre de Tipo Documento Requerido" value="#{editarTipoDocumentoBean.tipoDocumentoEdicion.descripcion}"></p:inputText>
+			<p:inputText id="tipoDocumentoDescripcion" required="true" requiredMessage="Nombre de Tipo Documento Requerido" value="#{editarTipoDocumentoBean.tipoDocumentoEdicion.descripcion}" onblur="value=value.toUpperCase()"></p:inputText>
 			<p:outputLabel value="Estado" for="estadoTipoDocumento"/>
 			<p:selectOneMenu required= "true" requiredMessage="Estado debe ser seleccionado" id="estadoTipoDocumento" value="#{editarTipoDocumentoBean.tipoDocumentoEdicion.estado}" style="width:125px" >
             	<f:selectItem itemLabel="Seleccione Estado"  />
-            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
-            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+            	<f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+            	<f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
         	</p:selectOneMenu>
 			
 		</p:panelGrid>

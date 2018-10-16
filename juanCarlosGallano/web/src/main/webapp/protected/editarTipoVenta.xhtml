@@ -17,12 +17,12 @@
 			
 			<p:outputLabel value="TipoVenta" required= "true" for="tipoVenta"/>
 			<p:inputText required="true" id="tipoVenta" value="#{editarTipoVentaBean.tipoVentaEdicion.nombreTipoVenta}"
-				requiredMessage="Nombre de Tipo Venta no puede ser vacio"></p:inputText>
+				requiredMessage="Nombre de Tipo Venta no puede ser vacio" onblur="value=value.toUpperCase()"></p:inputText>
 			<p:outputLabel value="Estado" for="estadoTipoVenta"/>
 			<p:selectOneMenu required= "true" requiredMessage="Estado debe ser seleccionado" id="estadoTipoVenta" value="#{editarTipoVentaBean.tipoVentaEdicion.estado}" style="width:125px" >
             	<f:selectItem itemLabel="Seleccione Estado"  />
-            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
-            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+            	<f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+            	<f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
         	</p:selectOneMenu>
 		</p:panelGrid>
 		

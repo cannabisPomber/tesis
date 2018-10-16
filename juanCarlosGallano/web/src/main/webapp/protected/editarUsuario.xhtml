@@ -16,13 +16,22 @@
 		<p:panelGrid columns="2" id="panelEditUsuario">
 			
 			<p:outputLabel value="Usuario" required= "true" for="usuario"/>
-			<p:inputText id="usuario" value="#{editarUsuarioBean.usuarioEdit.usuario}"></p:inputText>
+			<p:inputText id="usuario" value="#{editarUsuarioBean.usuarioEdit.usuario}" onblur="value=value.toUpperCase()"
+			onkeypress="if (event.keyCode == 13) { return false; }"></p:inputText>
 			<p:outputLabel value="Password" required= "true" for="password"/>
-			<p:password id="password" value="#{editarUsuarioBean.usuarioEdit.password}"/>
+			<p:password id="password" value="#{editarUsuarioBean.usuarioEdit.password}" 
+			onkeypress="if (event.keyCode == 13) { return false; }"/>
+			
+			<p:outputLabel value="Sucursal" for="sucursalUsuario"/>
+			<p:selectOneMenu id="sucursalUsuario" value="#{editarUsuarioBean.idEmpresa}" 
+				style="width:125px"  effect="fade">
+				<f:selectItem itemLabel="Seleccione Sucursal"  />
+				<f:selectItems value="#{editarUsuarioBean.empresas}" var="gru" itemValue="#{gru.idEmpresa}" itemLabel="#{gru.nombreEmpresa} #{gru.direccion}" />
+        	</p:selectOneMenu>
 			<p:outputLabel value="Grupo" for="grupo"/>
 			<p:selectOneMenu id="grupo" value="#{editarUsuarioBean.idGrupo}" 
 				style="width:125px"  effect="fade">
-<!-- 				<f:selectItem itemLabel="Seleccione Grupo"  /> -->
+				<f:selectItem itemLabel="Seleccione Grupo"  /> 
 				<f:selectItems value="#{editarUsuarioBean.grupos}" var="gru" itemValue="#{gru.idGrupo}" itemLabel="#{gru.nombreGrupo}" />
         	</p:selectOneMenu>
 			

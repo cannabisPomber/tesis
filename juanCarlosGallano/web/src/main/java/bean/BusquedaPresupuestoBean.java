@@ -12,6 +12,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.event.TabCloseEvent;
 
 import ejb.DetalleOrdenCompraEJB;
@@ -109,8 +110,15 @@ public class BusquedaPresupuestoBean {
 	
 	public void init(){
 		
+		try{
+			detalleOrdenCompraEJB.deleteConstraintUniqueProducto();
+		} catch (Exception ex){
+			System.out.println("Error al borrar Constraint: " + ex.getMessage());
+		}
+		listPedidosActivos = pedidoEJB.findAllActivo();
 		if (!FacesContext.getCurrentInstance().isPostback()){
-			listPedidosActivos = pedidoEJB.findAllActivo();
+			
+			
 			listPedidosActivosSelection = new ArrayList<Pedido>();
 			listProducto = new ArrayList<Producto>();
 			listProductoProveedores = new ArrayList<ProductoProveedor>();
@@ -138,6 +146,7 @@ public class BusquedaPresupuestoBean {
 	public void setCodBarra(String codBarra) {
 		this.codBarra = codBarra;
 	}
+
 
 	public Boolean getMostrarProveedor() {
 		return mostrarProveedor;
@@ -363,12 +372,9 @@ public class BusquedaPresupuestoBean {
 		this.setListProductoProveedores(listProductoProveedores);
 		System.out.println("Lista de proveedores :" + listProductoProveedores.size());
 		if(listProductoProveedores.size()>0){
-			
 			cantidadOrdenCompra = Long.parseLong(cantidad);
 			mostrarProveedor = true;
-			System.out.println("No es null Lista Proveedores, cantidad" + cantidadOrdenCompra);
 		} else {
-			System.out.println("null Lista Proveedores");
 			FacesContext.getCurrentInstance().addMessage("Producto no Posee Proveedor", new FacesMessage("Producto sin Proveedor."));
 			mostrarProveedor = false;
 		}
@@ -397,23 +403,25 @@ public class BusquedaPresupuestoBean {
 			listDetOc.add(det);
 			oc.setListaDetalleOrdenCompra(listDetOc);
 			listOrdenCompraGenerado.add(oc);
+			oc= new OrdenCompra();
 		} else {
 			//si la lisa no esta vacia
 			//busca si ya no hay proveedor con orden de compra
 			Boolean existeProveedor = false;
+			Boolean existeProducto = false;
 			for (int i = 0; i < listOrdenCompraGenerado.size(); i++) {
 				//Si ya existe ese proveedor en la lista agregar 
 				if (listOrdenCompraGenerado.get(i).getProveedor().getIdProveedor().equals(idProveedor)){
-					//listDetOc.add(det);
 					oc = listOrdenCompraGenerado.get(i);
 					existeProveedor = true;
+					break;
 				}
 			}
 			//Si no existe en proveedor en la lista de Orden de compra agregar
 			if (!existeProveedor){
 				//Crear nueva Orden de Compra
 				oc = new OrdenCompra();
-				oc.setEstado("Activo");
+				oc.setEstado("ACTIVO");
 				oc.setFechaPedido(new Date());
 				oc.setProveedor(proveedorEJB.findProveedorId(idProveedor));
 				oc.setUsuarioPedido(usuarioEJB.findUserUsuario(userLogueado));
@@ -423,8 +431,7 @@ public class BusquedaPresupuestoBean {
 				det.setOrdenCompra(oc);
 				det.setPrecioCompra(precioCompra);
 				det.setProducto(productoEJB.findIdProducto(idProducto));
-				oc.setListaDetalleOrdenCompra(new ArrayList<DetalleOrdenCompra>());
-				//oc.getListaDetalleOrdenCompra().add(det);
+				listDetOc = new ArrayList<DetalleOrdenCompra>();
 				listDetOc.add(det);
 				oc.setListaDetalleOrdenCompra(listDetOc);
 				listOrdenCompraGenerado.add(oc);
@@ -437,14 +444,27 @@ public class BusquedaPresupuestoBean {
 				det.setOrdenCompra(oc);
 				det.setPrecioCompra(precioCompra);
 				det.setProducto(productoEJB.findIdProducto(idProducto));
-				oc.setListaDetalleOrdenCompra(new ArrayList<DetalleOrdenCompra>());
-				//oc.getListaDetalleOrdenCompra().add(det);
-				listDetOc.add(det);
-				oc.setListaDetalleOrdenCompra(listDetOc);
+				//obteniendo detalle para agregar uno nuevo
+				listDetOc = oc.getListaDetalleOrdenCompra();
+				for (Iterator iterator = listDetOc.iterator(); iterator.hasNext();) {
+					DetalleOrdenCompra controlarDetalleOc = (DetalleOrdenCompra) iterator.next();
+					if(controlarDetalleOc.getProducto().getIdProducto().equals(idProducto)){
+						//Si ya existe producto en lista
+						existeProducto = true;
+					}
+					
+				}
+				if (!existeProducto){
+					listDetOc.add(det);
+					oc.setListaDetalleOrdenCompra(listDetOc);
+				} else {
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_FATAL, "No se puede duplicar producto en Orden de Compra.", null);
+					facesContext.addMessage("No se puede duplicar producto en Orden de Compra.", facesMessage);
+				}
 			}
-		}
-		//Verificar que no exista para agregar a detalle de proveedor
-		//Cargar a TabView
+		}	
+		
 	}
 	
 	public String costoProducto(Long precioCompra){
@@ -455,10 +475,10 @@ public class BusquedaPresupuestoBean {
 	public void guardarOrdenCompra(){
 		try{
 		//persistir orden de compra y detalle
-		System.out.println("lista de Orden de compra :" + listOrdenCompraGenerado.size());
 		for (Iterator<OrdenCompra> iterator = listOrdenCompraGenerado.iterator(); iterator.hasNext();) {
 			OrdenCompra oCompra = iterator.next();
 			//oCompra.setListaDetalleOrdenCompra(listDetOc);
+			oCompra.setEstado("ACTIVO");
 			ordenCompraEJB.create(oCompra);
 		}
 //		for(OrdenCompra oc: listOrdenCompraGenerado){
@@ -472,7 +492,7 @@ public class BusquedaPresupuestoBean {
 		// cambiar estado de los pedidos a cerrado
 		 for (int k = 0; k < listPedidosActivosSelection.size(); k++) {
 			 Pedido ped = listPedidosActivosSelection.get(k);
-			 ped.setEstado("Cerrado");
+			 ped.setEstado("CERRADO");
 			 ped = pedidoEJB.update(ped);
 		}
 		 //borrando listas de tabView
@@ -486,7 +506,37 @@ public class BusquedaPresupuestoBean {
 			//FacesContext.getCurrentInstance().addMessage("Generado Correctamente Orden de Compra", new FacesMessage("Nuevo Orden de Compra Creado."));
 		}
 	}
-	public void eliminarTab(TabCloseEvent event){
-		
+	
+	public void anularPedido(){
+		//Anula pedido desde busqueda de presupuesto
+		for (Iterator iterator = listPedidosActivosSelection.iterator(); iterator.hasNext();) {
+			Pedido pedidoAnular = (Pedido) iterator.next();
+			pedidoAnular.setEstado("ANULADO");
+			pedidoAnular =pedidoEJB.update(pedidoAnular);
+			
+		}
+		FacesContext.getCurrentInstance().addMessage("Pedidos Seleccionados Anulados", new FacesMessage("Pedidos Seleccionados Anulados."));
 	}
+	
+	
+	 public void onTabChange(OrdenCompra ordenCompra) {
+		 	List<DetalleOrdenCompra> listAuxDetalleOrdenCompra = new ArrayList<DetalleOrdenCompra>();
+		 	for (Iterator iterator = listDetOc.iterator(); iterator.hasNext();) {
+				DetalleOrdenCompra detalleOrdenCompraAux = (DetalleOrdenCompra) iterator.next();
+				if(detalleOrdenCompraAux.getOrdenCompra().getProveedor().getIdProveedor() == ordenCompra.getProveedor().getIdProveedor()){
+					listAuxDetalleOrdenCompra.add(detalleOrdenCompraAux);
+				}
+			}
+		 	listDetOc = listAuxDetalleOrdenCompra;
+    }
+	 
+	 public void limpiar(){
+		 	listPedidosActivos = pedidoEJB.findAllActivo();
+		 	listPedidosActivosSelection = new ArrayList<Pedido>();
+			listProducto = new ArrayList<Producto>();
+			listProductoProveedores = new ArrayList<ProductoProveedor>();
+			listOrdenCompraGenerado = new ArrayList<OrdenCompra>();
+			listDetOc = new ArrayList<DetalleOrdenCompra>();
+			listCantidadProductos = new ArrayList<List<String>>();
+	 }
 }

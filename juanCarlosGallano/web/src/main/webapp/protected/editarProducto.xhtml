@@ -11,30 +11,41 @@
 	</f:metadata>
 <ui:composition template="template.xhtml">
 	<ui:define name="contenido">
-	<h:form id="formEditProducto">
+	<h:form id="formEditProducto" >
+		<p:focus id="focusID" for="templateForm:formEditProducto:nombreProducto"></p:focus>
 		<p:panel id="panelEdicion">
 		<p:panelGrid columns="2" id="panelEditProducto">
 			
-			<p:outputLabel value="Nombre Producto" for="producto"/>
-			<p:inputText id="producto" value="#{editarProductoBean.productoEdicion.nombreProducto}"
-				required="true" requiredMessage="Nombre de producto no puede ser vacio"></p:inputText>
+			<p:outputLabel value="Nombre Producto" for="nombreProducto"/>
+			<p:inputText id="nombreProducto" value="#{editarProductoBean.productoEdicion.nombreProducto}"
+				required="true" requiredMessage="Nombre de producto no puede ser vacio"  onblur="value=value.toUpperCase()"></p:inputText>
 				
 				
 			<p:outputLabel value="Codigo de Barra" for="codBarra"/>
 			<p:inputText id="codBarra" value="#{editarProductoBean.productoEdicion.codigoBarra}"
-				required="true" requiredMessage="Código de Barra de producto no puede ser vacio"></p:inputText>
+				requiredMessage="Código de Barra de producto no puede ser vacio" 
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				</p:inputText>
 				
 			<p:outputLabel value="Precio de venta" for="precio"/>
 			<p:inputNumber id="precio" value="#{editarProductoBean.productoEdicion.precioUnitario}"
-				required="true" requiredMessage="Precio de producto no puede ser vacio"></p:inputNumber>
+				required="true" requiredMessage="Precio de producto no puede ser vacio"
+				onkeypress="if (event.keyCode == 13) { return false; }"></p:inputNumber>
 				
 			<p:outputLabel value="IVA Producto" for="iva"/>
-			<p:inputNumber id="iva" value="#{editarProductoBean.productoEdicion.ivaProducto}"
-				required="true" requiredMessage="IVA de producto no puede ser vacio" decimalPlaces="2" maxValue="99" minValue="1"></p:inputNumber>
+			<p:selectOneMenu  
+					id="iva" value="#{editarProductoBean.productoEdicion.ivaProducto}"
+					style="width:125px" >
+	            	<f:selectItem itemLabel="Seleccione Porcentaje IVA "  />
+	            	<f:selectItem itemLabel="5%" itemValue="5" />
+	            	<f:selectItem itemLabel="10%" itemValue="10" />
+	            	<f:selectItem itemLabel="Exento" itemValue="0" />
+	        	</p:selectOneMenu>
 				
 			<p:outputLabel value="Cantidad Minima" for="cantidadMinima"/>
 			<p:inputNumber id="cantidadMinima" value="#{editarProductoBean.productoEdicion.cantidadMinima}"
-				required="true" requiredMessage="Cantidad Mínima no puede ser vacio"></p:inputNumber>
+				required="true" requiredMessage="Cantidad Mínima no puede ser vacio"
+				onkeypress="if (event.keyCode == 13) { return false; }" ></p:inputNumber>
 				
 			<p:outputLabel value="Cantidad Maxima" for="cantidadMaxima"/>
 			<p:inputNumber id="cantidadMaxima" value="#{editarProductoBean.productoEdicion.cantidadMaxima}"
@@ -65,12 +76,21 @@
             	<f:selectItems value="#{editarProductoBean.marcas}" var="gru" itemValue="#{gru.idMarca}" itemLabel="#{gru.nombreMarca}" />
         	</p:selectOneMenu>
         	
+        	<p:outputLabel value="Producto Unitario" for="productoUnitario"/>
+			<p:selectOneMenu 
+				id="productoUnitario" value="#{editarProductoBean.idProductoUnitario}" 
+					style="width:125px" >
+            	<f:selectItem itemLabel="Seleccione Unidad de Producto"  />
+            	<f:selectItems value="#{editarProductoBean.listProductos}" var="gru" itemValue="#{gru.idProducto}" 
+            	itemLabel="#{gru.nombreProducto} #{gru.marca.nombreMarca} #{gru.tipoProducto.nombreTipoProducto} #{gru.unidadMedida.unidad}"  />
+        	</p:selectOneMenu>
+        	
 			
 			<p:outputLabel value="Estado Producto" for="estadoProducto"/>
 			<p:selectOneMenu required= "true" requiredMessage="Estado debe ser seleccionado" id="estadoProducto" value="#{editarProductoBean.productoEdicion.estado}" style="width:125px" >
             	<f:selectItem itemLabel="Seleccione Estado"  />
-            	<f:selectItem itemLabel="Activo" itemValue="Activo" />
-            	<f:selectItem itemLabel="Inactivo" itemValue="Inactivo" />
+            	<f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+            	<f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
         	</p:selectOneMenu>
 		</p:panelGrid>
 		

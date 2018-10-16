@@ -63,7 +63,7 @@ public class Producto implements Serializable {
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_producto_unitario", nullable = true)
-	private Producto producto;
+	private Producto productoUnitario;
 
 	public Long getIdProducto() {
 		return idProducto;
@@ -157,13 +157,14 @@ public class Producto implements Serializable {
 	public void setIvaProducto(Float ivaProducto) {
 		this.ivaProducto = ivaProducto;
 	}
-	
-	public Producto getProducto() {
-		return producto;
+
+
+	public Producto getProductoUnitario() {
+		return productoUnitario;
 	}
 
-	public void setProducto(Producto producto) {
-		this.producto = producto;
+	public void setProductoUnitario(Producto productoUnitario) {
+		this.productoUnitario = productoUnitario;
 	}
 
 	@Override

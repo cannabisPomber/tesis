@@ -2,6 +2,7 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -119,6 +120,7 @@ public class Empresa implements Serializable{
 	public void setVencimientoTimbrado(Date vencimientoTimbrado) {
 		this.vencimientoTimbrado = vencimientoTimbrado;
 	}
+
 
 	@Override
 	public int hashCode() {

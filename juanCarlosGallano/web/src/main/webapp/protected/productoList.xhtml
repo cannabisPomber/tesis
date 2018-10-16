@@ -11,9 +11,13 @@
 	<ui:define name="contenido">
 	<h:form id="formProductoList">
 		<p:panel>
-		<p:outputLabel value="Listado de Productoes" />
+		<p:outputLabel value="Listado de Productos" />
 		<p:dataTable var="producto" value="#{productoBean.productoList}" emptyMessage="No se registran elementos cargados"
 			style="margin-top:10px" id="tablaProducto">
+			
+			<p:column headerText="id Producto">
+				<h:outputText value="#{producto.idProducto}" />
+			</p:column>
 			
 			<p:column headerText="Nombre Producto">
 				<h:outputText value="#{producto.nombreProducto}" />

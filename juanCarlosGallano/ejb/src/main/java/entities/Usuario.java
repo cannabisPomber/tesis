@@ -35,6 +35,10 @@ public class Usuario implements Serializable{
 	@ManyToOne(fetch=FetchType.EAGER,optional=false)
 	@JoinColumn(name="id_grupo", nullable = false)
 	private Grupo grupo;
+	
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "id_empresa", nullable = false)
+	private Empresa empresa;
 
 	public Usuario() {
 	}
@@ -71,6 +75,15 @@ public class Usuario implements Serializable{
 		this.grupo = grupo;
 	}
 	
+	
+	public Empresa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

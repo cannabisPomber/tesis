@@ -44,7 +44,7 @@ public class UnidadMedidaEJB extends GenericDaoImpl<UnidadMedida, Serializable>{
 	   
 	   public List<UnidadMedida> findAllActivo() {
 		   Query query = em.createQuery("select u from unidad_medida u where u.estado = :estado");
-		   query.setParameter("estado", "Activo");
+		   query.setParameter("estado", "ACTIVO");
 	    	unidadMedidas = query.getResultList();
 	    	return unidadMedidas;
 	   }
