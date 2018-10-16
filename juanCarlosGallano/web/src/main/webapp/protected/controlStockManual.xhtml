@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event listener="#{controlStockManualBean.init()}" type="preRenderView"></f:event>
+</f:metadata>
+
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+		<h:form id="formControlStock" target="_blank">
+			
+			<p:panel header="Cargar Datos Producto y cantidad en Stock" id="panelDatosStock">
+				
+					<p:panelGrid columns="8" id="panelGridCargaProducto">
+
+					<p:outputLabel value="Codigo de Barra" for="idProducto" style="font-weight: bold;"/>
+					<p:inputText id="idProducto" value="#{controlStockManualBean.idProducto}"  
+						onkeypress="return enterCantidadStock(event,'templateForm:formControlStock:cantidadExistencia_input');">
+						<p:ajax event="change" update="@this"></p:ajax>
+					</p:inputText>
+					
+					<p:outputLabel value="Cantidad Actual en Stock" for="cantidadExistencia" style="font-weight: bold;"/>
+					<p:inputNumber id="cantidadExistencia"
+						value="#{controlStockManualBean.cantidadExistente}" decimalPlaces="0" onkeypress="if (event.keyCode == 13) { return false; }">
+						<p:ajax event="change" listener="#{controlStockManualBean.cargarListaStock()}"></p:ajax>	
+					</p:inputNumber>
+
+				</p:panelGrid>
+			
+			</p:panel>
+			
+			<p:separator />
+			
+			<p:panel header="Listado de Productos en Deposito Empresa" id="panelListadoStock">
+				<p:dataTable id="dataTableSTockProductos" var="stock" value="#{controlStockManualBean.listStockEmpresa}" rowKey="#{stock.idStock}" >
+				
+				
+					<p:column headerText="Id Stock" style="width:5%;text-align: center">
+							<h:outputText value="#{stock.idStock}" />
+					</p:column>
+					
+					<p:column headerText="Producto" style="width:15%;text-align: center">
+							<h:outputText value="#{stock.producto.nombreProducto} #{stock.producto.marca.nombreMarca} #{stock.producto.tipoProducto.nombreTipoProducto} #{stock.producto.unidadMedida.dimension} #{stock.producto.unidadMedida.unidad}" />
+					</p:column>
+					
+					<p:column headerText="Cantidad en Stock" style="width:4%;text-align: center">
+							<h:outputText value="#{stock.cantidadStock}" />
+					</p:column>
+					
+					
+					<p:column headerText="Cantidad Existente" style="width:10%;text-align: center">
+							 <h:outputText value="#{stock.cantidadExistente}"> </h:outputText>
+					 </p:column>
+				
+				</p:dataTable>
+				
+			</p:panel>
+			<p:separator />
+			<p:panel>
+				<p:commandButton action="#{controlStockManualBean.ajustarStock()}" value="Ajustar Inventario"></p:commandButton>
+				<p:commandButton action="#{controlStockManualBean.generarReporte()}" value="Generar Reporte"></p:commandButton>
+			</p:panel>
+		
+			
+		
+		
+		</h:form>
+		</ui:define>
+	</ui:composition>
+</html>

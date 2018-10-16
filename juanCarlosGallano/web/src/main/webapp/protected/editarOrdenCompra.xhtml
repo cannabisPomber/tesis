@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{editarOrdenCompraBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditOrdenCompra">
+		<p:panel id="panelEdicion">
+		<p:panel id="panelDatosOrdenCompra" header="Cabecera de Orden de Compra" >
+			<p:panelGrid columns="2" id="panelCabeceraOrdenCompra">
+					
+					<p:outputLabel value="Proveedor" for="proveedor"/>
+					<h:outputText id="proveedor" value="#{editarOrdenCompraBean.ordenCompraEdicion.proveedor.nombreEmpresa}"/>
+					<p:outputLabel value="Usuario Pedido" for="usuarioAprobacion"/>
+					<h:outputText id="usuarioAprobacion" value="#{editarOrdenCompraBean.ordenCompraEdicion.usuarioPedido.usuario}"/>
+					<p:outputLabel value="Fecha Pedido" for="fechaPedido"/>
+					<h:outputText id="fechaPedido" value="#{editarOrdenCompraBean.ordenCompraEdicion.fechaPedido}">
+                            <f:convertDateTime pattern="MM/dd/yyyy hh:mm:ss" />
+                    </h:outputText>
+                    <p:outputLabel value="Estado de Orden de Compra" for="estadoOrdenCompra"/>
+                    <h:outputText id="estadoOrdenCompra" value="#{editarOrdenCompraBean.ordenCompraEdicion.estado}"/>
+			</p:panelGrid>
+		</p:panel>
+		<p:panelGrid columns="2" id="panelEditDetalleOrdenCompra">
+			
+			<p:panel id="panelSeleccionarProveedor" header="Seleccionar Proveedor" style="margin-top:20px" >
+		    			
+		    			
+		    			<p:dataTable id="dataTableEditProveedor" var="proveedorProducto" value="#{editarOrdenCompraBean.listProductoProveedores}" editable="true" style="margin-bottom:20px">
+					       <f:facet name="header">
+					           Listado de Proveedores por producto Seleccionado.
+					       </f:facet>
+					       
+					       <p:column headerText="Proveedor">
+					       		<h:outputText value="#{proveedorProducto.proveedor.nombreEmpresa}" />
+					       </p:column>
+					       <p:column headerText="Precio de Compra">
+					       		<h:outputText value="#{proveedorProducto.precioCompra}" />
+					       </p:column>
+					       <p:column headerText="Cantidad de Producto">
+					       		<p:cellEditor>
+					               <f:facet name="output"><h:outputText value="#{editarOrdenCompraBean.cantidadOrdenCompra}" /></f:facet>
+					               <f:facet name="input"><p:inputText value="#{editarOrdenCompraBean.cantidadOrdenCompra}" style="width:100%" label="Cantidad"/></f:facet>
+					           </p:cellEditor>
+					       </p:column>
+					       <p:column headerText="Costo">
+					       		<h:outputText value="#{editarOrdenCompraBean.costoProducto(proveedorProducto.precioCompra)}" />
+					       </p:column>
+					       <p:column style="width:10%" headerText="Editar Cantidad">
+					           <p:rowEditor update="dataTableEditProveedor"/>
+					       </p:column>
+					     </p:dataTable>
+		    		</p:panel>
+			
+			
+		</p:panelGrid>
+		
+			<p:commandButton id="guardarOrdenCompra" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
+				action="#{editarOrdenCompraBean.guardarOrdenCompra()}" update="templateForm:formEditOrdenCompra:panelEditOrdenCompra"/>
+			<p:button id="salirGrupo" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				outcome="/protected/presupuestoList.xhtml?faces-redirect=true"/>
+		</p:panel>
+		
+		
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

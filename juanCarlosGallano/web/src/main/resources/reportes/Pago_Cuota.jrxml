@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReciboDinero" pageWidth="212" pageHeight="368" whenNoDataType="AllSectionsNoDetail" columnWidth="184" leftMargin="14" rightMargin="14" topMargin="42" bottomMargin="28" uuid="ec8c5f02-0679-4cfc-858f-8e9366ab3165">
+	<property name="com.jaspersoft.studio.unit." value="cm"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kapeluTesis"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="cm"/>
+	<parameter name="RUC" class="java.lang.String"/>
+	<parameter name="SUCURSAL" class="java.lang.String"/>
+	<parameter name="DIRECCION" class="java.lang.String"/>
+	<parameter name="CAJA_ID" class="java.lang.String"/>
+	<parameter name="CAJERO" class="java.lang.String"/>
+	<parameter name="ID_CUOTA" class="java.lang.Integer"/>
+	<parameter name="NRO_CUOTA_PAGAR" class="java.lang.Integer"/>
+	<parameter name="NRO_CUOTA_TOTAL" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select c.id_detalle_cuotas,
+c.fecha_pago,
+c.fecha_vencimiento,
+tp.numero_documento as ruc,
+cl.nombre || ' ' || cl.apellido as cliente,
+round(c.monto_pago,0)monto_pago
+from detalle_cuotas c
+inner join factura f on c.id_factura = f.idfactura
+inner join cliente cl on cl.id_cliente = f.id_cliente
+left join tipo_documento_cliente_proveedor tp on tp.id_cliente=cl.id_cliente
+where c.id_detalle_cuotas =   $P{ID_CUOTA} ]]>
+	</queryString>
+	<field name="id_detalle_cuotas" class="java.lang.Long"/>
+	<field name="fecha_pago" class="java.sql.Date"/>
+	<field name="fecha_vencimiento" class="java.sql.Date"/>
+	<field name="ruc" class="java.lang.String"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="monto_pago" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="180" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="185" height="15" uuid="96424d5a-d6ce-43d4-bf6c-c2fd455ede5a"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[** BODEGA KAPELU **]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="15" width="185" height="15" uuid="0a7d53bc-e203-4915-83d8-7d4648343403"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["R.U.C " + $P{RUC}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="30" width="185" height="15" uuid="18f10a35-722b-4cb4-89b4-3a51b107eca1"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[------------------------------------------------------------]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="60" width="185" height="15" uuid="dda923d6-bab1-4a86-9b2e-8feb011abef6"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{DIRECCION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="120" width="185" height="15" uuid="092937d0-8d87-4d37-a28e-c2e54358d7ae"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[------------------------------------------------------------]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="75" width="185" height="15" uuid="92e1a463-e5b6-45bd-bde6-d6c4e994826a"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["RECIBO NRO: " + $P{ID_CUOTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="90" width="90" height="15" uuid="02a38dc5-c2ca-447c-81f5-368b189eecaf"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CAJA: " + $P{CAJA_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="105" width="185" height="15" uuid="520d9d53-e3af-45e9-be71-b8b26d019642"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CAJERO: " + $P{CAJERO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="45" width="185" height="15" uuid="587556b1-db12-48e9-86b9-725d9934af6c"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["SUCURSAL " + $P{SUCURSAL}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="0" y="45" width="185" height="15" uuid="ff68f50a-d826-428a-8b6e-d67c3d5b817e">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+				</reportElement>
+			</frame>
+			<staticText>
+				<reportElement x="0" y="165" width="185" height="15" uuid="6595eff0-28c4-41b9-87f5-77948354d7e6"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[------------------------------------------------------------]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="135" width="100" height="15" uuid="43b9a168-9d85-4fe7-a90e-3b6e1f4ed3b7"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["C.I/R.U.C: "+$F{ruc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="150" width="180" height="15" uuid="02419e08-3686-4b77-a110-1279fa648216"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CLIENTE: "+$F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="90" width="55" height="15" uuid="7d889a5c-95ab-41b6-8148-d609c3087a88"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_pago}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="16" width="90" height="15" uuid="d29d8d92-6246-449a-809d-ae44c58e0b75"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NRO DE CUOTA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="90" height="15" uuid="d64e75a1-94c3-4dff-a9db-90765b067c7f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[MONTO A COBRAR:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="16" width="65" height="15" uuid="1a07dd1a-7a64-4dcb-b4bc-90135b5f3cce"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NRO_CUOTA_PAGAR}+"/"+$P{NRO_CUOTA_TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="30" width="65" height="15" uuid="de7dce67-9293-4db2-b780-d2b7d9b85641"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{monto_pago}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="0" width="65" height="15" uuid="c9f2940c-b67a-4f72-91b4-d30df67b6f68"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_vencimiento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="80" height="15" uuid="05b09453-3354-4119-9b46-09efbab871e0"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[VENCIMIENO]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="185" height="15" uuid="00df2eb4-6f2e-422c-94b8-945b0759d656"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[--------------------------------------------------------------------]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="15" width="90" height="15" uuid="8615ac8e-8914-4c3a-b695-e82c2a536b85"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TOTAL RECIBIDO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="15" width="65" height="15" uuid="1283c6a4-c12d-44f0-a22b-cd65e7986389"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{monto_pago}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="15" width="185" height="15" uuid="6d5610c7-aa9a-4317-8d33-7ea1a93199b8"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[** GRACIAS POR SU PREFERENCIA **]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="185" height="15" uuid="beb8b98a-d706-4249-809c-25b931a872f9"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[------------------------------------------------------------]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

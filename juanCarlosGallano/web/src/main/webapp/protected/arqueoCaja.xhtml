@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<f:metadata>
+			<f:event listener="#{arqueoCajaBean.init()}" type="preRenderView"></f:event>
+		</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id= "formArqueoCaja">
+		<p:focus id="focusID" for="#{arqueoCajaBean.focusComponent}"></p:focus>
+		<p:panel header="Cargar Cantidad de Monedas en Caja" id="panelMonedasArqueo">
+			<p:panelGrid columns="6">
+				<p:outputLabel value="Moneda 50Gs:"></p:outputLabel>
+				<p:inputNumber id="mon50" value="#{arqueoCajaBean.canti50}">
+					<p:ajax event="change"
+							listener="#{arqueoCajaBean.sumarCantidadMonedas()}" />	
+				</p:inputNumber>
+				
+				<p:outputLabel value="Moneda 100Gs:"></p:outputLabel>
+				<p:inputNumber id="mon100" value="#{arqueoCajaBean.canti100}">
+				<p:ajax event="change"
+							listener="#{arqueoCajaBean.sumarCantidadMonedas()}" /></p:inputNumber>
+				<p:outputLabel value="Moneda 500Gs:"></p:outputLabel>
+				<p:inputNumber id="mon500" value="#{arqueoCajaBean.canti500}">
+				<p:ajax event="change"
+							listener="#{arqueoCajaBean.sumarCantidadMonedas()}" /></p:inputNumber>
+				<p:outputLabel value="Moneda 1.000Gs:"></p:outputLabel>
+				<p:inputNumber id="mon1000" value="#{arqueoCajaBean.canti1000}">
+				<p:ajax event="change"
+							listener="#{arqueoCajaBean.sumarCantidadMonedas()}" /></p:inputNumber>
+				<p:outputLabel value="Moneda 5.000Gs:"></p:outputLabel>
+				<p:inputNumber id="mon5000" value="#{arqueoCajaBean.canti5mil}">
+				<p:ajax event="change"
+							listener="#{arqueoCajaBean.sumarCantidadMonedas()}" /></p:inputNumber>
+				<p:outputLabel value="Moneda 10.000Gs:"></p:outputLabel>
+				<p:inputNumber id="mon10000" value="#{arqueoCajaBean.canti10mil}">
+				<p:ajax event="change"
+							listener="#{arqueoCajaBean.sumarCantidadMonedas()}" /></p:inputNumber>
+				<p:outputLabel value="Moneda 50.000Gs:"></p:outputLabel>
+				<p:inputNumber id="mon50000" value="#{arqueoCajaBean.canti50mil}">
+				<p:ajax event="change"
+							listener="#{arqueoCajaBean.sumarCantidadMonedas()}" /></p:inputNumber>
+				<p:outputLabel value="Moneda 100.000Gs:"></p:outputLabel>
+				<p:inputNumber id="mon100mil" value="#{arqueoCajaBean.canti100mil}">
+				<p:ajax event="change"
+							listener="#{arqueoCajaBean.sumarCantidadMonedas()}" /></p:inputNumber>
+			</p:panelGrid>
+			
+		</p:panel>
+		<p:panelGrid columns="2">
+		<p:panel id="panelSumaCaja">
+			<p:panelGrid columns="2">
+				<p:outputLabel value="Suma Importe Caja:"></p:outputLabel>
+				<p:inputNumber id="campoSumaImporteCaja" value="#{arqueoCajaBean.sumaImporteCaja}" disabled="true"></p:inputNumber>
+				
+				<p:outputLabel value="Comparar Importes:"></p:outputLabel>
+				<p:commandButton title="Comparar Importes:" actionListener="#{arqueoCajaBean.compararImportes()}"></p:commandButton>
+				
+				<p:outputLabel value="Limpiar Campos:"></p:outputLabel>
+				<p:commandButton title="Limpiar" actionListener="#{arqueoCajaBean.limpiarCamposCaja()}"></p:commandButton>
+			</p:panelGrid>
+		</p:panel>
+		<p:panel id="diferenciaCaja">
+			<p:panelGrid columns="2">
+				<p:outputLabel value="Diferencia Arqueo Caja:"></p:outputLabel>
+				<p:inputNumber id="diferenciaCajaArqueo" value="#{arqueoCajaBean.diferenciaEscasez}" disabled="true"></p:inputNumber>
+				<p:outputLabel value="Cerrar Caja y Enviar a Tesoreria:" rendered="#{arqueoCajaBean.permitirCerrarCaja}"></p:outputLabel>
+				<p:commandButton icon="ui-icon-close" title="Cerrar" label="CerrarCaja" value="Cerrar Caja" actionListener="#{arqueoCajaBean.cerrarEnviarTesoreria()}" 
+					rendered="#{arqueoCajaBean.permitirCerrarCaja}"></p:commandButton>
+			</p:panelGrid>
+		</p:panel>
+		</p:panelGrid>
+		<p:panel header="Detalle de Caja">
+			<p:panel header="Datos Caja">
+				<p:panelGrid columns="2" style="width:50%">
+					<p:outputLabel value="Usuario Caja"/>
+					<p:outputLabel id= "usuarioCaja" value="#{arqueoCajaBean.cajaSeleccionada.usuario.usuario}"></p:outputLabel>
+					
+					<p:outputLabel value="Fecha Inicio"/>
+					<p:outputLabel id= "fechaInicioCaja" value="#{arqueoCajaBean.cajaSeleccionada.fechaInicio}" ></p:outputLabel>
+					
+					<p:outputLabel value="Fecha Fin"/>
+					<p:outputLabel id= "fechaFinCaja" value="#{arqueoCajaBean.cajaSeleccionada.fechaFin}" ></p:outputLabel>
+					
+					<p:outputLabel value="Puesto Venta"/>
+					<p:outputLabel id= "PuestoVentaCaja" value="#{arqueoCajaBean.cajaSeleccionada.puestoVenta.nombrePuestoVenta} #{arqueoCajaBean.cajaSeleccionada.puestoVenta.sucursal.nombreEmpresa}" ></p:outputLabel>
+				</p:panelGrid>
+			</p:panel>
+			
+			<p:panel header="Listado de Detalle de Caja">
+					<p:dataTable var="detCaja" value="#{arqueoCajaBean.listDetalleCajaCerrada}" emptyMessage="No se encuentran detalle de Stock"
+			style="margin-top:10px" id="detalleCajaTable" rowKey="#{detCaja.idCajaDetalle}" paginator="true">
+					
+					<p:column headerText="Fecha">
+						<p:outputLabel value="#{detCaja.fechaHora}" />
+					</p:column>
+					
+					<p:column headerText="Monto Ingreso">
+						<p:outputLabel value="#{detCaja.montoIngreso}" />
+					</p:column>
+					<p:column headerText="Monto Egreso">
+						<p:outputLabel value="#{detCaja.montoEgreso}" />
+					</p:column>
+			
+				</p:dataTable>
+			
+			</p:panel>
+			<p:panel header="Totales Ingreso Egreso">
+				<p:panelGrid columns="2">
+				<p:outputLabel value="Monto Inicial"></p:outputLabel>
+				<p:outputLabel value="#{arqueoCajaBean.cajaSeleccionada.montoInicial}"></p:outputLabel>
+				
+				<p:outputLabel value="Sumas Ingreso"></p:outputLabel>
+				<p:outputLabel value="#{arqueoCajaBean.sumaIngreso}"></p:outputLabel>
+				<p:outputLabel value="Sumas Egreso"></p:outputLabel>
+				<p:outputLabel value="#{arqueoCajaBean.sumaEgreso}"></p:outputLabel>
+				<p:outputLabel value="Suma Caja"></p:outputLabel>
+				<p:outputLabel value="#{arqueoCajaBean.sumaCaja}"></p:outputLabel>
+				
+				</p:panelGrid>
+			</p:panel>
+		</p:panel>
+	</h:form>
+	</ui:define>
+	</ui:composition>
+</html>

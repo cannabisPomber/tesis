@@ -1,0 +1,101 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<f:metadata>
+		<f:event listener="#{pedidoAutomaticoBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formProductoList">
+		<p:panel>
+		<p:outputLabel value="Listado de Productos Para Reposicion Automatica en Stock" />
+		<p:panel id="datosSucursal" header="Datos Sucursal">
+				<p:panelGrid columns="4" id="panelGridDatosSucursal" >
+
+					<p:outputLabel value="Local:" style="font-weight: bold;"/>
+					<p:outputLabel value="#{pedidoAutomaticoBean.sucursalUsuario.local}" ></p:outputLabel>
+
+					<p:outputLabel value="Empresa :"  style="font-weight: bold;"/>
+					<p:outputLabel
+						value="#{pedidoAutomaticoBean.sucursalUsuario.nombreEmpresa}"></p:outputLabel>
+
+
+					<p:outputLabel value="Direccion :"  style="font-weight: bold;"/>
+					<p:outputLabel value="#{pedidoAutomaticoBean.sucursalUsuario.direccion}"></p:outputLabel>
+
+					<p:outputLabel value="Timbrado :"  style="font-weight: bold;"/>
+					<p:outputLabel value="#{pedidoAutomaticoBean.sucursalUsuario.timbrado}"></p:outputLabel>
+
+					<p:outputLabel value="RUC :" style="font-weight: bold;"/>
+					<p:outputLabel value="#{pedidoAutomaticoBean.sucursalUsuario.ruc}"></p:outputLabel>
+
+					<p:outputLabel value="Telefono :" style="font-weight: bold;"/>
+					<p:outputLabel value="#{pedidoAutomaticoBean.sucursalUsuario.telefono}"></p:outputLabel>
+
+
+
+
+				</p:panelGrid>
+			</p:panel>
+			
+			<p:panel id="datosDepositos" header="Depositos Sucursal">
+				<p:dataTable var="depoSucursal" value="#{pedidoAutomaticoBean.listDepositos}" emptyMessage="No se encuentran productos con stock insuficiente"
+						style="margin-top:10px" id="depositoSucursal">
+						
+						<p:column headerText="Deposito">
+							<h:outputText value="#{depoSucursal.nombreDeposito}" />
+						</p:column>
+			
+				</p:dataTable>	
+			
+			</p:panel>
+		<p:panel header="Listado Productos Unitarios Sin Stock">
+		<p:dataTable var="producto" value="#{pedidoAutomaticoBean.listProductosPedidoAutomatico}" emptyMessage="No se encuentran productos con stock insuficiente"
+			style="margin-top:10px" id="tablaProducto">
+			
+			<p:column headerText="Nombre Producto">
+				<h:outputText value="#{producto.nombreProducto} #{producto.marca.nombreMarca}" />
+			</p:column>
+			
+			<p:column headerText="Tipo Producto">
+				<h:outputText value="#{producto.tipoProducto.nombreTipoProducto} #{producto.unidadMedida.dimension} #{producto.unidadMedida.unidad}" />
+			</p:column>
+			
+			<p:column headerText="Stock Minimo">
+				<h:outputText value="#{producto.cantidadMinima}" />
+			</p:column>
+			
+			<p:column headerText="Stock de producto">
+				<h:outputText value="#{pedidoAutomaticoBean.getStock(producto.idProducto)}" />
+			</p:column>
+			
+			<p:column headerText="Producto Con Proveedor Preferido">
+				<h:outputText value="Posee" rendered="#{pedidoAutomaticoBean.getProveedorPreferido(producto.idProducto)}" />
+				<h:outputLabel value="No Posee" rendered="#{!pedidoAutomaticoBean.getProveedorPreferido(producto.idProducto)}" />
+			</p:column>
+			
+			<p:column headerText="Cargar Proveedor Preferido">
+				<p:commandButton value="Crear" rendered="#{!pedidoAutomaticoBean.getProveedorPreferido(producto.idProducto)}"></p:commandButton>
+			</p:column>
+			
+		</p:dataTable>
+		
+		<p:panel header="Horario de Pedido">
+			<p:outputLabel value="Seleccionar El horario a Ejecutar"></p:outputLabel>
+				<p:panelGrid columns="2">
+			 		<h:outputText value="Hora Habitual:" />
+	            	<p:calendar value="#{pedidoAutomaticoBean.horarioHabitual}" pattern="HH:mm" timeOnly="true" />
+	          	</p:panelGrid>
+         </p:panel>       
+		</p:panel>
+		<p:commandButton value="Ejecutar Pedido Automatico de Productos sin Stock" action="#{pedidoAutomaticoBean.pedidoAutomatico()}"></p:commandButton>
+	</p:panel>
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

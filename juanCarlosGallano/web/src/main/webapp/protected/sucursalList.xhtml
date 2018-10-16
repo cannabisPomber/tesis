@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<!-- 
+	<f:metadata>
+		<f:event listener="#{usuarioBean.initUsuario()}" type="preRenderView"></f:event>
+	</f:metadata>  -->
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formSucursalList">
+		<p:panel>
+		<p:outputLabel value="Listado de Sucursales" />
+		<p:dataTable id="tablaSucursal" var="sucursal" value="#{sucursalBean.sucursalList}" emptyMessage="No se registran elementos cargados"
+			style="margin-top:10px">
+			<p:column headerText="Empresa">
+				<h:outputText value="#{sucursal.nombreEmpresa}" />
+			</p:column>
+			
+			<p:column headerText="Sucursal">
+				<h:outputText value="#{sucursal.local}" />
+			</p:column>
+			
+			<p:column headerText="Direccion">
+				<h:outputText value="#{sucursal.direccion}" />
+			</p:column>
+			<p:column headerText="Telefono">
+				<h:outputText value="#{sucursal.telefono}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<p:button outcome="empresa" title="Nueva Sucursal" value="Nuevo"/>
+					<p:button outcome="index.xhtml" title="Salir" value="Salir"/>
+				</f:facet>
+				
+				<p:button outcome="empresa" icon="ui-icon-pencil" id="editSucursal">
+					<f:param name="idEmpresa" value="#{sucursal.idEmpresa}"></f:param>
+				</p:button>
+
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<f:metadata>
+		<f:event listener="#{editarCotizacionActualizarBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>  
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formCrearCotizacion">
+		<p:growl id="msgs" showDetail="true"/>
+		<p:panel id="panelDatoPedido" header="Cotizacion Seleccionado" >
+			<p:panelGrid columns="2">
+				<p:outputLabel value="Fecha Cotizacion"></p:outputLabel>
+				<h:outputText value="#{editarCotizacionActualizarBean.cotizacionSeleccionada.fechaCargaCotizacion}">
+					<f:convertDateTime type="date" pattern="dd-MM-yyyy HH:mm:ss"/>
+				</h:outputText>
+				
+				<p:outputLabel value="Usuario Cotizacion"></p:outputLabel>
+				<h:outputText value="#{editarCotizacionActualizarBean.cotizacionSeleccionada.usuarioCotizacion.usuario}"></h:outputText>
+				
+				<p:outputLabel value="Estado"></p:outputLabel>
+				<h:outputText value="#{editarCotizacionActualizarBean.cotizacionSeleccionada.estado}"></h:outputText>
+				
+				
+			
+			
+			</p:panelGrid>
+			
+		</p:panel>
+		
+		<p:panel id="panelCargaPrecio" >
+		
+			<p:dataTable id="dataTableEditDetalleCotizacion" var="detCotizacion" value="#{editarCotizacionActualizarBean.listCotizacionDetalle}" editable="true" style="margin-bottom:20px">
+				<f:facet name="header">
+					    Cargar Precios Proveedores.
+				</f:facet>
+				
+					<p:ajax event="rowEdit" listener="#{editarCotizacionActualizarBean.onRowEdit}" update=":templateForm:formCrearCotizacion:msgs" />
+					<p:ajax event="rowEditCancel" listener="#{editarCotizacionActualizarBean.onRowCancel}" update=":templateForm:formCrearCotizacion:msgs" />
+					
+					<p:column headerText="Producto">       
+			       		<h:outputText value="#{detCotizacion.idProducto.marca.nombreMarca} #{detCotizacion.idProducto.tipoProducto.nombreTipoProducto} #{detCotizacion.idProducto.unidadMedida.dimension} #{detCotizacion.idProducto.unidadMedida.unidad}"></h:outputText> 
+			       </p:column>
+			       
+			       <p:column headerText="Proveedor">       
+			       		<h:outputText value="#{detCotizacion.idProveedor.nombreEmpresa}"></h:outputText>
+			       </p:column>
+			       
+			       <p:column headerText="Cantidad" style="width:20%">       
+			       		<h:outputText value="#{detCotizacion.cantidad}"></h:outputText>
+			       </p:column>
+			       
+			       <p:column headerText="Precio de Compra">  
+			       				<p:cellEditor>
+					               <f:facet name="output"><h:outputText value="#{detCotizacion.precioCotizacion}" /></f:facet>
+					               <f:facet name="input"><p:inputText value="#{detCotizacion.precioCotizacion}" style="width:100%" label="Cantidad"/></f:facet>
+					           </p:cellEditor>     
+			       </p:column>
+			
+					 <p:column style="width:32px">
+				           <p:rowEditor />
+				       </p:column>
+			
+			</p:dataTable>
+			
+			
+		</p:panel>
+			
+		
+		<p:panel id="guardarDetCotizacion">
+			<p:commandButton id="guardarCotizacion" label="Guardar" title="Actualizar Cotizacion" style="margin-top:25px;margin-left:25px"
+				action="#{editarCotizacionActualizarBean.guardarCotizacionActualizada()}" />
+				
+			<p:button id="salirPedido" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				outcome="/protected/actualizarCotizacion.xhtml?faces-redirect=true"/>
+		</p:panel>
+	</h:form>
+</ui:define>
+</ui:composition>
+</html>

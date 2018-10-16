@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{editarPuestoVentaBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditPuestoVenta">
+		<p:panel id="panelEdicion">
+		<p:panelGrid columns="2" id="panelEditPuestoVenta">
+			
+			<p:outputLabel value="Nombre Puesto de Venta" for="puestoVenta"/>
+			<p:inputText id="puestoVenta" value="#{editarPuestoVentaBean.puestoVentaEdicion.nombrePuestoVenta}"
+				required="true" maxlenght="60" requiredMessage="Nombre de Puesto Venta no puede ser vacio" onblur="value=value.toUpperCase()"/>
+				
+				
+			<p:outputLabel value="Sucursal" for="sucursalEmpresa"/>
+			<p:selectOneMenu id="sucursalEmpresa" value="#{editarPuestoVentaBean.idEmpresa}" 
+				style="width:125px"  effect="fade">
+				<f:selectItem itemLabel="Seleccione Sucursal"  />
+				<f:selectItems value="#{editarPuestoVentaBean.empresas}" var="gru" itemValue="#{gru.idEmpresa}" itemLabel="#{gru.nombreEmpresa} #{gru.direccion}" />
+        	</p:selectOneMenu>
+        	
+        	<p:outputLabel value="Numero Sucursal" for="nroSucursal"/>
+			<p:inputText id="nroSucursal" value="#{editarPuestoVentaBean.puestoVentaEdicion.nroSucursal}"
+				required="true" maxlength="3" size="3" requiredMessage="Nombre de Puesto Venta no puede ser vacio" 
+				onkeypress="return isNumberKey(event)"/>
+				
+			<p:outputLabel value="Numero Puesto Venta" for="nroPuesto"/>
+			<p:inputText id="nroPuesto" value="#{editarPuestoVentaBean.puestoVentaEdicion.nroPuestoVenta}"
+				required="true" maxlength="3" size="3" requiredMessage="Nombre de Puesto Venta no puede ser vacio"
+				onkeypress="return isNumberKey(event)"/>
+				
+			<p:outputLabel value="Numero Secuencia" for="nroSecuencia"/>
+			<p:inputText id="nroSecuencia" value="#{editarPuestoVentaBean.puestoVentaEdicion.nroSecuencia}"
+				required="true" maxlength="7" size="7" requiredMessage="Nombre de Puesto Venta no puede ser vacio" 
+				onkeypress="return isNumberKey(event)"/>
+				
+			<p:outputLabel value="Asignado" for="asignado"/>
+			<p:selectBooleanCheckbox id="asignado" value="#{editarPuestoVentaBean.puestoVentaEdicion.asignado}"/>
+			
+			<p:outputLabel value="Caja Tesoreria" for="cajaTesoreria"/>
+			<p:selectBooleanCheckbox id="cajaTesoreria" value="#{editarPuestoVentaBean.puestoVentaEdicion.cajaTesoreria}"/>
+		</p:panelGrid>
+		
+			<p:commandButton id="guardarPuestoVenta" label="Guardar" title="Guardar" style="margin-top:25px;margin-left:25px"
+				action="#{editarPuestoVentaBean.guardarPuestoVenta()}" update="templateForm:formEditPuestoVenta:panelEditPuestoVenta"/>
+			<p:button id="salirPuestoVenta" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				outcome="/protected/puestoVentaList.xhtml?faces-redirect=true"/>
+		</p:panel>
+		
+		
+	</h:form>
+	</ui:define>
+
+
+</ui:composition>	
+</html>

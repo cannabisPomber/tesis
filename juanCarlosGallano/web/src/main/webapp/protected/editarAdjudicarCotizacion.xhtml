@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<f:metadata>
+		<f:event listener="#{editarAdjudicarCotizacion.init()}" type="preRenderView"></f:event>
+	</f:metadata>  
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditarAdjudicacion">
+		<p:growl id="msgs" showDetail="true"/>
+		
+		<p:panel id="panelListadoPedidos" header="Listado de Cotizaciones" >
+				<p:dataTable id="checkboxCotizacion" var="cotizacion" value="#{editarAdjudicarCotizacion.listCotizacionActualizada}" 
+					selection="#{editarAdjudicarCotizacion.listCotizacionActualizadaSeleccionada}" 
+						rowKey="#{cotizacion.idCotizacionCabecera}" style="margin-bottom:0"
+						paginator="true" disabledSelection="#{editarAdjudicarCotizacion.disableCotizacionCabecera}" rows="10">
+			        <f:facet name="header">
+			            Seleccionar Cotizacion a Adjudicar
+			        </f:facet>
+			       <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+			       <p:column headerText="Fecha de Cotizacion">
+					<h:outputText value="#{cotizacion.fechaCargaCotizacion}">
+						 <f:convertDateTime type="date" pattern="dd-MM-yyyy HH:mm:ss"/>
+					</h:outputText>
+					</p:column>
+					
+					<p:column headerText="Usuario Cotizacion">
+						<h:outputText value="#{cotizacion.usuarioCotizacion.usuario}" />
+					</p:column>
+					
+					<p:column headerText="Estado">
+						<h:outputText value="#{cotizacion.estado}" />
+					</p:column>
+			        
+			        <f:facet name="footer">
+			            <p:commandButton id="verDetalleCotizacion" process="checkboxCotizacion"  
+			            	icon="ui-icon-search" value="Seleccionar Cotizacion" actionListener="#{editarAdjudicarCotizacion.mostrarDetalleCotizacion()}" disabled="#{editarAdjudicarCotizacion.disableCotizacionCabecera}" />
+			           
+			        </f:facet>
+			      
+			    </p:dataTable>
+			   
+		</p:panel>
+		
+		<p:panel id="panelListadoDetalleCotizaciones" header="Listado de Cotizaciones Detalle" >
+		
+				<p:dataTable id="checkboxDetalleCotizacion" var="cotizacionDet" value="#{editarAdjudicarCotizacion.listDetalleCotizacion}" 
+				selection="#{editarAdjudicarCotizacion.listCotizacionDetalleSeleccionada }" 
+					rowKey="#{cotizacionDet.idDetalleCabecera}" style="margin-bottom:0"
+					paginator="true" rows="10">
+					
+					
+					<p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+					<p:column headerText="Producto">
+						<h:outputText value="#{cotizacionDet.idProducto.nombreProducto} #{cotizacionDet.idProducto.marca.nombreMarca} #{cotizacionDet.idProducto.tipoProducto.nombreTipoProducto} #{cotizacionDet.idProducto.unidadMedida.dimension} #{cotizacionDet.idProducto.unidadMedida.unidad}" />
+					</p:column>
+					
+					<p:column headerText="Proveedor">
+						<h:outputText value="#{cotizacionDet.idProveedor.nombreEmpresa}" />
+					</p:column>
+					
+					<p:column headerText="Precio">
+						<h:outputText value="#{cotizacionDet.precioCotizacion}" />
+					</p:column>
+					
+					<p:column headerText="Cantidad">
+						<h:outputText value="#{cotizacionDet.cantidad}" />
+					</p:column>
+					
+					 <f:facet name="footer">
+		            <p:commandButton id="mostrarOrdenesCompra" process="checkboxDetalleCotizacion"  
+		            	icon="fa-check-square-o" value="Seleccionar Proveedores Adjudicados" actionListener="#{editarAdjudicarCotizacion.crearOrdenesCompraSeleccionados()}"  />
+		            	
+		            	 <p:commandButton id="limpiarCotizacionDetalles" process="checkboxDetalleCotizacion"  
+		            	icon="fa-refresh" value="Limpiar seleccion de Detalles" actionListener="#{editarAdjudicarCotizacion.limpiarDetallesSeleccionados()}"  />
+		           
+		        	</f:facet>
+				</p:dataTable>
+				
+		</p:panel>
+		
+		<p:panel id="panelGenerarOrdenCompra" header="Lista Ordenes de Compra  a generar" style="margin-top:20px">
+		    		<p:tabView value="#{editarAdjudicarCotizacion.listOrdenCompraGenerado}" var="OcGenerado" id="tabDetalleOrdenCompra">
+		    			<p:ajax event="tabChange" listener="#{editarAdjudicarCotizacion.onTabChange(OcGenerado)}" update="dataTableDetalleOc"/>
+		    			
+		    			<p:tab title="#{OcGenerado.proveedor.nombreEmpresa}" closable="false">
+		    				<p:dataTable id="dataTableDetalleOc" value="#{OcGenerado.listaDetalleOrdenCompra}" var="detOc">
+		    					<p:column headerText="Producto">
+		    						<p:outputLabel value="#{detOc.producto.nombreProducto} #{detOc.producto.marca.nombreMarca} #{detOc.producto.tipoProducto.nombreTipoProducto} #{detOc.producto.unidadMedida.dimension} #{detOc.producto.unidadMedida.unidad}"></p:outputLabel>
+		    					</p:column>
+		    					
+		    					<p:column headerText="Cantidad">
+		    						<p:outputLabel value="#{detOc.cantidad}"></p:outputLabel>
+		    					</p:column>
+		    					
+		    					<p:column headerText="Costo">
+		    						<p:outputLabel value="#{detOc.cantidad*detOc.precioCompra}"></p:outputLabel>
+		    					</p:column>
+		    				</p:dataTable>
+		    			</p:tab>
+		    		</p:tabView>
+		    		<p:commandButton id="generarOrdenCompra" ajax="false" value="Generar Orden de Compra"  action="#{busquedaPresupuestoBean.guardarOrdenCompra()}" style="margin-top:15px"/>
+		    		<p:commandButton id="limpiarBusquedaOrdenCompra" ajax="false" value="Limpiar" icon="ui-icon-trash" action="#{busquedaPresupuestoBean.limpiar()}" style="margin-top:15px" />
+		    	</p:panel>
+		
+	</h:form>
+</ui:define>
+</ui:composition>
+</html>

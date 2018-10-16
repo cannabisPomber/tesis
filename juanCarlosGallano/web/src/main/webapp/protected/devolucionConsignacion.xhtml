@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event listener="#{devolucionConsignacionBean.init()}" type="preRenderView"></f:event>
+</f:metadata>
+
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+		<h:form id="formDevolucionConsignacion" target="_blank">
+		
+			<p:panel id="panelRemisionConsignacion" header="Listado de Remisiones Consignación">
+			
+				<p:dataTable id="datatableRemisionConsignacion" var="rem" value="#{devolucionConsignacionBean.listRemisiones}" rowKey="#{rem.idRemision}" 
+					selection="#{devolucionConsignacionBean.remisionSeleccionada}" paginator="true" rows="5" >
+					
+						<p:ajax event="rowSelect" listener="#{devolucionConsignacionBean.cargarDetalleRemision()}"  /> 
+						 <p:column selectionMode="single" style="width:16px;text-align:center"/>
+		        		<p:column headerText="Fecha Consignacion" style="width:15%;text-align: center">
+		        			<h:outputText value="#{rem.fechaRemision}"></h:outputText>
+		        		</p:column>
+		        		
+		        		<p:column headerText="Cliente" style="width:15%;text-align: center">
+		        			<h:outputText value="#{rem.cliente.nombre}"></h:outputText>
+		        		</p:column>
+		        		
+		        		<p:column headerText="Dias Consignación" style="width:15%;text-align: center">
+		        			<h:outputText value="#{rem.diasConsignacion}"></h:outputText>
+		        		</p:column>
+		        		<f:facet name="footer">
+				            <p:commandButton process="datatableRemisionConsignacion"  actionListener="#{devolucionConsignacionBean.cargarDetalleRemision()}" icon="ui-icon-search" value="Ver Detalle Remisión Seleccionada"  />
+				        </f:facet>
+					
+					</p:dataTable>
+			
+			</p:panel>
+			
+			<p:panel id="panelDetalleConsignacion" header="Detalle Remisión">
+				<p:dataTable id="datatableDetalleRemisionConsignacion" var="detRem" value="#{devolucionConsignacionBean.listDetalleRemision}" editable="true" rowKey="#{detRem.idRemisionDetalle}" 
+					paginator="true" rows="5" >
+					
+						<p:column headerText="Producto" style="width:15%;text-align: center">
+		        			<h:outputText value="#{detRem.producto.nombreProducto} #{detRem.producto.marca.nombreMarca} 
+		        				#{detRem.producto.tipoProducto.nombreTipoProducto} #{detRem.producto.unidadMedida.dimension} #{detRem.producto.unidadMedida.unidad}"></h:outputText>
+		        		</p:column>
+		        		
+		        		<p:column headerText="Precio Unitario" style="width:15%;text-align: center">
+		        			<h:outputText value="#{detRem.precioUnitario}"></h:outputText>
+		        		</p:column>
+		        		
+		        		<p:column headerText="Cantidad" style="width:15%;text-align: center">
+		        			<h:outputText value="#{detRem.cantidad}"></h:outputText>
+		        		</p:column>
+		        		
+		        		<p:column headerText="Cantidad Recibida" style="width:15%;text-align: center">
+		        			<p:cellEditor>
+					               <f:facet name="output"><h:outputText value="#{detRem.cantidadRecibida}" /></f:facet>
+					               <f:facet name="input"><p:inputNumber value="#{detRem.cantidadRecibida}" style="width:100%" label="Cantidad Recibida" maxValue="#{detRem.cantidad}" onkeypress="if (event.keyCode == 13) { return false; }" /></f:facet>
+					           </p:cellEditor>
+		        		</p:column>
+		        		<p:column style="width:10%" headerText="Editar Cantidad Recibida">
+					           <p:rowEditor update="datatableDetalleRemisionConsignacion"/>
+					       </p:column>
+		        		
+		        		<f:facet name="footer">
+		        			 <p:commandButton process="datatableDetalleRemisionConsignacion"  actionListener="#{devolucionConsignacionBean.devolverConsignacion()}" icon="ui-icon-search" value="Facturar Consignación" />
+		        		</f:facet>
+					
+					</p:dataTable>
+			
+			</p:panel>
+		</h:form>
+		<p:dialog id="facturarConsignacion" widgetVar="facturarVentaConsignacionDialog" width="800px">
+			<p:panel header="Seleccionar Metodo de Pago" id="panelPagoConsignacion">
+				<p:panelGrid columns="2">
+				<p:outputLabel value="Total Sin Iva:" style="width: 150px;"></p:outputLabel>
+				<p:inputNumber value="#{devolucionConsignacionBean.montoTotalsinIva}" disabled="true"></p:inputNumber>
+				<p:outputLabel value="Total Iva 10:" style="width: 150px;"></p:outputLabel>
+				<p:inputNumber value="#{devolucionConsignacionBean.montoTotalIva10}" disabled="true"></p:inputNumber>
+				<p:outputLabel value="Total Iva 5:" style="width: 150px;"></p:outputLabel>
+				<p:inputNumber value="#{devolucionConsignacionBean.montoTotalIva5}" disabled="true"></p:inputNumber>
+				<p:outputLabel value="Total Venta:" style="width: 150px;"></p:outputLabel>
+				<p:inputNumber value="#{devolucionConsignacionBean.montoTemporalConsignacion}" disabled="true"></p:inputNumber>
+				
+				<p:outputLabel value="Seleccionar Metodo de Pago:"></p:outputLabel>
+				<p:selectOneMenu  
+					id="selectTipoPago" value="#{devolucionConsignacionBean.idFormaPagoSeleccionado}" 
+					style="width:250px" label="Seleccionar Tipo Pago">
+						
+						<p:ajax event="change" update="panelPagoTarjeta"></p:ajax>
+						<f:selectItem itemLabel="Seleccion Tipo Pago" itemValue="" />
+	            		<f:selectItems value="#{devolucionConsignacionBean.listFormaPago}" var="tipoPago" itemLabel="#{tipoPago.nombreFormaPago}" itemValue="#{tipoPago.idFormaPago}"></f:selectItems>
+	            	</p:selectOneMenu>	
+	            <p:outputLabel value="Pago Tarjeta:"></p:outputLabel>
+	            <p:panel id="panelPagoTarjeta" header="Datos para Pago Tarjeta">
+	            	<p:panelGrid columns="2">
+	            	<p:outputLabel value="Seleccionar Tarjeta:"/>
+	            	<p:selectOneMenu  
+					id="selectTarjeta" value="#{devolucionConsignacionBean.idMarcaTarjeta}" 
+					style="width:250px" label="Seleccionar Tipo Pago">
+						<p:ajax event="change" update="panelPagoTarjeta"></p:ajax> 
+						<f:selectItem itemLabel="Seleccion Tarjeta" itemValue="" />
+	            		<f:selectItems value="#{devolucionConsignacionBean.listMarcaTarjetas}" var="tarjeta" itemLabel="#{tarjeta.marca}" itemValue="#{tarjeta.idTarjeta}"></f:selectItems>
+	            	</p:selectOneMenu>	
+					<p:outputLabel value="Numero de Tarjeta:"/>
+					<p:inputText value="#{devolucionConsignacionBean.numeroTarjeta}" onkeypress="if (event.keyCode == 13) { return false; }"></p:inputText>    
+					
+					<p:outputLabel value="Numero de Voucher:"/>
+					<p:inputText value="#{devolucionConsignacionBean.numeroVoucher}" onkeypress="if (event.keyCode == 13) { return false; }"></p:inputText> 
+	            	</p:panelGrid>
+	            </p:panel>
+	            <p:outputLabel value="Pago Recibido"/>
+				<p:inputNumber id="totalRecibido" value="#{devolucionConsignacionBean.pagoRecibido}"
+				onkeypress="return enter(event,'templateForm:totalRecibido_input');" >
+					<p:ajax event="change"
+							listener="#{devolucionConsignacionBean.cargarVuelto()}" />
+				</p:inputNumber>
+				
+				<p:outputLabel value="Vuelto"/>
+				<p:inputNumber id="vuelto" value="#{devolucionConsignacionBean.vuelto}" disabled="true"></p:inputNumber>
+				
+				</p:panelGrid>
+				<p:panel id="panelPago" style="margin-top: 30px: width:60%">
+					<p:dataTable id="tablePagos" var="pago" value="#{devolucionConsignacionBean.listDetPagoContado}" rowKey="#{pago.idDetallePagoContado}">
+						<p:column headerText="Tipo de Pago" style="width:15%;text-align: center">
+							<h:outputText value="#{pago.tipoPago}" />
+						</p:column>
+					
+						<p:column headerText="Monto" style="width:15%;text-align: center">
+							<h:outputText value="#{pago.monto}" />
+						</p:column>
+						
+						<p:column headerText="Vuelto" style="width:15%;text-align: center">
+							<h:outputText value="#{pago.vuelto}" />
+						</p:column>
+					
+					</p:dataTable>
+				
+					<p:commandButton value="Procesar" actionListener="#{devolucionConsignacionBean.agregarPago()}" >
+					</p:commandButton>
+					
+					<p:commandButton value="Cancelar" onclick="PF('facturarVentaConsignacionDialog').hide()"/>
+				</p:panel>
+			</p:panel>
+		</p:dialog>
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" id="confirmDevolucionRemision">
+				        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" actionListener="#{devolucionConsignacionBean.crearNuevaRemision()}" />
+				        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" actionListener="#{devolucionConsignacionBean.devolucionStock()}" />
+				    </p:confirmDialog>
+	</ui:define>
+</ui:composition>
+</html>

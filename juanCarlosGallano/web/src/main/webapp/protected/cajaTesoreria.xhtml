@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<f:metadata>
+			<f:event listener="#{cajaTesoriaBean.init()}" type="preRenderView"></f:event>
+		</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id= "formCajaTesoreria">
+		<p:panel>
+			
+			<p:panel id="panelTesoreriaCaja" header="Datos Caja Tesorería">
+			
+				<p:panelGrid columns="2">
+					<p:outputLabel value="Usuario Caja" title="UsuarioCaja"/>
+					<p:outputLabel value="#{cajaTesoriaBean.cajaSeleccionada.usuario.usuario}" id="usuarioCajaTesoreria"></p:outputLabel>
+				
+					<p:outputLabel value="Fecha inicio" title="Fecha Inicio"/>
+					<p:outputLabel value="#{cajaTesoriaBean.cajaSeleccionada.fechaInicio}" id="fechaInicioCajaTesoreria"></p:outputLabel>
+					
+					<p:outputLabel value="Monto Caja Disponible" title="MontoCaja"/>
+					<p:outputLabel value="#{cajaTesoriaBean.cajaSeleccionada.montoCaja}" id="montoCajaTesoreria"></p:outputLabel>
+				</p:panelGrid>
+			</p:panel>
+			
+			<p:spacer></p:spacer>
+			
+			<p:panel id="panelTesoreriaPago" header="Caja Tesorería"> 
+				
+				<p:dataTable id="checkboxPedido" var="ordenCompra" value="#{cajaTesoriaBean.listOrdenCompraPago}" rowKey="#{ordenCompra.idOrdenCompra}" style="margin-bottom:0">
+			        <f:facet name="header">
+			            Seleccionar Orden de Compra a Confirmar
+			        </f:facet>
+			        
+			        <p:column headerText="Proveedor" style="width:15%;text-align: center"  rendered="#{ordenCompra.estado eq 'RECEPCIONADO'}">
+			       	 	<f:facet name="header">
+			        		Proveedor
+			        	</f:facet>
+			            <h:outputText value="#{ordenCompra.proveedor.nombreEmpresa}" />
+			        </p:column>
+			        <p:column headerText="Fecha Pedido" style="width:10%;text-align: center"  rendered="#{ordenCompra.estado eq 'RECEPCIONADO'}">
+			        	<f:facet name="Fecha Recepcion">
+			        		Proveedor
+			        	</f:facet>
+			            <h:outputText value="#{ordenCompra.fechaRecepcion}" />
+			        </p:column>
+			        <p:column headerText="Usuario Pedido" style="width:10%;text-align: center"  rendered="#{ordenCompra.estado eq 'RECEPCIONADO'}">
+			            <h:outputText value="#{ordenCompra.usuarioPedido.usuario}" />
+			        </p:column>
+			        <p:column headerText="Estado" style="width:10%;text-align: center"  rendered="#{ordenCompra.estado eq 'RECEPCIONADO'}">
+			            <h:outputText value="#{ordenCompra.estado}" />
+			        </p:column>
+			        
+			         <p:column style="width:10%;text-align: center"  rendered="#{ordenCompra.estado eq 'RECEPCIONADO'}">
+			         
+			         	 <p:commandButton id="verDetalle" update="templateForm:detallePedidoDialog" oncomplete="PF('detallePedidoDialog').show()"
+			             	 icon="ui-icon-search" title="Vista Detalle Pedido" action="#{cajaTesoriaBean.cargarDetalle(ordenCompra.idOrdenCompra)}">
+			           	</p:commandButton>
+			         	
+			          </p:column>
+			            <p:column style="width:10%;text-align: center"  rendered="#{ordenCompra.estado eq 'RECEPCIONADO'}">
+			             <p:commandButton id="realizarPagoOrdenCompra" 
+			             	 icon="ui-icon-check" title="Pago Orden Compra" value="Pago Orden Compra" actionListener="#{cajaTesoriaBean.pagoOrdenCompra(ordenCompra.idOrdenCompra)}"
+			             	 update="templateForm:formCajaTesoreria:panelOrdenCompraPago" >
+			                
+			           </p:commandButton>
+			        </p:column>
+			    </p:dataTable>
+			    
+				</p:panel>
+			
+				<p:separator></p:separator>
+				<p:panel id="panelOrdenCompraPago">
+					<p:panelGrid columns="2" id="panelGridPagoOrdenCompra">
+						<p:outputLabel value="Proveedor" title="Proveedor"  rendered="#{cajaTesoriaBean.mostrarOrdenCompra}"/>
+						<p:outputLabel value="#{cajaTesoriaBean.ordenCompraPagar.proveedor.nombreEmpresa}" id="proveedor"  rendered="#{cajaTesoriaBean.mostrarOrdenCompra}"></p:outputLabel>
+						
+						<p:outputLabel value="Numero de Factura Proveedor" title="Numero de Factura"  rendered="#{cajaTesoriaBean.mostrarOrdenCompra}"/>
+						<p:inputText value="#{cajaTesoriaBean.ordenCompraPagar.nroFacturaProveedor}" id="nroFacturaProveedor"  rendered="#{cajaTesoriaBean.mostrarOrdenCompra}"></p:inputText>
+						
+						<p:outputLabel value="Fecha Recepción" title="Fecha Recepción"  rendered="#{cajaTesoriaBean.mostrarOrdenCompra}"/>
+						<p:outputLabel value="#{cajaTesoriaBean.ordenCompraPagar.fechaRecepcion}" id="fechaRecepcionProveedor"  rendered="#{cajaTesoriaBean.mostrarOrdenCompra}"></p:outputLabel>
+						
+						<p:outputLabel value="Importe de Orden de Compra" title="Importe de Orden de Compra"  rendered="#{cajaTesoriaBean.mostrarOrdenCompra}"/>
+						<p:inputNumber value="#{cajaTesoriaBean.obtenerImporteOrdenCompra()}" id="importeOrdenCompra" disabled="true"  rendered="#{cajaTesoriaBean.mostrarOrdenCompra}"></p:inputNumber>
+						
+						<p:outputLabel value="Importe de Factura Proveedor" title="Importe de Factura Proveedor"  rendered="#{cajaTesoriaBean.mostrarOrdenCompra}"/>
+						<p:inputNumber value="#{cajaTesoriaBean.importeProveedor}" id="importeFacturaProveedor"  rendered="#{cajaTesoriaBean.mostrarOrdenCompra}"></p:inputNumber>
+						
+						<p:outputLabel value="Método de pago" title="Método de pago" rendered="#{cajaTesoriaBean.mostrarOrdenCompra}"/>
+						<p:selectOneListbox rendered="#{cajaTesoriaBean.mostrarOrdenCompra}">
+							<f:selectItem itemLabel="Contado" itemValue="Contado" />
+						</p:selectOneListbox>
+					
+					</p:panelGrid>
+					
+					<p:separator></p:separator>
+					<p:commandButton value="Pagar Proveedor" rendered="#{cajaTesoriaBean.mostrarOrdenCompra}" actionListener="#{cajaTesoriaBean.pagoProveedor()}"  >
+						<p:confirm header="Confirmation" message="Seguro de realizar pago proveedor?" icon="ui-icon-alert" />
+							
+					</p:commandButton>
+			    	<p:commandButton value="Devolver Producto" rendered="#{cajaTesoriaBean.mostrarOrdenCompra}"></p:commandButton>
+			    	
+			    	
+			    	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"  />
+				        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				    </p:confirmDialog>
+					
+				</p:panel>
+				<p:separator></p:separator>
+		</p:panel>
+	</h:form>
+	<p:dialog id="detallePedidoDialog" header="Mostrar Detalle Pedido" widgetVar="detallePedidoDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="40%">
+		        <p:dataTable id="dataTableDetalleOrdenCompra" var="detalle" value="#{cajaTesoriaBean.listDetalleOrdenCompraPago}" editable="true" style="margin-bottom:20px">
+					       <f:facet name="header">
+					           Listado de Proveedores de Orden de Compra.
+					       </f:facet>
+					       
+					       <p:column headerText="Producto">
+					       		<h:outputText value="#{detalle.producto.nombreProducto} #{detalle.producto.marca.nombreMarca} #{detalle.producto.tipoProducto.nombreTipoProducto} #{detalle.producto.unidadMedida.dimension} #{detalle.producto.unidadMedida.unidad}" />
+					       </p:column>
+					       <p:column headerText="Precio de Compra">
+					       		<h:outputText value="#{detalle.precioCompra}" >
+					       			<f:convertNumber type="currency" currencySymbol="Gs" />
+					       		</h:outputText>
+					       </p:column>
+					       <p:column headerText="Cantidad de Producto">
+					       		<h:outputText value="#{detalle.cantidadRecibida}" />
+					       </p:column>
+					       <p:column headerText="Costo">
+					       		<h:outputText value="#{detalle.cantidadRecibida*detalle.precioCompra}" >
+					       			<f:convertNumber type="currency" currencySymbol="Gs" />
+					       		</h:outputText>
+					       </p:column>
+					       <p:summaryRow>
+					            <p:column colspan="3" style="text-align:right">
+					                <h:outputText value="Total:" />
+					            </p:column>
+					            <p:column>
+					                <h:outputText value="#{cajaTesoriaBean.importeViewOrdenCompra}">
+					                    <f:convertNumber type="currency" currencySymbol="Gs" />
+					                </h:outputText>
+					            </p:column>
+					        </p:summaryRow>
+					     </p:dataTable>
+					     <p:commandButton label="Cerrar" value="Cerrar" onclick="PF('detallePedidoDialog').hide()"  />
+		    </p:dialog>
+	</ui:define>
+</ui:composition>
+</html>

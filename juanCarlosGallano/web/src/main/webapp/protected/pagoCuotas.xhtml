@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:event listener="#{pagoCuotasBean.init()}" type="preRenderView"></f:event>
+</f:metadata>
+
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+		<h:form id="formPagoCuotas" target="_blank">
+		<p:focus id="focusID" for="#{pagoCuotasBean.focusProperty}" />
+			<p:panel id="datosFacturaCredito" >
+				<p:panelGrid columns="2">
+				<p:panel header="Listado de Facturas a Credito">
+				<p:dataTable id="datatableFacturaCredito" var="fac" value="#{pagoCuotasBean.listFacturaCredito}" rowKey="#{fac.idFactura}" 
+					selection="#{pagoCuotasBean.facturaSeleccionada}" paginator="true" rows="5" >
+					 
+					 <p:column selectionMode="single" style="width:16px;text-align:center"/>
+		        	<p:column headerText="Fecha Facturacion Credito" style="width:15%;text-align: center">
+		            	<h:outputText value="#{fac.fechaCredito}">
+		            	</h:outputText>
+		        	</p:column>
+		        	
+		        	<p:column headerText="Cliente Nombre" style="width:15%;text-align: center">
+		            	<h:outputText value="#{fac.cliente.nombre} #{fac.cliente.apellido}">
+		            	</h:outputText>
+		        	</p:column>
+		        	
+				<f:facet name="footer">
+		            <p:commandButton process="datatableFacturaCredito"  actionListener="#{pagoCuotasBean.cargarDetalleCuotas()}" icon="ui-icon-search" value="Ver Cuotas Factura Seleccionada"  />
+		        </f:facet>
+				
+				</p:dataTable>
+				</p:panel>
+				<p:panel id="datosDetalleCuota" header="Listado de Detalle de Cuotas Credito">
+			
+			
+				<p:dataTable id="datatableDetalleCuotaCredito" var="cuota" value="#{pagoCuotasBean.listDetalleCuotasFactura}" rowKey="#{cuota.idDetalleCuota}" 
+					 paginator="true" rows="5" >
+					
+					<p:column headerText="Fecha Vencimiento" style="width:15%;text-align: center">
+		            	<h:outputText value="#{cuota.fechaVencimiento} ">
+		            	</h:outputText>
+		        	</p:column>
+		        	
+		        	<p:column headerText="Fecha Pago" style="width:15%;text-align: center">
+		            	<h:outputText value="#{cuota.fechaPago} ">
+		            	</h:outputText>
+		        	</p:column>
+		        	<p:column headerText="Monto a Pagar" style="width:15%;text-align: center">
+		            	<h:outputText value="#{cuota.montoPago}">
+		            	</h:outputText>
+		        	</p:column>
+		        	<p:column headerText="Interes" style="width:15%;text-align: center">
+		            	<h:outputText value="#{cuota.interes}">
+		            	</h:outputText>
+		        	</p:column>
+		        	
+		        	<f:facet name="footer">
+		        		<p:commandButton process="datatableDetalleCuotaCredito"  actionListener="#{pagoCuotasBean.abrirDialogPagoCuota()}" icon="fa-check-square-o" value="Pagar Cuota Factura Seleccionada"  />
+		        	</f:facet>
+					
+					</p:dataTable>
+			</p:panel>
+				</p:panelGrid>
+			</p:panel>
+			
+			
+		</h:form>
+		
+		
+		<p:dialog id="facturarCredito" widgetVar="facturarCreditoDialog" width="800px" appendTo="@(body)">
+			<p:panel header="Seleccionar Metodo de Pago" id="panelPagoConsignacion">
+				<p:panelGrid columns="2">
+				
+				<p:outputLabel value="Seleccionar Metodo de Pago:"></p:outputLabel>
+				<p:selectOneMenu  
+					id="selectTipoPago" value="#{pagoCuotasBean.idFormaPagoSeleccionado}" 
+					style="width:250px" label="Seleccionar Tipo Pago">
+						
+						<p:ajax event="change" update="panelPagoTarjeta"></p:ajax>
+						<f:selectItem itemLabel="Seleccion Tipo Pago" itemValue="" />
+	            		<f:selectItems value="#{pagoCuotasBean.listFormaPago}" var="tipoPago" itemLabel="#{tipoPago.nombreFormaPago}" itemValue="#{tipoPago.idFormaPago}"></f:selectItems>
+	            	</p:selectOneMenu>	
+	            <p:outputLabel value="Pago Tarjeta:"></p:outputLabel>
+	            <p:panel id="panelPagoTarjeta" header="Datos para Pago Tarjeta">
+	            	<p:panelGrid columns="2">
+	            	<p:outputLabel value="Seleccionar Tarjeta:"/>
+	            	<p:selectOneMenu  
+					id="selectTarjeta" value="#{pagoCuotasBean.idMarcaTarjeta}" 
+					style="width:250px" label="Seleccionar Tipo Pago">
+						<p:ajax event="change" update="panelPagoTarjeta"></p:ajax> 
+						<f:selectItem itemLabel="Seleccion Tarjeta" itemValue="" />
+	            		<f:selectItems value="#{pagoCuotasBean.listMarcaTarjetas}" var="tarjeta" itemLabel="#{tarjeta.marca}" itemValue="#{tarjeta.idTarjeta}"></f:selectItems>
+	            	</p:selectOneMenu>	
+					<p:outputLabel value="Numero de Tarjeta:"/>
+					<p:inputText value="#{pagoCuotasBean.numeroTarjeta}" onkeypress="if (event.keyCode == 13) { return false; }"></p:inputText>    
+					
+					<p:outputLabel value="Numero de Voucher:"/>
+					<p:inputText value="#{pagoCuotasBean.numeroVoucher}" onkeypress="if (event.keyCode == 13) { return false; }"></p:inputText> 
+	            	</p:panelGrid>
+	            </p:panel>
+	            <p:outputLabel value="Pago Recibido"/>
+				<p:inputNumber id="totalRecibido" value="#{pagoCuotasBean.pagoCredito}"
+				onkeypress="return enter(event,'templateForm:totalRecibido_input');" >
+					<p:ajax event="change"
+							listener="#{pagoCuotasBean.cargarVuelto()}" />
+				</p:inputNumber>
+				
+				<p:outputLabel value="Vuelto"/>
+				<p:inputNumber id="vuelto" value="#{pagoCuotasBean.vuelto}" disabled="true"></p:inputNumber>
+				
+				</p:panelGrid>
+				<p:panel id="panelPago" style="margin-top: 30px: width:60%">
+					<p:dataTable id="tablePagos" var="pago" value="#{pagoCuotasBean.listDetallePagoContado}" rowKey="#{pago.idDetallePagoContado}" paginator="true">
+						<p:column headerText="Tipo de Pago" style="width:15%;text-align: center" >
+							<h:outputText value="#{pago.tipoPago}" />
+						</p:column>
+					
+						<p:column headerText="Monto" style="width:15%;text-align: center">
+							<h:outputText value="#{pago.monto}" />
+						</p:column>
+						
+						<p:column headerText="Vuelto" style="width:15%;text-align: center">
+							<h:outputText value="#{pago.vuelto}" />
+						</p:column>
+					
+					</p:dataTable>
+				
+					<p:commandButton value="Procesar Pago" action="#{pagoCuotasBean.agregarPago()}" oncomplete="PF('facturarCreditoDialog').hide()" >
+					</p:commandButton>
+					
+					<p:commandButton value="Cancelar" actionListener="#{pagoCuotasBean.limpiar()}" oncomplete="PF('facturarCreditoDialog').hide()"/>
+				</p:panel>
+			</p:panel>
+		</p:dialog>
+	</ui:define>
+	</ui:composition>	
+</html>

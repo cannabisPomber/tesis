@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<f:metadata>
+		<f:event listener="#{crearCotizacionBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>  
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formCrearCotizacion">
+	
+		<p:panel id="panelDatoPedido" header="Pedido Seleccionado" >
+			
+			<p:panelGrid columns="2">
+				<p:outputLabel value="Fecha Pedido"></p:outputLabel>
+				<h:outputText value="#{crearCotizacionBean.pedido.fecha}">
+					 <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+				</h:outputText>
+				<p:outputLabel  value="Usuario Pedido"></p:outputLabel>
+				<h:outputText value="#{crearCotizacionBean.pedido.usuario}"></h:outputText>
+				<p:outputLabel  value="Estado"></p:outputLabel>
+				<h:outputText value="#{crearCotizacionBean.pedido.estado}"></h:outputText>
+			
+			</p:panelGrid>
+			<p:panel header="Detalle Pedido">
+			
+				<p:dataTable id="tablaPedido" var="detallePedido" value="#{crearCotizacionBean.listDetallePedido}" emptyMessage="No se registran elementos cargados"
+							style="margin-top:10px">
+						<p:column headerText="Producto">
+							<h:outputText value="#{detallePedido.producto.nombreProducto} #{detallePedido.producto.marca.nombreMarca} #{detallePedido.producto.tipoProducto.nombreTipoProducto} #{detallePedido.producto.unidadMedida.dimension} #{detallePedido.producto.unidadMedida.unidad}" />
+						</p:column>
+						
+						<p:column headerText="Cantidad">
+							<h:outputText value="#{detallePedido.cantidad}" />
+						</p:column>
+						
+						
+				</p:dataTable>
+			
+			</p:panel>
+		
+		</p:panel>
+		
+		<p:panel id="panelSeleccionarProveedores" header="Seleccionar Proveedores" >
+		
+			<p:dataTable id="checkboxProveedor" var="prod" value="#{crearCotizacionBean.listProveedor}" selection="#{crearCotizacionBean.listProveedorSeleccionado}" rowKey="#{prod.idProveedor}" style="margin-bottom:0">
+		        <f:facet name="header">
+		            Seleccionar Porveedores para Pedido
+		        </f:facet>
+		        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+		        <p:column headerText="Proveedor">
+		            <h:outputText value="#{prod.nombreEmpresa}" />
+		        </p:column>
+		        <p:column headerText="Direccion">
+		            <h:outputText value="#{prod.direccionProveedor}" />
+		        </p:column>
+		        <p:column headerText="Telefono">
+		            <h:outputText value="#{prod.telefonoEmpresa}" />
+		        </p:column>
+		        
+		        <f:facet name="footer">
+		            <p:commandButton id="cargarCot" process="checkboxProveedor" update="templateForm:formCrearCotizacion:panelSeleccionarProveedores" icon="ui-icon-search" value="Cargar Cotizacion" actionListener="#{crearCotizacionBean.cargarCotizacion()}"  />
+		           
+		        </f:facet>
+		    </p:dataTable>
+		
+			 <!--  <p:selectManyMenu id="basic" value="#{crearCotizacionBean.listProveedorSeleccionado}" label="Proveedores Activos" filter="true" filterMatchMode="startsWith">
+			 	<f:selectItems value="#{crearCotizacionBean.listProveedor}" var="prod" itemLabel="#{prod.nombreEmpresa} #{prod.direccionProveedor}" itemValue="#{prod}"/>
+			 
+			 </p:selectManyMenu>
+		
+			<p:selectCheckboxMenu id="multiple" value="#{crearCotizacionBean.listProveedorSeleccionado}" label="Proveedores Activos" multiple="true"
+                              filter="true" filterMatchMode="startsWith" panelStyle="width:400px">
+            	<f:selectItems value="#{crearCotizacionBean.listProveedor}" var="prod" itemLabel="#{prod.nombreEmpresa} #{prod.direccionProveedor}" itemValue="#{prod}"/>
+            
+            </p:selectCheckboxMenu>-->
+		
+		</p:panel>
+	</h:form>
+</ui:define>
+</ui:composition>
+</html>

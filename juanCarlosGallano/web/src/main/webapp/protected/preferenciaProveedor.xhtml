@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+		<f:event listener="#{preferenciaProveedorBean.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+<ui:composition template="template.xhtml">
+	<ui:define name="contenido">
+	<h:form id="formEditPreferenciaProveedor">
+		<p:panel id="panelSeleccionProducto" header="Seleccionar Producto">
+		<p:panelGrid columns="2" id="panelEditPreferenciaProveedor">
+		
+			<p:outputLabel value="Seleccionar Producto" for="producto"/>
+			<p:selectOneMenu  requiredMessage="Producto debe ser seleccionado" id="producto" value="#{preferenciaProveedorBean.idProducto}" style="width:125px" >
+            	<f:selectItem itemLabel="Seleccione Producto"  />
+            	<f:selectItems value="#{preferenciaProveedorBean.listProductosActivos}" var="gru" itemValue="#{gru.idProducto}" itemLabel="#{gru.nombreProducto} #{gru.marca.nombreMarca} #{gru.tipoProducto.nombreTipoProducto} #{gru.unidadMedida.dimension} #{gru.unidadMedida.unidad}" />
+        		<p:ajax event="change" listener="#{preferenciaProveedorBean.cargaProductoProveedor()}"/>
+        	</p:selectOneMenu>
+			
+		
+        </p:panelGrid>
+		</p:panel>
+		
+		<p:panel id="panelProveedorPreferencia" header="Proveedor Preferencial de Producto Seleccionado" rendered="#{preferenciaProveedorBean.mostrarProveedorPreferido}">
+		
+				<p:panelGrid columns="2" id="panelProveedorPreferido">
+				
+					<p:outputLabel value="Nombre Proveedor" for="nombreProveedor"/>
+					<p:outputLabel value="#{preferenciaProveedorBean.preferenciaProveedor.proveedor.nombreEmpresa}" id="nombreProveedor"></p:outputLabel>
+					
+					<p:outputLabel value="Telefono" for="telefonoProveedor"/>
+					<p:outputLabel value="#{preferenciaProveedorBean.preferenciaProveedor.proveedor.telefonoEmpresa}" id="telefonoProveedor"></p:outputLabel>
+					
+					<p:outputLabel value="Nombre Contacto" for="nombreContactoProveedor"/>
+					<p:outputLabel value="#{preferenciaProveedorBean.preferenciaProveedor.proveedor.contacto}" id="nombreContactoProveedor"></p:outputLabel>
+					
+					<p:outputLabel value="Telefono Contacto" for="telefonoContactoProveedor"/>
+					<p:outputLabel value="#{preferenciaProveedorBean.preferenciaProveedor.proveedor.telefonoContacto}" id="telefonoContactoProveedor"></p:outputLabel>
+				</p:panelGrid>
+		
+		</p:panel>
+		
+		<p:panel id="panelSeleccionProveedor" header="Seleccionar Proveedor Prefererido">
+		
+			<p:panelGrid columns="2" id="panelProveedor">
+			
+	        	
+	        	 <p:dataTable id="singleDT" var="proveedor" value="#{preferenciaProveedorBean.listProductoProveedor}"  rowKey="#{proveedor.idProductoProveedor}">
+			        <f:facet name="header">
+			            Seleccion de Proveedor Preferido
+			        </f:facet>
+			         <p:column headerText="Id" style="width:5%">
+			            <h:outputText value="#{proveedor.idProductoProveedor}" />
+			        </p:column>
+			        <p:column headerText="Empresa" style="width:5%">
+			            <h:outputText value="#{proveedor.proveedor.nombreEmpresa}" />
+			        </p:column>
+			        <p:column headerText="Telefono" style="width:5%">
+			            <h:outputText value="#{proveedor.proveedor.telefonoEmpresa}" />
+			        </p:column>
+			       <p:column headerText="Precio" style="width:5%">
+			            <p:inputNumber value="#{proveedor.precioCompra}" disabled= "true">
+			            </p:inputNumber>
+			        </p:column>
+			        <p:column style="width:32px;text-align: center">
+			             <p:commandButton update="templateForm:formEditPreferenciaProveedor:panelProveedorPreferencia"  icon="ui-icon-check" value="Seleccionar" title="Seleccionar"
+			             	actionListener="#{preferenciaProveedorBean.guardar(proveedor.idProductoProveedor)}">
+			                
+			            </p:commandButton>
+			        </p:column>
+			    </p:dataTable>
+        	</p:panelGrid>
+		
+		</p:panel>
+		
+		<p:panel id="panelGuardarProveedor" >
+			<p:button id="salirGrupo" value="Salir" title="Salir" style="margin-top:25px;margin-left:25px" 
+				 outcome="index.xhtml"/>
+		
+		</p:panel>
+		
+	</h:form>
+
+	</ui:define>
+
+
+</ui:composition>	
+</html>
